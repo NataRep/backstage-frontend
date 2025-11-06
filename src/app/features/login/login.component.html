@@ -1,0 +1,12 @@
+<div *ngIf="!auth.user(); else loggedIn">
+  <input #email placeholder="Email" />
+  <input #password placeholder="Password" type="password" />
+  <button (click)="login(email.value, password.value)">Login</button>
+</div>
+
+<ng-template #loggedIn>
+  <div>
+    Hello, {{ auth.user()?.email }}
+    <button (click)="logout()">Logout</button>
+  </div>
+</ng-template>
