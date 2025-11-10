@@ -1,42 +1,62 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, from, switchMap } from 'rxjs';
+// interceptors/api.interceptor.ts
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { from, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
-@Injectable()
-export class ApiInterceptor implements HttpInterceptor {
-  constructor(private auth: AuthService) { }
+export const apiInterceptor: HttpInterceptorFn = (req, next) => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return from(this.getFreshToken()).pipe(
-      switchMap(token => {
-        const baseUrl = 'http://localhost:3000';
-        const url = req.url.startsWith('http') ? req.url : `${baseUrl}${req.url}`;
+  return from(getFreshToken(auth)).pipe(
+    switchMap(token => {
+      const baseUrl = 'http://localhost:3000';
+      const url = req.url.startsWith('http') ? req.url : `${baseUrl}${req.url}`;
 
-        const apiReq = req.clone({
-          url: url,
-          setHeaders: {
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            'Content-Type': 'application/json'
-          }
-        });
+      const headers: { [key: string]: string } = {
+        'Content-Type': 'application/json'
+      };
 
-        return next.handle(apiReq);
-      })
-    );
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const apiReq = req.clone({
+        url: url,
+        setHeaders: headers
+      });
+
+      return next(apiReq);
+    }),
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401 || error.status === 403) {
+        console.warn('Authentication error, redirecting to login');
+        redirectToLogin(router);
+      }
+      return throwError(() => error);
+    })
+  );
+};
+
+async function getFreshToken(auth: AuthService): Promise<string | null> {
+  const user = auth.user();
+  if (!user) return null;
+
+  try {
+    const token = await user.getIdToken();
+    return token;
+  } catch (error) {
+    console.error('Failed to get fresh token:', error);
+    return null;
   }
+}
 
-  private async getFreshToken(): Promise<string | null> {
-    const user = this.auth.user();
-    if (!user) return null;
-
-    try {
-      // Получаем свежий токен
-      const token = await user.getIdToken();
-      return token;
-    } catch (error) {
-      console.error('Failed to get fresh token:', error);
-      return null;
-    }
-  }
+function redirectToLogin(router: Router): void {
+  setTimeout(() => {
+    router.navigate(['/login'], {
+      queryParams: { returnUrl: router.url }
+    });
+  }, 0);
 }
