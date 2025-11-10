@@ -23,10 +23,9 @@ export class AuthService {
   constructor() {
     this.initAuth();
 
-    // Автоматически обновляем токен при изменении пользователя
     effect(() => {
       this.updateToken();
-    });
+    }, { allowSignalWrites: true });
   }
 
   private async initAuth() {
@@ -67,7 +66,6 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const result = await signInWithEmailAndPassword(this.auth, email, password);
-    // Токен автоматически обновится через effect
     return result;
   }
 
@@ -93,13 +91,30 @@ export class AuthService {
   }
 
   // Метод для проверки статуса токена
-  getTokenStatus(): { isValid: boolean; expiresIn?: number } {
+  getTokenStatus(): { isValid: boolean; expiresIn?: number; isExpired?: boolean; willExpireSoon?: boolean } {
     const token = this.token();
     const user = this.user();
 
     if (!token || !user) {
-      return { isValid: false };
+      return { isValid: false, isExpired: true };
     }
-    return { isValid: true };
+
+    try {
+      // Декодируем JWT токен чтобы получить expiration
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000; // Convert to milliseconds
+      const now = Date.now();
+      const expiresIn = exp - now;
+
+      return {
+        isValid: expiresIn > 0,
+        expiresIn: Math.floor(expiresIn / 1000), // в секундах
+        isExpired: expiresIn <= 0,
+        willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000 // 5 минут
+      };
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return { isValid: false, isExpired: true };
+    }
   }
 }
