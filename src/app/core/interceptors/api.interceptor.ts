@@ -12,7 +12,7 @@ export const apiInterceptor: HttpInterceptorFn = (req, next) => {
 
   return from(getFreshToken(auth)).pipe(
     switchMap(token => {
-      const baseUrl = 'http://localhost:3000';
+      const baseUrl = 'http://localhost:3000/api/';
       const url = req.url.startsWith('http') ? req.url : `${baseUrl}${req.url}`;
 
       const headers: { [key: string]: string } = {
