@@ -3,11 +3,15 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { UserPersonal } from "../models/interfaces/auth.models";
 
+/**
+ * во всех методах в качестве id используется localId персоны из firebase
+ */
+
 @Injectable({ providedIn: 'root' })
 export class PersonsService {
   private http = inject(HttpClient);
 
-  getPersonByFirebaseId(id: string): Observable<UserPersonal> {
+  getPersonById(id: string): Observable<UserPersonal> {
     return this.http.get<UserPersonal>(`persons/${id}`);
   }
 
@@ -19,11 +23,32 @@ export class PersonsService {
     if (props.limit) {
       params = params.append('limit', props.limit.toString());
     }
-    if (props.ids) {
-      params = params.append('ids', props.ids.toString());
+    if (props.ids?.length) {
+      props.ids.forEach(id => {
+        params = params.append('ids', id);
+      });
     }
 
     return this.http.get<UserPersonal[]>(`persons`, { params });
+  }
+
+  createPerson(body: UserPersonal): Observable<UserPersonal> {
+    return this.http.post<UserPersonal>(`persons`, body);
+  }
+
+  updatePerson(id: string, body: {
+    full_name?: string,
+    email?: string,
+    phone?: string,
+    telegram?: string,
+    whatsapp?: string,
+    vk?: string,
+  }): Observable<UserPersonal> {
+    return this.http.patch<UserPersonal>(`persons/${id}`, body);
+  }
+
+  deletePerson(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`persons/${id}`);
   }
 
 }
@@ -31,5 +56,5 @@ export class PersonsService {
 interface PersonsProps {
   page?: number,
   limit?: number,
-  ids?: number
+  ids?: string[]
 }
