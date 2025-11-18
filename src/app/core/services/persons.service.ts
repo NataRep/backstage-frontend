@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Person } from "../models/interfaces/auth.models";
+import { Person } from "../models/interfaces/person.model";
 
 /**
  * во всех методах в качестве id используется localId персоны из firebase

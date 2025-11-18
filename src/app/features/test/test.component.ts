@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Person } from '../../core/models/interfaces/auth.models';
+import { Person } from '../../core/models/interfaces/person.model';
 import { PersonsService } from '../../core/services/persons.service';
 
 @Component({
