@@ -22,6 +22,6 @@ export interface EmployeeProfile {
   roles: Role[],
   availability: Timestamp<string>[],
   isActive: boolean,
-  uthUid: string,
+  personId: string,
   accessLevel: AccessLevel,
 }
