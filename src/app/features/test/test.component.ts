@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { UserPersonal } from '../../core/models/interfaces/auth.models';
+import { Person } from '../../core/models/interfaces/auth.models';
 import { PersonsService } from '../../core/services/persons.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { PersonsService } from '../../core/services/persons.service';
 export class TestComponent {
   private personService = inject(PersonsService);
 
-  protected user: UserPersonal = {
+  protected user: Person = {
     personId: "tsEF1eNkNodmFsSKjuokCkh82BR2",
     email: "pn.88@mail.ru",
     full_name: "Natalia Repkina",

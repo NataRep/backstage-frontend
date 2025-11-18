@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { UserPersonal } from "../models/interfaces/auth.models";
+import { Person } from "../models/interfaces/auth.models";
 
 /**
  * во всех методах в качестве id используется localId персоны из firebase
@@ -11,11 +11,11 @@ import { UserPersonal } from "../models/interfaces/auth.models";
 export class PersonsService {
   private http = inject(HttpClient);
 
-  getPersonById(id: string): Observable<UserPersonal> {
-    return this.http.get<UserPersonal>(`persons/${id}`);
+  getPersonById(id: string): Observable<Person> {
+    return this.http.get<Person>(`persons/${id}`);
   }
 
-  getAllPersons(props: PersonsProps): Observable<UserPersonal[]> {
+  getAllPersons(props: PersonsProps): Observable<Person[]> {
     let params = new HttpParams();
     if (props.page) {
       params = params.append('page', props.page.toString());
@@ -29,11 +29,11 @@ export class PersonsService {
       });
     }
 
-    return this.http.get<UserPersonal[]>(`persons`, { params });
+    return this.http.get<Person[]>(`persons`, { params });
   }
 
-  createPerson(body: UserPersonal): Observable<UserPersonal> {
-    return this.http.post<UserPersonal>(`persons`, body);
+  createPerson(body: Person): Observable<Person> {
+    return this.http.post<Person>(`persons`, body);
   }
 
   updatePerson(id: string, body: {
@@ -43,8 +43,8 @@ export class PersonsService {
     telegram?: string,
     whatsapp?: string,
     vk?: string,
-  }): Observable<UserPersonal> {
-    return this.http.patch<UserPersonal>(`persons/${id}`, body);
+  }): Observable<Person> {
+    return this.http.patch<Person>(`persons/${id}`, body);
   }
 
   deletePerson(id: string): Observable<{ message: string }> {

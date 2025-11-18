@@ -1,23 +1,13 @@
 import { Timestamp } from "rxjs";
 import { AccessLevel } from "../enums/auth.enums";
 import { Role } from "../enums/employee.enums";
+import { Person } from "./person.model";
 
-export interface UserProfile {
-  personal: UserPersonal;
+
+export interface User {
+  personal: Person;
   employee: EmployeeProfile;
   auth: AuthInfo;
-}
-
-//персональные данные по всем персонам в приложении хранятся в отдельной базе для соблюдения закона о персональных данных
-export interface UserPersonal {
-  id?: number,
-  personId: string,
-  full_name: string,
-  email?: string,
-  phone?: string,
-  telegram?: string,
-  whatsapp?: string,
-  vk?: string,
 }
 
 //авторизация firebase
