@@ -9,3 +9,10 @@ export interface Person {
   whatsapp?: string,
   vk?: string,
 }
+
+
+export interface PersonsProps {
+  page?: number,
+  limit?: number,
+  ids?: string[]
+}

@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Person } from "../models/interfaces/person.model";
+import { Person, PersonsProps } from "../models/interfaces/person.model";
 
 /**
  * во всех методах в качестве id используется localId персоны из firebase
@@ -51,10 +51,4 @@ export class PersonsService {
     return this.http.delete<{ message: string }>(`persons/${id}`);
   }
 
-}
-
-interface PersonsProps {
-  page?: number,
-  limit?: number,
-  ids?: string[]
 }
