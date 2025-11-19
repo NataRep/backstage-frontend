@@ -2,7 +2,8 @@ import { Injectable } from "@angular/core";
 import { QueryConstraint } from "firebase/firestore";
 import { Observable } from "rxjs";
 import { Employee } from "../../models/interfaces/emploeey.models";
-import { FirebaseService, WithId } from "./firebase.service";
+import { FirebaseService, WithId } from "./firebase-base.service";
+
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {

@@ -1,19 +1,19 @@
-import { effect, Injectable, signal } from '@angular/core';
-import { getApps } from 'firebase/app';
+import { effect, inject, Injectable, signal } from '@angular/core';
+import { Auth } from '@angular/fire/auth'; // ← используем AngularFire Auth
 import {
   browserLocalPersistence,
-  getAuth,
-  IdTokenResult,
+  getIdTokenResult,
   onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
-  User
+  User,
+  UserCredential
 } from 'firebase/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private _auth: ReturnType<typeof getAuth> | null = null;
+  private auth = inject(Auth);
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(null);
 
@@ -29,26 +29,23 @@ export class AuthService {
   }
 
   private async initAuth() {
-    if (!getApps().length) throw new Error('Firebase App not initialized yet');
-
-    this._auth = getAuth();
-
     try {
-      await setPersistence(this._auth, browserLocalPersistence);
-    } catch (err) {
-      console.error('Failed to set persistence', err);
-    }
+      await setPersistence(this.auth, browserLocalPersistence);
 
-    onAuthStateChanged(this._auth, (user) => {
-      this._user.set(user);
-    });
+      onAuthStateChanged(this.auth, (user) => {
+        console.log('Auth state changed:', user);
+        this._user.set(user);
+      });
+    } catch (err) {
+      console.error('Failed to initialize auth:', err);
+    }
   }
 
   private async updateToken() {
     const user = this._user();
     if (user) {
       try {
-        const tokenResult: IdTokenResult = await user.getIdTokenResult();
+        const tokenResult = await getIdTokenResult(user); // ← правильный метод
         this._token.set(tokenResult.token);
       } catch (error) {
         console.error('Failed to get user token:', error);
@@ -59,19 +56,26 @@ export class AuthService {
     }
   }
 
-  private get auth() {
-    if (!this._auth) throw new Error('Auth not initialized yet');
-    return this._auth;
+  async login(email: string, password: string): Promise<UserCredential> {
+    try {
+      console.log('Attempting login for:', email);
+      const result = await signInWithEmailAndPassword(this.auth, email, password);
+      console.log('Login successful:', result.user.email);
+      return result;
+    } catch (error) {
+      console.error('Login failed:', error);
+      throw error;
+    }
   }
 
-  async login(email: string, password: string) {
-    const result = await signInWithEmailAndPassword(this.auth, email, password);
-    return result;
-  }
-
-  async logout() {
-    await signOut(this.auth);
-    this._token.set(null);
+  async logout(): Promise<void> {
+    try {
+      await signOut(this.auth);
+      console.log('Logout successful');
+    } catch (error) {
+      console.error('Logout failed:', error);
+      throw error;
+    }
   }
 
   // Метод для принудительного обновления токена
@@ -81,7 +85,7 @@ export class AuthService {
 
     try {
       await user.getIdToken(true); // forceRefresh = true
-      const tokenResult = await user.getIdTokenResult();
+      const tokenResult = await getIdTokenResult(user);
       this._token.set(tokenResult.token);
       return tokenResult.token;
     } catch (error) {
@@ -91,9 +95,14 @@ export class AuthService {
   }
 
   // Метод для проверки статуса токена
-  getTokenStatus(): { isValid: boolean; expiresIn?: number; isExpired?: boolean; willExpireSoon?: boolean } {
-    const token = this.token();
-    const user = this.user();
+  getTokenStatus(): {
+    isValid: boolean;
+    expiresIn?: number;
+    isExpired?: boolean;
+    willExpireSoon?: boolean
+  } {
+    const token = this._token();
+    const user = this._user();
 
     if (!token || !user) {
       return { isValid: false, isExpired: true };
@@ -116,5 +125,22 @@ export class AuthService {
       console.error('Error decoding token:', error);
       return { isValid: false, isExpired: true };
     }
+  }
+
+  // Дополнительные полезные методы
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
+  }
+
+  isAuthenticated(): boolean {
+    return this._user() !== null;
+  }
+
+  getUserEmail(): string | null {
+    return this._user()?.email || null;
+  }
+
+  getUserId(): string | null {
+    return this._user()?.uid || null;
   }
 }
