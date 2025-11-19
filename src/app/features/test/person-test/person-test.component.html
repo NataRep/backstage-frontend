@@ -1,0 +1,131 @@
+<div class="test-container">
+  <h2>🧪 PersonsService Test Component</h2>
+
+  <!-- Статус -->
+  <div class="status" [class]="statusClass()">
+    {{ statusMessage() }}
+  </div>
+
+  <!-- Форма для создания/обновления -->
+  <div class="form-section">
+    <h3>📝 Create/Update Person</h3>
+    <div class="form-group">
+      <label>Person ID (localId from Firebase):</label>
+      <input [(ngModel)]="testPerson.personId" placeholder="user-123">
+    </div>
+    <div class="form-group">
+      <label>Full Name:</label>
+      <input [(ngModel)]="testPerson.full_name" placeholder="John Doe">
+    </div>
+    <div class="form-group">
+      <label>Email:</label>
+      <input [(ngModel)]="testPerson.email" placeholder="john@example.com" type="email">
+    </div>
+    <div class="form-group">
+      <label>Phone:</label>
+      <input [(ngModel)]="testPerson.phone" placeholder="+1234567890">
+    </div>
+    <div class="form-group">
+      <label>Telegram:</label>
+      <input [(ngModel)]="testPerson.telegram" placeholder="@username">
+    </div>
+    <div class="form-group">
+      <label>WhatsApp:</label>
+      <input [(ngModel)]="testPerson.whatsapp" placeholder="+1234567890">
+    </div>
+    <div class="form-group">
+      <label>VK:</label>
+      <input [(ngModel)]="testPerson.vk" placeholder="id123456">
+    </div>
+
+    <div class="button-group">
+      <button (click)="testCreatePerson()" [disabled]="loading">🎯 Create Person</button>
+      <button (click)="testUpdatePerson()" [disabled]="!currentPersonId() || loading">✏️ Update Person</button>
+    </div>
+  </div>
+
+  <!-- Операции чтения -->
+  <div class="read-section">
+    <h3>👀 Read Operations</h3>
+
+    <!-- Параметры для getAll -->
+    <div class="query-params">
+      <h4>Query Parameters:</h4>
+      <div class="param-group">
+        <label>Page:</label>
+        <input type="number" [(ngModel)]="queryParams.page" min="1">
+      </div>
+      <div class="param-group">
+        <label>Limit:</label>
+        <input type="number" [(ngModel)]="queryParams.limit" min="1" max="100">
+      </div>
+      <div class="param-group">
+        <label>IDs (comma separated):</label>
+        <input [(ngModel)]="queryParams.idsInput" placeholder="id1,id2,id3">
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button (click)="testGetPersonById()" [disabled]="!currentPersonId() || loading">🔍 Get By ID</button>
+      <button (click)="testGetAllPersons()" [disabled]="loading">📋 GetAll Persons</button>
+    </div>
+
+    <div class="person-display" *ngIf="displayPerson()">
+      <h4>Current Person:</h4>
+      <pre>{{ displayPerson() | json }}</pre>
+    </div>
+
+    <div class="persons-list" *ngIf="displayPersons().length > 0">
+      <h4>Persons List ({{ displayPersons().length }}):</h4>
+      <div *ngFor="let person of displayPersons()" class="person-item" (click)="selectPerson(person)">
+        <strong>{{ person.personId }}</strong> - {{ person.full_name }}
+        <div class="person-details">
+          📧 {{ person.email }} | 📞 {{ person.phone }}
+          <span *ngIf="person.telegram">| 📱 {{ person.telegram }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Удаление -->
+  <div class="delete-section">
+    <h3>🗑️ Delete Operations</h3>
+    <div class="button-group">
+      <button (click)="testDeletePerson()" [disabled]="!currentPersonId() || loading" class="danger">
+        🗑️ Delete Current Person
+      </button>
+    </div>
+  </div>
+
+  <!-- Быстрые тестовые данные -->
+  <div class="quick-data-section">
+    <h3>⚡ Quick Test Data</h3>
+    <div class="button-group">
+      <button (click)="loadSampleData(1)" [disabled]="loading">👤 Load Sample 1</button>
+      <button (click)="loadSampleData(2)" [disabled]="loading">👤 Load Sample 2</button>
+      <button (click)="loadSampleData(3)" [disabled]="loading">👤 Load Sample 3</button>
+    </div>
+  </div>
+
+  <!-- Логи -->
+  <div class="logs-section">
+    <h3>📋 Operation Logs</h3>
+    <div class="logs">
+      <div *ngFor="let log of logs()" [class]="log.type" class="log-entry">
+        <span class="timestamp">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+        <span class="message">{{ log.message }}</span>
+      </div>
+    </div>
+    <button (click)="clearLogs()" class="secondary">Clear Logs</button>
+  </div>
+
+  <!-- Информация о текущем состоянии -->
+  <div class="state-section">
+    <h3>🔍 Current State</h3>
+    <div class="state-info">
+      <p><strong>Current Person ID:</strong> {{ currentPersonId() || 'None' }}</p>
+      <p><strong>Total Persons Loaded:</strong> {{ displayPersons().length }}</p>
+      <p><strong>Loading:</strong> {{ loading }}</p>
+    </div>
+  </div>
+</div>
