@@ -1,0 +1,125 @@
+<div class="test-container">
+  <h2>🧪 EmployeeService Test Component</h2>
+
+  <!-- Статус -->
+  <div class="status" [class]="statusClass()">
+    {{ statusMessage() }}
+  </div>
+
+  <!-- Форма для создания/обновления -->
+  <div class="form-section">
+    <h3>📝 Create/Update Employee</h3>
+    <div class="form-group">
+      <label>ID (for setWithId):</label>
+      <input [(ngModel)]="testEmployee.id" placeholder="Leave empty for auto-generate">
+    </div>
+    <div class="form-group">
+      <label>Person ID:</label>
+      <input [(ngModel)]="testEmployee.personId" placeholder="person123">
+    </div>
+    <div class="form-group">
+      <label>Roles:</label>
+      <div class="roles">
+        <label *ngFor="let role of allRoles">
+          <input type="checkbox" [value]="role" [checked]="testEmployee.roles.includes(role)"
+            (change)="toggleRole(role, $event)">
+          {{ role }}
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Active:</label>
+      <input type="checkbox" [(ngModel)]="testEmployee.isActive">
+    </div>
+
+    <div class="button-group">
+      <button (click)="testCreate()" [disabled]="loading">🎯 Create</button>
+      <button (click)="testSetWithId()" [disabled]="loading">💾 Set With ID</button>
+      <button (click)="testUpdate()" [disabled]="!currentEmployeeId() || loading">✏️ Update</button>
+    </div>
+  </div>
+
+  <!-- Операции чтения -->
+  <div class="read-section">
+    <h3>👀 Read Operations</h3>
+    <div class="button-group">
+      <button (click)="testGetOne()" [disabled]="!currentEmployeeId() || loading">🔍 Get One</button>
+      <button (click)="testGetAll()" [disabled]="loading">📋 GetAll</button>
+      <button (click)="testQuery()" [disabled]="loading">🔎 Query Active</button>
+    </div>
+
+    <div class="employee-display" *ngIf="displayEmployee()">
+      <h4>Current Employee:</h4>
+      <pre>{{ displayEmployee() | json }}</pre>
+    </div>
+
+    <div class="employees-list" *ngIf="displayEmployees().length > 0">
+      <h4>Employees List ({{ displayEmployees().length }}):</h4>
+      <div *ngFor="let emp of displayEmployees()" class="employee-item">
+        {{ emp.id }} - {{ emp.personId }} - {{ emp.roles.join(', ') }} - Active: {{ emp.isActive }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Удаление -->
+  <div class="delete-section">
+    <h3>🗑️ Delete Operations</h3>
+    <div class="button-group">
+      <button (click)="testDelete()" [disabled]="!currentEmployeeId() || loading" class="danger">
+        🗑️ Delete Current
+      </button>
+      <button (click)="cleanupTestData()" [disabled]="loading" class="danger">
+        🧹 Cleanup All Test Data
+      </button>
+    </div>
+  </div>
+
+  <!-- Real-time подписки -->
+  <div class="subscription-section">
+    <h3>📡 Real-time Subscriptions</h3>
+    <div class="button-group">
+      <button (click)="toggleSubscription('all')" [class.active]="subscriptions.all">
+        {{ subscriptions.all ? '🔴 Unsubscribe All' : '🟢 Subscribe All' }}
+      </button>
+      <button (click)="toggleSubscription('one')" [class.active]="subscriptions.one" [disabled]="!currentEmployeeId()">
+        {{ subscriptions.one ? '🔴 Unsubscribe One' : '🟢 Subscribe One' }}
+      </button>
+      <button (click)="toggleSubscription('changes')" [class.active]="subscriptions.changes">
+        {{ subscriptions.changes ? '🔴 Unsubscribe Changes' : '🟢 Subscribe Changes' }}
+      </button>
+    </div>
+
+    <div class="subscription-output">
+      <div *ngIf="realtimeData.all.length > 0">
+        <h4>All Subscription ({{ realtimeData.all.length }}):</h4>
+        <div *ngFor="let emp of realtimeData.all" class="realtime-item">
+          {{ emp.id }} - {{ emp.personId }}
+        </div>
+      </div>
+
+      <div *ngIf="realtimeData.one">
+        <h4>One Subscription:</h4>
+        <pre>{{ realtimeData.one | json }}</pre>
+      </div>
+
+      <div *ngIf="realtimeData.changes.length > 0">
+        <h4>Changes Subscription:</h4>
+        <div *ngFor="let change of realtimeData.changes" class="change-item" [class]="change.type">
+          {{ change.type }}: {{ change.doc.id }} - {{ change.doc.personId }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Логи -->
+  <div class="logs-section">
+    <h3>📋 Operation Logs</h3>
+    <div class="logs">
+      <div *ngFor="let log of logs()" [class]="log.type" class="log-entry">
+        <span class="timestamp">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+        <span class="message">{{ log.message }}</span>
+      </div>
+    </div>
+    <button (click)="clearLogs()" class="secondary">Clear Logs</button>
+  </div>
+</div>

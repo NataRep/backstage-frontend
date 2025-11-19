@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import {
   addDoc,
   collection as collectionFn,
@@ -22,7 +22,7 @@ import {
   updateDoc,
   where,
   writeBatch
-} from 'firebase/firestore';
+} from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 export type WithId<T> = T & { id: string };
@@ -33,8 +33,21 @@ export type WithId<T> = T & { id: string };
  */
 
 @Injectable({ providedIn: 'root' })
+
 export class FirebaseService {
-  constructor(private db: Firestore) { }
+
+  private db = inject(Firestore);
+
+  constructor() {
+    console.log('🔥 FirebaseService constructor called');
+    console.log('🔥 Firestore instance:', this.db);
+
+    if (!this.db) {
+      console.error('❌ Firestore is not available!');
+    } else {
+      console.log('✅ Firestore injected successfully');
+    }
+  }
 
   // ---- Helpers ----
   private colRef(collectionName: string): CollectionReference<DocumentData> {
@@ -220,4 +233,5 @@ export class FirebaseService {
       return unsubscribe;
     });
   }
+
 }

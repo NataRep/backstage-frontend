@@ -1,16 +1,26 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { Firestore } from '@angular/fire/firestore';
 import { Person } from '../../core/models/interfaces/person.model';
+import { EmployeeService } from '../../core/services/firebase/employee.service';
+import { FirebaseService } from '../../core/services/firebase/firebase-base.service';
 import { PersonsService } from '../../core/services/persons.service';
+import { EmployeeTestComponent } from './employee-test/employee-test.component';
 
 @Component({
   selector: 'app-test',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, EmployeeTestComponent],
   templateUrl: './test.component.html',
   styleUrl: './test.component.scss'
 })
 export class TestComponent {
+  diagnostics: any = {};
+
   private personService = inject(PersonsService);
+  private firebase = inject(FirebaseService);
+  private firestore = inject(Firestore);
+  private employee = inject(EmployeeService);
 
   protected user: Person = {
     personId: "tsEF1eNkNodmFsSKjuokCkh82BR2",
@@ -20,10 +30,6 @@ export class TestComponent {
     telegram: '@johndoe',
     whatsapp: '+1234567890',
     vk: 'id123456'
-  }
-
-  constructor() {
-
   }
 
   createUser() {
@@ -53,5 +59,4 @@ export class TestComponent {
       error: (err) => console.error('ERROR:', err)
     });
   }
-
 }
