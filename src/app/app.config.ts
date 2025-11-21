@@ -11,13 +11,14 @@ import { routes } from './app.routes';
 import { apiInterceptor } from './core/interceptors/api.interceptor';
 import { environment } from './environments/environments';
 import { AuthEffects } from './store/auth/auth.effects';
+import { authReducer } from './store/auth/auth.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideStore({
-      //user: authReducer
+      auth: authReducer
     }),
     provideEffects([AuthEffects]),
     provideHttpClient(

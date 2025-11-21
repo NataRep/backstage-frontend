@@ -25,6 +25,10 @@ export class EmployeeService {
     return this.firebase.getOne<Employee>(this.collectionName, id);
   }
 
+  getByPersonId(personId: string): Promise<WithId<Employee> | null> {
+    return this.firebase.getOneByField<Employee>(this.collectionName, 'personId', personId);
+  }
+
   getAll(): Promise<WithId<Employee>[]> {
     return this.firebase.getAll<Employee>(this.collectionName);
   }

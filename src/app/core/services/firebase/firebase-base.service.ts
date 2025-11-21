@@ -96,6 +96,33 @@ export class FirebaseService {
     return this.snapshotToEntity<T>(snap);
   }
 
+  async getAllByField<T>(
+    collectionName: string,
+    field: string,
+    value: any
+  ): Promise<Array<WithId<T>>> {
+    const q = firestoreQuery(
+      this.colRef(collectionName),
+      where(field, '==', value)
+    );
+    const snap = await getDocs(q);
+    return this.querySnapshotToEntities<T>(snap);
+  }
+
+  async getOneByField<T>(
+    collectionName: string,
+    field: string,
+    value: any
+  ): Promise<WithId<T> | null> {
+    const q = firestoreQuery(
+      this.colRef(collectionName),
+      where(field, '==', value),
+      limit(1)
+    );
+    const snap = await getDocs(q);
+    return snap.empty ? null : this.querySnapshotToEntities<T>(snap)[0];
+  }
+
   async getAll<T>(collectionName: string): Promise<Array<WithId<T>>> {
     const snap = await getDocs(this.colRef(collectionName));
     return this.querySnapshotToEntities<T>(snap);

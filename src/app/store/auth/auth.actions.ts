@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { User } from "../../core/models/interfaces/auth.models";
+import { AuthInfo, User } from "../../core/models/interfaces/auth.models";
 
 export const loginAction = createAction(
   '[Auth] Login',
@@ -8,7 +8,7 @@ export const loginAction = createAction(
 
 export const loginSuccessAction = createAction(
   '[Auth] Login Success',
-  props<{ user: User }>()
+  props<{ user: AuthInfo }>()
 );
 
 export const loginFailureAction = createAction(
@@ -21,11 +21,17 @@ export const logoutAction = createAction(
 );
 
 export const logoutSuccessAction = createAction(
-  '[Auth] Logout Success',
-  props<{ message: string }>()
+  '[Auth] Logout Success'
 );
 
 export const logoutFailureAction = createAction(
   '[Auth] Logout Failure',
   props<{ error: unknown }>()
 );
+
+export const setUserDataAction = createAction(
+  '[Auth] Set User Data',
+  props<{ user: User }>()
+);
+
+export const autoLoginAction = createAction('[Auth] Auto Login');

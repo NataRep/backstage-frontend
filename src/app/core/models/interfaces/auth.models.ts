@@ -5,15 +5,16 @@ import { Person } from "./person.model";
 
 
 export interface User {
-  personal: Person;
-  employee: EmployeeProfile;
+  personal: Person | null;
+  employee: EmployeeProfile | null;
   auth: AuthInfo;
 }
 
 //авторизация firebase
 export interface AuthInfo {
   email: string | null,
-  localId: string,
+  personId: string,
+  name: string | null,
 }
 
 //данные пользователе как о сотруднике

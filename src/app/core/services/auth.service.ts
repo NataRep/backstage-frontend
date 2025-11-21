@@ -1,5 +1,6 @@
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { Auth } from '@angular/fire/auth'; // ← используем AngularFire Auth
+import { Store } from '@ngrx/store';
 import {
   browserLocalPersistence,
   getIdTokenResult,
@@ -10,12 +11,14 @@ import {
   User,
   UserCredential
 } from 'firebase/auth';
+import { loginSuccessAction } from '../../store/auth/auth.actions';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(null);
+  private store = inject(Store);
 
   user = this._user.asReadonly();
   token = this._token.asReadonly();
@@ -35,6 +38,16 @@ export class AuthService {
       onAuthStateChanged(this.auth, (user) => {
         console.log('Auth state changed:', user);
         this._user.set(user);
+
+        if (user) {
+          this.store.dispatch(loginSuccessAction({
+            user: {
+              email: user.email,
+              personId: user.uid,
+              name: user.displayName
+            }
+          }));
+        }
       });
     } catch (err) {
       console.error('Failed to initialize auth:', err);
