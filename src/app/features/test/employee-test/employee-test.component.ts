@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { AccessLevel } from '../../../core/models/enums/auth.enums';
 import { Role } from '../../../core/models/enums/employee.enums';
 import { Employee } from '../../../core/models/interfaces/emploeey.models';
 import { EmployeeService } from '../../../core/services/firebase/employee.service';
@@ -28,7 +29,8 @@ export class EmployeeTestComponent implements OnInit, OnDestroy {
     personId: 'test-person-' + Date.now(),
     roles: [Role.Artist],
     availability: [],
-    isActive: true
+    isActive: true,
+    accessLevel: AccessLevel.Director
   };
 
   allRoles = Object.values(Role);

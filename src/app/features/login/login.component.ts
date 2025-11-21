@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { AuthService } from '../../core/services/auth.service';
+import { Store } from '@ngrx/store';
+import { loginAction, logoutAction } from '../../store/auth/auth.actions';
+import { selectAuthState } from '../../store/auth/auth.selectors';
 
 @Component({
   selector: 'app-login',
@@ -10,13 +12,20 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  auth = inject(AuthService);
+  private store = inject(Store);
+
+  user = this.store.selectSignal(selectAuthState);
 
   login(email: string, password: string) {
-    this.auth.login(email, password).catch(console.error);
+
+    this.store.dispatch(loginAction({
+      email: email,
+      password: password
+    }));
   }
 
+
   logout() {
-    this.auth.logout();
+    this.store.dispatch(logoutAction())
   }
 }

@@ -1,11 +1,11 @@
-<div *ngIf="!auth.user(); else loggedIn">
+<div *ngIf="!user().profile; else loggedIn">
   <input #email placeholder="Email" />
   <input #password placeholder="Password" type="password" />
   <button (click)="login(email.value, password.value)">Login</button>
 </div>
 <ng-template #loggedIn>
   <div>
-    Hello, {{ auth.user()?.email }}
+    Hello, {{ user().profile?.personal?.full_name }}
     <button (click)="logout()">Logout</button>
   </div>
 </ng-template>
