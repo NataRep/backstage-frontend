@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { loginAction, logoutAction } from '../../store/auth/auth.actions';
-import { selectAuthState } from '../../store/auth/auth.selectors';
-
+import { loginAction, logoutAction } from '../../core/store/auth/auth.actions';
+import { selectAuthState } from '../../core/store/auth/auth.selectors';
 @Component({
   selector: 'app-login',
   standalone: true,

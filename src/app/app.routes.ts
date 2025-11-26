@@ -1,16 +1,17 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { LoginComponent } from './features/login/login.component';
-import { NotFoundComponent } from './features/not-found/not-found.component';
 import { TestComponent } from './features/test/test.component';
 import { LoginLayoutComponent } from './layout/login-layout/login-layout.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { NotFoundComponent } from './layout/not-found/not-found.component';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginLayoutComponent,
-    // canActivate: [GuestGuard],
+    canActivate: [authGuard],
     children: [
       { path: '', component: LoginComponent }
     ]
@@ -18,7 +19,6 @@ export const routes: Routes = [
   {
     path: 'test',
     component: MainLayoutComponent,
-    // canActivate: [GuestGuard],
     children: [
       { path: '', component: TestComponent }
     ]
@@ -26,16 +26,16 @@ export const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
-      { path: '404', component: NotFoundComponent }
     ]
   },
 
-  //{
-  //path: '**',
-  //canActivate: [notFoundGuard] 
-  //}
+  {
+    path: '**',
+    component: NotFoundComponent,
+    //canActivate: [notFoundGuard] 
+  }
 ];

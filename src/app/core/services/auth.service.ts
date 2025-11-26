@@ -11,17 +11,22 @@ import {
   User,
   UserCredential
 } from 'firebase/auth';
-import { loginSuccessAction } from '../../store/auth/auth.actions';
+import { loginSuccessAction } from '../store/auth/auth.actions';
+
+export type UserAuthRole = 'guest' | 'user' | null;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private auth = inject(Auth);
+  private store = inject(Store);
+
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(null);
-  private store = inject(Store);
+  private _role = signal<UserAuthRole>(null);
 
   user = this._user.asReadonly();
   token = this._token.asReadonly();
+  role = this._role.asReadonly();
 
   constructor() {
     this.initAuth();
@@ -40,6 +45,7 @@ export class AuthService {
         this._user.set(user);
 
         if (user) {
+          this._role.set('user');
           this.store.dispatch(loginSuccessAction({
             user: {
               email: user.email,
@@ -47,10 +53,13 @@ export class AuthService {
               name: user.displayName
             }
           }));
+        } else {
+          this._role.set('guest');
         }
       });
     } catch (err) {
       console.error('Failed to initialize auth:', err);
+      this._role.set('guest');
     }
   }
 

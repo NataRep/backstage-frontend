@@ -2,11 +2,19 @@ import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, forkJoin, from, map, of, switchMap, tap } from "rxjs";
-import { EmployeeProfile } from "../../core/models/interfaces/auth.models";
-import { AuthService } from "../../core/services/auth.service";
-import { EmployeeService } from "../../core/services/firebase/employee.service";
-import { PersonsService } from "../../core/services/persons.service";
-import { loginAction, loginFailureAction, loginSuccessAction, logoutAction, logoutFailureAction, logoutSuccessAction, setUserDataAction } from "./auth.actions";
+import { EmployeeProfile } from "../../models/interfaces/auth.models";
+import { AuthService } from "../../services/auth.service";
+import { EmployeeService } from "../../services/firebase/employee.service";
+import { PersonsService } from "../../services/persons.service";
+import {
+  loginAction,
+  loginFailureAction,
+  loginSuccessAction,
+  logoutAction,
+  logoutFailureAction,
+  logoutSuccessAction,
+  setUserDataAction
+} from "./auth.actions";
 
 @Injectable()
 export class AuthEffects {
@@ -47,7 +55,6 @@ export class AuthEffects {
 
 
           map(({ personal, employee }) => {
-            console.log("personId", user.personId);
 
             if (!personal) {
               throw new Error('Person not found');
@@ -65,8 +72,6 @@ export class AuthEffects {
               personId: employee.personId,
               accessLevel: employee.accessLevel,
             };
-
-            console.log("employeeProfile", employeeProfile)
 
             return setUserDataAction({
               user: {
@@ -132,5 +137,4 @@ export class AuthEffects {
       })
     );
   });
-
 }

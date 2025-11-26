@@ -1,6 +1,12 @@
 import { createReducer, on } from "@ngrx/store";
-import { User } from "../../core/models/interfaces/auth.models";
-import { loginAction, loginFailureAction, logoutFailureAction, logoutSuccessAction, setUserDataAction } from "./auth.actions";
+import { User } from "../../models/interfaces/auth.models";
+import {
+  loginAction,
+  loginFailureAction,
+  logoutFailureAction,
+  logoutSuccessAction,
+  setUserDataAction
+} from "./auth.actions";
 
 export interface UserState {
   profile: User | null,

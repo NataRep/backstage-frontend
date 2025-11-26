@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { logoutAction } from '../../core/store/auth/auth.actions';
 
 @Component({
   selector: 'app-main-layout',
@@ -9,5 +11,10 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
+  private store = inject(Store);
+
+  logout() {
+    this.store.dispatch(logoutAction())
+  }
 
 }

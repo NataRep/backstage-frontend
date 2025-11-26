@@ -9,9 +9,9 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
 import { apiInterceptor } from './core/interceptors/api.interceptor';
+import { AuthEffects } from './core/store/auth/auth.effects';
+import { authReducer } from './core/store/auth/auth.reducer';
 import { environment } from './environments/environments';
-import { AuthEffects } from './store/auth/auth.effects';
-import { authReducer } from './store/auth/auth.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
