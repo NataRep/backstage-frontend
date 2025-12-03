@@ -1,11 +1,42 @@
-<div *ngIf="!user().profile; else loggedIn">
-  <input #email placeholder="Email" />
-  <input #password placeholder="Password" type="password" />
-  <button (click)="login(email.value, password.value)">Login</button>
-</div>
-<ng-template #loggedIn>
-  <div>
-    Hello, {{ user().profile?.personal?.full_name }}
-    <button (click)="logout()">Logout</button>
+@let error = loginErrorMessage();
+
+<h1 class="title">Backstage entrance</h1>
+<form [formGroup]="authForm" (ngSubmit)="login()">
+  <!-- Email с debounce-валидацией -->
+  <div class="form__row" [class.invalid]="emailError()">
+    <label for="email">Email</label>
+    <input id="email" type="email" formControlName="email" placeholder="" autocomplete="on">
+    @if (emailError()) {
+    <div class="error-message">
+      <span>{{emailErrorMessage()}}</span>
+    </div>
+    }
   </div>
-</ng-template>
+
+  <!-- Пароль с обычной валидацией -->
+  <div class="form__row" [class.invalid]="password?.invalid && password?.touched">
+    <label for="password">Password</label>
+    <input id="password" [type]="isPasswordVisibility ? 'text' : 'password'" formControlName="password" placeholder=""
+      autocomplete="on">
+    <div class="password__eye" [class.isOpen]="isPasswordVisibility" (click)="togglePasswordVisibility()">
+      @if(isPasswordVisibility){
+      <app-icon name="eye-open"></app-icon>
+      }@else{
+      <app-icon name="eye-close"></app-icon>
+      }
+    </div>
+    @if (password?.invalid && password?.touched) {
+    <div class="error-message">
+      @if (password?.errors?.['required']) {
+      <span>Введите пароль</span>
+      }
+    </div>
+    }
+  </div>
+
+  @if(error){
+  <div class="form__error">Неверный пароль или емейл</div>
+  }
+
+  <button type="submit">Login</button>
+</form>

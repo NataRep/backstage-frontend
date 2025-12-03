@@ -73,6 +73,8 @@ export class AuthEffects {
               accessLevel: employee.accessLevel,
             };
 
+            this.router.navigate(['/dashboard']);
+
             return setUserDataAction({
               user: {
                 personal,

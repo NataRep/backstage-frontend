@@ -100,13 +100,13 @@ export class AuthService {
     }
   }
 
-  // Метод для принудительного обновления токена
+
   async refreshToken(): Promise<string | null> {
     const user = this._user();
     if (!user) return null;
 
     try {
-      await user.getIdToken(true); // forceRefresh = true
+      await user.getIdToken(true);
       const tokenResult = await getIdTokenResult(user);
       this._token.set(tokenResult.token);
       return tokenResult.token;
@@ -116,7 +116,6 @@ export class AuthService {
     }
   }
 
-  // Метод для проверки статуса токена
   getTokenStatus(): {
     isValid: boolean;
     expiresIn?: number;
@@ -131,17 +130,16 @@ export class AuthService {
     }
 
     try {
-      // Декодируем JWT токен чтобы получить expiration
       const payload = JSON.parse(atob(token.split('.')[1]));
-      const exp = payload.exp * 1000; // Convert to milliseconds
+      const exp = payload.exp * 1000;
       const now = Date.now();
       const expiresIn = exp - now;
 
       return {
         isValid: expiresIn > 0,
-        expiresIn: Math.floor(expiresIn / 1000), // в секундах
+        expiresIn: Math.floor(expiresIn / 1000),
         isExpired: expiresIn <= 0,
-        willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000 // 5 минут
+        willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000
       };
     } catch (error) {
       console.error('Error decoding token:', error);
@@ -149,7 +147,6 @@ export class AuthService {
     }
   }
 
-  // Дополнительные полезные методы
   getCurrentUser(): User | null {
     return this.auth.currentUser;
   }

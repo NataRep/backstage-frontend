@@ -1,0 +1,37 @@
+:host {
+  display: block;
+  margin-left: 12px;
+  padding: 0 60px;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 100%;
+  background-image: linear-gradient(to right, #D4AB03, #FDF118);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-transform: uppercase;
+}
+
+form {
+  margin-top: 32px;
+}
+
+label {
+  width: 35%;
+  margin-left: 0.5rem;
+}
+
+.password__eye {
+  width: 2rem;
+  height: 100%;
+  cursor: pointer;
+  opacity: 0.4;
+
+  img {
+    width: 100%;
+  }
+}
