@@ -9,5 +9,6 @@ import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
   styleUrl: './login-layout.component.scss'
 })
 export class LoginLayoutComponent {
+  year = new Date().getFullYear();
 
 }

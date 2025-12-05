@@ -1,7 +1,22 @@
-.icon svg {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  vertical-align: middle;
-  fill: currentColor;
+.icon {
+  display: block;
+  width: 100%;
+
+  ::ng-deep svg {
+    display: block;
+    width: var(--icon-size, 1rem);
+    height: var(--icon-size, 1rem);
+    vertical-align: middle;
+
+
+    path {
+      fill: var(--icon-fill-color, currentColor);
+      stroke: var(--icon-stroke-color, none);
+    }
+
+    circle {
+      fill: var(--icon-fill-color, currentColor);
+      stroke: var(--icon-stroke-color, none);
+    }
+  }
 }

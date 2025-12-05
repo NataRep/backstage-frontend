@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { User } from "../../models/interfaces/auth.models";
 import {
+  clearLoginErrorAction,
   loginAction,
   loginFailureAction,
   logoutFailureAction,
@@ -53,5 +54,10 @@ export const authReducer = createReducer(
     ...state,
     loading: false,
     error: error,
+  })),
+
+  on(clearLoginErrorAction, (state) => ({
+    ...state,
+    error: null
   })),
 );

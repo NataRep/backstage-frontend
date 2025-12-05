@@ -1,19 +1,19 @@
-@let error = loginErrorMessage();
+@let loginError = loginErrorMessage();
+@let emailError = isEmailError();
 
 <h1 class="title">Backstage entrance</h1>
 <form [formGroup]="authForm" (ngSubmit)="login()">
-  <!-- Email с debounce-валидацией -->
-  <div class="form__row" [class.invalid]="emailError()">
+  <div class="form__row" [class.invalid]=" emailError">
     <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" placeholder="" autocomplete="on">
-    @if (emailError()) {
+    <input id="email" type="email" formControlName="email" placeholder="" autocomplete="on" (focus)="onEmailFocus()"
+      (blur)="onEmailBlur()">
+    @if (emailError) {
     <div class="error-message">
       <span>{{emailErrorMessage()}}</span>
     </div>
     }
   </div>
 
-  <!-- Пароль с обычной валидацией -->
   <div class="form__row" [class.invalid]="password?.invalid && password?.touched">
     <label for="password">Password</label>
     <input id="password" [type]="isPasswordVisibility ? 'text' : 'password'" formControlName="password" placeholder=""
@@ -34,9 +34,9 @@
     }
   </div>
 
-  @if(error){
+  @if(loginError){
   <div class="form__error">Неверный пароль или емейл</div>
   }
 
-  <button type="submit">Login</button>
+  <button type="submit" class="button button_big button_yellow-gradient">Login</button>
 </form>

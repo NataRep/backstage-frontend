@@ -34,4 +34,8 @@ export const setUserDataAction = createAction(
   props<{ user: User }>()
 );
 
+export const clearLoginErrorAction = createAction(
+  '[Auth] Clear Error Message'
+);
+
 export const autoLoginAction = createAction('[Auth] Auto Login');

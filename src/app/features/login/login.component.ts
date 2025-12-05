@@ -3,7 +3,7 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil, tap } from 'rxjs';
-import { loginAction } from '../../core/store/auth/auth.actions';
+import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.actions';
 import { selectAuthError } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 
@@ -16,13 +16,12 @@ import { IconComponent } from '../../shared/icons/components/icons/icons.compone
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private store = inject(Store);
-  loginErrorMessage = this.store.selectSignal(selectAuthError);
   private destroy$ = new Subject<void>();
-
+  loginErrorMessage = this.store.selectSignal(selectAuthError);
   isPasswordVisibility = false;
-
-  emailError = signal(false);
+  isEmailError = signal(false);
   emailErrorMessage = signal('');
+  emailWasFocused = signal(false);
 
   authForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -31,11 +30,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const emailControl = this.authForm.get('email')!;
+    const passwordControl = this.authForm.get('password')!;
 
     emailControl.valueChanges.pipe(
       tap(() => {
-        this.emailError.set(false);
+        this.isEmailError.set(false);
         this.emailErrorMessage.set('');
+        this.store.dispatch(clearLoginErrorAction());
       }),
       debounceTime(500),
       distinctUntilChanged(),
@@ -45,15 +46,33 @@ export class LoginComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.destroy$)
     ).subscribe();
+
+    passwordControl.valueChanges.pipe(
+      tap(() => {
+        this.store.dispatch(clearLoginErrorAction());
+      }),
+      distinctUntilChanged())
+      .subscribe();
+  }
+
+  onEmailFocus() {
+    this.emailWasFocused.set(true);
+  }
+
+  onEmailBlur() {
+    const emailControl = this.authForm.get('email');
+    emailControl?.markAsTouched({ onlySelf: true });
+    this.updateEmailError();
   }
 
   private updateEmailError() {
     const emailControl = this.authForm.get('email');
-    const isInvalid = !!(emailControl?.invalid && emailControl?.touched);
+    const shouldShowError = !!(emailControl?.invalid &&
+      (emailControl?.touched || this.emailWasFocused()));
 
-    this.emailError.set(isInvalid);
+    this.isEmailError.set(shouldShowError);
 
-    if (isInvalid && emailControl?.errors) {
+    if (shouldShowError && emailControl?.errors) {
       if (emailControl.errors['required']) this.emailErrorMessage.set('Введите email');
       if (emailControl.errors['email']) this.emailErrorMessage.set('Неверный формат email');
     } else {
@@ -63,12 +82,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   login() {
     this.authForm.markAllAsTouched();
-
     this.updateEmailError();
 
     if (this.authForm.valid) {
       const { email, password } = this.authForm.value;
-
       this.store.dispatch(loginAction({
         email: email!,
         password: password!
