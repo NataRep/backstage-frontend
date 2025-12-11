@@ -55,12 +55,31 @@
   justify-content: space-between;
 
   h1 {
+    display: flex;
     margin: 0;
     font-family: "Road Rage", sans-serif;
     font-size: 2.875rem;
     font-weight: 500;
     line-height: 2rem;
     color: var(--color-green);
+
+    .home-link {
+      display: none;
+
+      @media (max-width:768px) {
+        display: block;
+        margin-right: 0.5rem;
+        position: relative;
+
+        app-icon {
+          width: 2rem;
+          height: 2rem;
+          --icon-size: 2rem;
+          --icon-fill-color: var(--color-green);
+
+        }
+      }
+    }
   }
 }
 
@@ -72,7 +91,7 @@
 .hello-message {
   font-size: 0.75rem;
 
-  @media (hover: none) and (max-width:768px) {
+  @media (max-width:768px) {
     display: none;
   }
 }
@@ -86,17 +105,22 @@
     "content"
     "footer";
   width: 100%;
-  padding: 1.5rem 0 1.5rem;
+  padding: 1.5rem 0 0;
   gap: 1rem;
 
   @media (max-width:768px) {
-    height: 100vh
+    height: calc(100vh - 2rem);
+    padding: 0.75rem 0 1.25rem;
   }
 }
 
 .header {
   padding: 0 2rem;
   grid-area: header;
+
+  @media (max-width:768px) {
+    padding: 0 0.5rem;
+  }
 }
 
 .content-area {
@@ -105,6 +129,9 @@
   overflow-y: auto;
   padding: 0 2rem;
 
+  @media (max-width:768px) {
+    padding: 0 0.5rem 3rem;
+  }
 
   &::-webkit-scrollbar {
     width: 0.75rem;

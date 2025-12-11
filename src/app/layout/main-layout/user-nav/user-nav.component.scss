@@ -16,10 +16,11 @@
   background-color: var(--color-green);
   border-radius: 100%;
   cursor: pointer;
-}
-
-.user-icon {
   margin-left: 1rem;
+
+  @media (max-width:768px) {
+    margin-right: 0.5rem;
+  }
 }
 
 .menu {

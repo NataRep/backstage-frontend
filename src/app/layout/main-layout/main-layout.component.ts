@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { filter } from 'rxjs';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { TEXT } from '../../shared/constants/texts/common.texts';
+import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { MAIN_NAV, MainNavComponent } from './main-nav/main-nav.component';
 import { WelcomeMessageService } from './services/welcome-message.service';
@@ -15,7 +16,7 @@ import { UserNavComponent } from './user-nav/user-nav.component';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, MainNavComponent, FooterComponent, UserNavComponent],
+  imports: [RouterOutlet, RouterModule, IconComponent, MainNavComponent, FooterComponent, UserNavComponent],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,6 +36,7 @@ export class MainLayoutComponent implements OnInit {
   userName: string = "";
   fullName: string[] = ["", ""];
   TEXT = TEXT;
+  dashboard = MAIN_NAV.find((item) => item.link === "dashboard");
 
   ngOnInit() {
     this.router.events.pipe(

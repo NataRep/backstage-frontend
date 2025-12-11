@@ -5,7 +5,15 @@
 <div class="main-content">
   <header class="header">
     <div class="header__left-group">
-      <h1>{{ pageTitle }}</h1>
+      <h1>
+        @if(dashboard){
+        <a [routerLink]="dashboard.link" routerLinkActive="active" class="home-link">
+          <app-icon [name]="dashboard.icon"></app-icon>
+          <span class="tooltip tooltip_right">{{ dashboard.title }} </span>
+        </a>
+        }
+        {{ pageTitle }}
+      </h1>
     </div>
     <div class="header__right-group">
       @if(welcomeMessage.needShow && welcomeMessage.message) {

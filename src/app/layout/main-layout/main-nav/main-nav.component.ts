@@ -15,14 +15,14 @@ export const MAIN_NAV: NavItem[] = [
     icon: "home"
   },
   {
-    title: "Team Management",
-    link: "team",
-    icon: "team"
-  },
-  {
     title: "Orders",
     link: "orders",
     icon: "calendar"
+  },
+  {
+    title: "Team Management",
+    link: "team",
+    icon: "team"
   },
   {
     title: "Shows & Events",

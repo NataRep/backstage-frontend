@@ -1,7 +1,7 @@
 <nav>
   <ul>
     @for (item of nav; track item.title){
-    <li class="nav_item">
+    <li class="nav_item nav_item-{{item.icon}}">
       <a [routerLink]="item.link" routerLinkActive="active" [class]="item.icon">
         <app-icon [name]="item.icon"></app-icon>
         <span class="tooltip tooltip_right">{{ item.title }} </span>

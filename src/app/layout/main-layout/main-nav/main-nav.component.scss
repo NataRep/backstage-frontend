@@ -22,6 +22,10 @@ ul {
 
 li {
   margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    margin-bottom: 0;
+  }
 }
 
 a {
@@ -70,5 +74,11 @@ a {
         opacity: 0.9;
       }
     }
+  }
+}
+
+.nav_item-home {
+  @media (max-width: 768px) {
+    display: none;
   }
 }
