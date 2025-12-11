@@ -1,0 +1,151 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.user-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--color-black);
+  background-color: var(--color-green);
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.user-icon {
+  margin-left: 1rem;
+}
+
+.menu {
+  position: relative;
+  display: inline-block;
+
+  &__content {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    padding: 1rem;
+    background: var(--color-grey-light);
+    border-radius: 8px;
+    box-shadow: -5px 9px 24px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    overflow: hidden;
+
+    &.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      animation: menuAppear 0.3s ease forwards;
+    }
+
+    &.closing {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+
+  }
+
+  &__item {
+    transition: background-color 0.2s ease;
+    margin-bottom: 1rem;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &-link {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      background: none;
+      color: var(--color-grey-text);
+      text-decoration: none;
+      text-align: left;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          color: var(--color-yellow);
+        }
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &.active {
+        color: var(--color-yellow);
+        font-weight: 500;
+      }
+    }
+
+    &-icon {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+@keyframes menuAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes menuItemAppear {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .menu {
+
+    &__content,
+    &__item-link {
+      transition: none;
+    }
+  }
+
+  @keyframes menuAppear {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+}

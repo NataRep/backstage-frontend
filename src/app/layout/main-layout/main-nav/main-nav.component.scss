@@ -1,0 +1,74 @@
+:host {
+  @media (max-width:768px) {
+    width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+ul {
+  list-style: none;
+  padding: 0 1rem;
+  margin: 0 auto;
+
+  @media (max-width:768px) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+  }
+}
+
+li {
+  margin-bottom: 1rem;
+}
+
+a {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.25s;
+
+
+  &:not(.home) {
+    padding: 6px;
+    background-color: var(--color-yellow);
+    border: solid 3px var(--color-black);
+    border-radius: 0.5rem;
+  }
+
+  app-icon {
+    width: 2rem;
+    height: 2rem;
+    --icon-size: 2rem;
+    --icon-fill-color: var(--color-black);
+  }
+
+  &:not(.home):active,
+  &:not(.home).active {
+    background-color: var(--color-orange);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:not(.home):hover {
+      background-color: var(--color-orange);
+    }
+
+    &.home:hover {
+      app-icon {
+        --icon-fill-color: var(--color-orange);
+      }
+    }
+
+    &:hover {
+      span {
+        display: flex;
+        opacity: 0.9;
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 @import 'normalize.css/normalize.css';
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Ysabeau+Infant:ital,wght@0,1..1000;1,1..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Road+Rage&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   --color-green: #92B701;
@@ -7,9 +7,13 @@
   --color-orange: #EB671B;
   --color-red: #BA0D18;
   --color-black: #121212;
+  --color-grey-dark: #17181A;
   --color-grey: #2B2E32;
-  --color-grey-light: #D9D9D9;
+  --color-grey-light: #353535;
+  --color-grey-extra-light: #D9D9D9;
+
   --color-grey-text: #B0B1B3;
+  --color-orange-text: #FFAA0D;
 
   --gradient-yellow: linear-gradient(to right, #D4AB03, #FDF118);
   --gradient-grey-y: linear-gradient(to bottom, #363636, #272727);
@@ -37,13 +41,13 @@ input {
   width: 100%;
   box-sizing: border-box;
   background: transparent;
-  color: var(--color-grey-light);
+  color: var(--color-grey-extra-light);
   background-clip: content-box !important;
 }
 
 input:-webkit-autofill {
-  -webkit-text-fill-color: var(--color-grey-light) !important;
-  caret-color: var(--color-grey-light) !important;
+  -webkit-text-fill-color: var(--color-grey-extra-light) !important;
+  caret-color: var(--color-grey-extra-light) !important;
   transition: background-color 9999s ease-in-out 0s;
 }
 
@@ -54,7 +58,7 @@ input:-webkit-autofill {
   width: 100%;
   height: 1.625rem;
   margin-bottom: 2rem;
-  color: var(--color-grey-light);
+  color: var(--color-grey-extra-light);
   border-bottom: solid 1px rgba(120, 120, 120, 0.2);
 
   &.invalid {
@@ -74,9 +78,8 @@ input:-webkit-autofill {
 .button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: var(--color-grey-light);
+  background: var(--color-grey-extra-light);
   border-radius: 0.25rem;
   font-weight: 600;
   font-size: 0.875rem;
@@ -121,5 +124,27 @@ input:-webkit-autofill {
   &:disabled {
     background: var(--color-grey);
     pointer-events: none;
+  }
+}
+
+
+
+.tooltip {
+  display: flex;
+  position: absolute;
+  width: max-content;
+  padding: 4px 8px;
+  background-color: var(--color-black);
+  font-size: 0.75rem;
+  color: var(--color-orange-text);
+  border-radius: 4px;
+  transition: opacity 0.25s;
+  opacity: 0;
+  pointer-events: none;
+
+  &.tooltip_right {
+    left: 100%;
+    top: 50%;
+    transform: translate(0.5rem, -50%);
   }
 }

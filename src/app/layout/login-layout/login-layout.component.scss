@@ -103,26 +103,3 @@ main {
     transform: translateX(6px);
   }
 }
-
-footer {
-  padding: 1rem 0;
-
-  p {
-    color: var(--color-grey);
-    text-align: center;
-    text-transform: uppercase;
-    line-height: 120%;
-    margin: 0.25rem 0;
-
-    a {
-      color: var(--color-grey);
-      transition: color 0.5s;
-
-      @media (hover: hover) and (pointer: fine) {
-        &:hover {
-          color: var(--color-yellow);
-        }
-      }
-    }
-  }
-}

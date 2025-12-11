@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.actions';
 import { selectAuthError } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/icons/components/icons/icons.component';
@@ -12,11 +13,11 @@ import { IconComponent } from '../../shared/icons/components/icons/icons.compone
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, IconComponent],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
+  private destroyRef = inject(DestroyRef);
   private store = inject(Store);
-  private destroy$ = new Subject<void>();
   loginErrorMessage = this.store.selectSignal(selectAuthError);
   isPasswordVisibility = false;
   isEmailError = signal(false);
@@ -44,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         emailControl.markAsTouched({ onlySelf: true });
         this.updateEmailError();
       }),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe();
 
     passwordControl.valueChanges.pipe(
@@ -110,8 +111,4 @@ export class LoginComponent implements OnInit, OnDestroy {
     return !!(passwordControl?.invalid && passwordControl?.touched);
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
 }

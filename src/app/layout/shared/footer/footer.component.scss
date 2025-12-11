@@ -1,0 +1,23 @@
+footer {
+  padding: 0.25rem 0 0;
+
+  p {
+    font-size: 0.75rem;
+    color: var(--color-grey);
+    text-align: center;
+    text-transform: uppercase;
+    line-height: 120%;
+    margin: 0.25rem 0;
+
+    a {
+      color: var(--color-grey);
+      transition: color 0.5s;
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          color: var(--color-yellow);
+        }
+      }
+    }
+  }
+}

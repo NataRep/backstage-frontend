@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { FooterComponent } from '../shared/footer/footer.component';
 
 @Component({
   selector: 'app-login-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterModule],
+  imports: [RouterOutlet, RouterModule, FooterComponent],
   templateUrl: './login-layout.component.html',
   styleUrl: './login-layout.component.scss'
 })
 export class LoginLayoutComponent {
-  year = new Date().getFullYear();
+  currentYear = new Date().getFullYear();
 
 }

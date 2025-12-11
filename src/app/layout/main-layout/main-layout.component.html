@@ -1,3 +1,23 @@
-<p>main-layout works!</p>
-<button (click)="logout()">Logout</button>
-<router-outlet></router-outlet>
+<aside class="sidebar">
+  <app-main-nav></app-main-nav>
+  <div class="sidebar__logo"></div>
+</aside>
+<div class="main-content">
+  <header class="header">
+    <div class="header__left-group">
+      <h1>{{ pageTitle }}</h1>
+    </div>
+    <div class="header__right-group">
+      @if(welcomeMessage.needShow && welcomeMessage.message) {
+      <div class="hello-message">
+        {{ welcomeMessage.message }}
+      </div>
+      }
+      <app-user-nav [userName]="fullName"></app-user-nav>
+    </div>
+  </header>
+  <main class="content-area" role="main">
+    <router-outlet></router-outlet>
+    <app-footer class="footer"></app-footer>
+  </main>
+</div>

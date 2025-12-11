@@ -1,0 +1,21 @@
+<div class="menu">
+  <div class="button user-icon" (click)="toggle()">
+    @if(userName){
+    {{userName[0][0]}}{{userName![1][0]}}
+    }
+  </div>
+  @if(isOpen()){
+  <nav class="menu__content" [class.open]="isOpen()">
+    <ul class="menu__list">
+      <li class="menu__item">
+        <a routerLink="profile" routerLinkActive="active" class="menu__item-link">
+          <app-icon name="user" class="menu__item-icon"></app-icon>
+          Profile</a>
+      </li>
+      <li class="menu__item">
+        <button class="button button_yellow" (click)="logout()">Logout</button>
+      </li>
+    </ul>
+  </nav>
+  }
+</div>
