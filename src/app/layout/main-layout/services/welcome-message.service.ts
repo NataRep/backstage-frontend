@@ -10,6 +10,7 @@ export class WelcomeMessageService {
   countShow: number = 0;
 
   show(userName: string | undefined): void {
+    console.log("WelcomeMessageService SHOW");
     if (!this.needShow) {
       return;
     }
@@ -23,6 +24,13 @@ export class WelcomeMessageService {
   hide(): void {
     this.message = "";
     this.needShow = false;
+    console.log("WelcomeMessageService HIDE");
+  }
+
+  reset() {
+    this.message = "";
+    this.needShow = true;
+    this.countShow = 0;
   }
 
 }

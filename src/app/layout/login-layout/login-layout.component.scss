@@ -16,7 +16,8 @@
   background-size: cover;
   background-position: bottom center;
   background-color: antiquewhite;
-  min-height: 100vh;
+  min-height: calc(100dvh - 1rem);
+  padding-bottom: 1rem;
 }
 
 .bg-blackout {

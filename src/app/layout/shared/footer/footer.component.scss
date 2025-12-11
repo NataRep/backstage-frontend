@@ -1,16 +1,17 @@
 footer {
   padding: 0.25rem 0 0;
+  text-align: center;
 
   p {
     font-size: 0.75rem;
-    color: var(--color-grey);
+    color: #747474;
     text-align: center;
     text-transform: uppercase;
     line-height: 120%;
     margin: 0.25rem 0;
 
     a {
-      color: var(--color-grey);
+      color: #747474;
       transition: color 0.5s;
 
       @media (hover: hover) and (pointer: fine) {

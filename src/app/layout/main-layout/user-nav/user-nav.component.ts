@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, Input, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { logoutAction } from '../../../core/store/auth/auth.actions';
@@ -9,7 +9,8 @@ import { IconComponent } from '../../../shared/icons/components/icons/icons.comp
   standalone: true,
   imports: [RouterModule, IconComponent],
   templateUrl: './user-nav.component.html',
-  styleUrl: './user-nav.component.scss'
+  styleUrl: './user-nav.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserNavComponent {
   @Input() userName: string[] | undefined = [];

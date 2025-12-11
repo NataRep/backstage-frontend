@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IconComponent } from '../../../shared/icons/components/icons/icons.component';
 
@@ -46,7 +46,8 @@ export const MAIN_NAV: NavItem[] = [
   standalone: true,
   imports: [RouterModule, IconComponent],
   templateUrl: './main-nav.component.html',
-  styleUrl: './main-nav.component.scss'
+  styleUrl: './main-nav.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainNavComponent {
 
