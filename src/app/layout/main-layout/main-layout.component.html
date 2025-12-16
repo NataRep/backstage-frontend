@@ -9,7 +9,7 @@
         @if(dashboard){
         <a [routerLink]="dashboard.link" routerLinkActive="active" class="home-link">
           <app-icon [name]="dashboard.icon"></app-icon>
-          <span class="tooltip tooltip_right">{{ dashboard.title }} </span>
+          <span class="tooltip tooltip--right">{{ dashboard.title }} </span>
         </a>
         }
         {{ pageTitle }}

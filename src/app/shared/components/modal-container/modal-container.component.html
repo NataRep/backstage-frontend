@@ -1,0 +1,26 @@
+@if(isOpen()){
+<div class="modal-wrapper" [class]="size">
+  <div class="modal-container modal" [class]="type">
+    <div class="close" (click)="close()">+</div>
+    <div class="header">
+      <ng-content select=".modal__header"></ng-content>
+    </div>
+    <div class="body">
+      <ng-content select=".modal__body"></ng-content>
+    </div>
+    @if(type === 'info' || type === 'action'){
+    <div class="buttons">
+      @if(type === 'info'){
+      <div class="button" (click)="close()">Close</div>
+      }
+      @if(type === 'action' && actionButton){
+      <div class="button" [class]="actionButton === 'Delete' ? 'button--red' : 'button--yellow'" (click)="onConfirm()">
+        {{
+        actionButton }}</div>
+      <div class="button button--yellow" (click)="onCancel()">Cancel</div>
+      }
+    </div>
+    }
+  </div>
+</div>
+}

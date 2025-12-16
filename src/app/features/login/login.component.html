@@ -38,5 +38,10 @@
   <div class="form__error">Неверный пароль или емейл</div>
   }
 
-  <button type="submit" class="button button_big button_yellow-gradient">Login</button>
+  <button type="submit" class="button button--big button--yellow-gradient">Login</button>
+  <div class="reset-password" (click)="openResetModal()">Forgot your password?</div>
 </form>
+<app-modal-container [(isOpen)]="isModalOpen" type="action" actionButton="Ok" (action)="handleModalAction($event)">
+  <div class="modal__header">Reset password</div>
+  <div class="modal__body">Отправить вам ссылку для сброса пароля на электронную почту?</div>
+</app-modal-container>

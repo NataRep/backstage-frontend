@@ -6,12 +6,14 @@ import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.actions';
 import { selectAuthError } from '../../core/store/auth/auth.selectors';
+import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
+import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, ModalContainerComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,6 +26,8 @@ export class LoginComponent implements OnInit {
   isEmailError = signal(false);
   emailErrorMessage = signal('');
   emailWasFocused = signal(false);
+
+  isModalOpen = false;
 
   authForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -110,6 +114,15 @@ export class LoginComponent implements OnInit {
   getPasswordError(): boolean {
     const passwordControl = this.authForm.get('password');
     return !!(passwordControl?.invalid && passwordControl?.touched);
+  }
+
+  openResetModal() {
+    this.isModalOpen = true;
+    console.log(this.isModalOpen)
+  }
+
+  handleModalAction(action: ModalAction) {
+    console.log(action)
   }
 
 }

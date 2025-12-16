@@ -47,9 +47,22 @@ app-icon {
   --icon-fill-color: #787878;
 }
 
-
 .form__error {
   position: absolute;
-  font-size: 1rem;
-  bottom: 4.25rem;
+  font-size: 0.75rem;
+  bottom: 5.75rem;
+  color: var(--color-red);
+}
+
+.reset-password {
+  font-size: 0.75rem;
+  color: var(--color-grey-text-dark);
+  margin-top: 0.5rem;
+  cursor: pointer;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-yellow);
+    }
+  }
 }

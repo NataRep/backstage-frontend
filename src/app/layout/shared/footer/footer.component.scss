@@ -4,14 +4,14 @@ footer {
 
   p {
     font-size: 0.75rem;
-    color: #747474;
+    color: var(--color-grey-text-dark);
     text-align: center;
     text-transform: uppercase;
     line-height: 120%;
     margin: 0.25rem 0;
 
     a {
-      color: #747474;
+      color: var(--color-grey-text-dark);
       transition: color 0.5s;
 
       @media (hover: hover) and (pointer: fine) {
