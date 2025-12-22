@@ -28,14 +28,14 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const role = authService.role();
   const url = state.url;
 
-  if (url.startsWith('/login')) {
+  if (url.startsWith('/login') || url.startsWith('/reset-password')) {
     if (role === 'user') {
       return router.parseUrl('/');
     }
     return true;
   }
 
-  if (role === 'guest') {
+  if (role === 'guest' && !url.startsWith('/reset-password') && !url.startsWith('/login')) {
     return router.parseUrl('/login');
   }
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
@@ -21,11 +22,17 @@ import { IconComponent } from '../../shared/icons/components/icons/icons.compone
 export class LoginComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private store = inject(Store);
+  private auth = inject(Auth);
+
   loginErrorMessage = this.store.selectSignal(selectAuthError);
   isPasswordVisibility = false;
   isEmailError = signal(false);
   emailErrorMessage = signal('');
   emailWasFocused = signal(false);
+
+  isResetEmailError = signal(false);
+  resetEmailErrorMessage = signal('');
+  resetEmailWasFocused = signal(false);
 
   isModalOpen = false;
 
@@ -34,61 +41,53 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   });
 
+  resetPasswordForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+  });
+
   ngOnInit() {
-    const emailControl = this.authForm.get('email')!;
+    this.initLoginForm();
+    this.initResetPasswordForm();
+  }
+
+  initLoginForm() {
+    const emailControl = this.authForm.get('email') as FormControl;
     const passwordControl = this.authForm.get('password')!;
 
-    emailControl.valueChanges.pipe(
-      tap(() => {
-        this.isEmailError.set(false);
-        this.emailErrorMessage.set('');
-        this.store.dispatch(clearLoginErrorAction());
-      }),
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(() => {
-        emailControl.markAsTouched({ onlySelf: true });
-        this.updateEmailError();
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe();
+    this.initEmailValidation(
+      emailControl,
+      this.isEmailError,
+      this.emailErrorMessage,
+      this.emailWasFocused
+    );
 
     passwordControl.valueChanges.pipe(
-      tap(() => {
-        this.store.dispatch(clearLoginErrorAction());
-      }),
-      distinctUntilChanged())
-      .subscribe();
+      tap(() => this.store.dispatch(clearLoginErrorAction())),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
   }
 
-  onEmailFocus() {
-    this.emailWasFocused.set(true);
-  }
+  initResetPasswordForm() {
+    const emailControl = this.resetPasswordForm.get('email') as FormControl;
 
-  onEmailBlur() {
-    const emailControl = this.authForm.get('email');
-    emailControl?.markAsTouched({ onlySelf: true });
-    this.updateEmailError();
-  }
-
-  private updateEmailError() {
-    const emailControl = this.authForm.get('email');
-    const shouldShowError = !!(emailControl?.invalid &&
-      (emailControl?.touched || this.emailWasFocused()));
-
-    this.isEmailError.set(shouldShowError);
-
-    if (shouldShowError && emailControl?.errors) {
-      if (emailControl.errors['required']) this.emailErrorMessage.set('Введите email');
-      if (emailControl.errors['email']) this.emailErrorMessage.set('Неверный формат email');
-    } else {
-      this.emailErrorMessage.set('');
-    }
+    this.initEmailValidation(
+      emailControl,
+      this.isResetEmailError,
+      this.resetEmailErrorMessage,
+      this.resetEmailWasFocused
+    );
   }
 
   login() {
     this.authForm.markAllAsTouched();
-    this.updateEmailError();
+    const emailControl = this.authForm.get('email') as FormControl;
+    this.updateEmailError(
+      emailControl,
+      this.isEmailError,
+      this.emailErrorMessage,
+      this.emailWasFocused
+    );
 
     if (this.authForm.valid) {
       const { email, password } = this.authForm.value;
@@ -99,16 +98,84 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  private initEmailValidation(
+    emailControl: FormControl,
+    isError: WritableSignal<boolean>,
+    errorMessage: WritableSignal<string>,
+    wasFocused: WritableSignal<boolean>
+  ) {
+    emailControl.valueChanges.pipe(
+      tap(() => {
+        isError.set(false);
+        errorMessage.set('');
+        this.store.dispatch(clearLoginErrorAction());
+      }),
+      debounceTime(500),
+      distinctUntilChanged(),
+      tap(() => {
+        emailControl.markAsTouched({ onlySelf: true });
+        this.updateEmailError(emailControl, isError, errorMessage, wasFocused);
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
+  }
+
+  private updateEmailError(
+    emailControl: FormControl,
+    isError: WritableSignal<boolean>,
+    errorMessage: WritableSignal<string>,
+    wasFocused: WritableSignal<boolean>
+  ) {
+    const shouldShowError =
+      emailControl.invalid && (emailControl.touched || wasFocused());
+
+    isError.set(shouldShowError);
+
+    if (shouldShowError && emailControl.errors) {
+      if (emailControl.errors['required']) {
+        errorMessage.set('Введите email');
+      } else if (emailControl.errors['email']) {
+        errorMessage.set('Неверный формат email');
+      }
+    } else {
+      errorMessage.set('');
+    }
+  }
+
+  onEmailFocus() {
+    this.emailWasFocused.set(true);
+  }
+
+  onEmailBlur() {
+    const emailControl = this.authForm.get('email') as FormControl;
+    emailControl.markAsTouched({ onlySelf: true });
+
+    this.updateEmailError(
+      emailControl,
+      this.isEmailError,
+      this.emailErrorMessage,
+      this.emailWasFocused
+    );
+  }
+
+  onResetEmailFocus() {
+    this.resetEmailWasFocused.set(true);
+  }
+
+  onResetEmailBlur() {
+    const emailControl = this.resetPasswordForm.get('email') as FormControl;
+    emailControl.markAsTouched({ onlySelf: true });
+
+    this.updateEmailError(
+      emailControl,
+      this.isResetEmailError,
+      this.resetEmailErrorMessage,
+      this.resetEmailWasFocused
+    );
+  }
+
   togglePasswordVisibility() {
     this.isPasswordVisibility = !this.isPasswordVisibility
-  }
-
-  get email() {
-    return this.authForm.get('email');
-  }
-
-  get password() {
-    return this.authForm.get('password');
   }
 
   getPasswordError(): boolean {
@@ -122,7 +189,52 @@ export class LoginComponent implements OnInit {
   }
 
   handleModalAction(action: ModalAction) {
-    console.log(action)
+
+    if (action == 'confirm') {
+      this.sendResetLink();
+    } else {
+      this.closeResetPasswordForm();
+      return;
+    }
   }
 
+  private sendResetLink() {
+    const emailControl = this.resetPasswordForm.get('email') as FormControl;
+
+    this.updateEmailError(
+      emailControl,
+      this.isResetEmailError,
+      this.resetEmailErrorMessage,
+      this.resetEmailWasFocused
+    );
+
+    if (!this.resetPasswordForm.valid) return;
+
+    sendPasswordResetEmail(this.auth, emailControl.value)
+      .then(() => {
+        this.resetEmailErrorMessage.set('Если такой email зарегистрирован, ссылка для сброса пароля отправлена.');
+      })
+      .catch((error) => {
+        this.resetEmailErrorMessage.set('Произошла ошибка. Попробуйте снова.');
+      })
+      .finally(() => {
+        this.closeResetPasswordForm();
+      });
+  }
+
+  closeResetPasswordForm() {
+    this.isModalOpen = false;
+    this.resetPasswordForm.get('email')?.reset();
+    this.isResetEmailError.set(false);
+    this.resetEmailErrorMessage.set('');
+    this.resetEmailWasFocused.set(false);
+  }
+
+  get email() {
+    return this.authForm.get('email');
+  }
+
+  get password() {
+    return this.authForm.get('password');
+  }
 }

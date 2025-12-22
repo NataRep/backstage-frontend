@@ -43,5 +43,19 @@
 </form>
 <app-modal-container [(isOpen)]="isModalOpen" type="action" actionButton="Ok" (action)="handleModalAction($event)">
   <div class="modal__header">Reset password</div>
-  <div class="modal__body">Отправить вам ссылку для сброса пароля на электронную почту?</div>
+  <div class="modal__body">
+    <p>Отправить вам ссылку для сброса пароля на электронную почту?</p>
+    <form [formGroup]="resetPasswordForm" [class.invalid]="isResetEmailError()" class="reset-form">
+      <div class="form__row" [class.invalid]="isResetEmailError()">
+        <label for="reset-email">Email</label>
+        <input id="reset-email" type="email" formControlName="email" placeholder="" autocomplete="on"
+          (focus)="onResetEmailFocus()" (blur)="onResetEmailBlur()">
+        @if (isResetEmailError()) {
+        <div class="error-message">
+          <span>{{resetEmailErrorMessage()}}</span>
+        </div>
+        }
+      </div>
+    </form>
+  </div>
 </app-modal-container>
