@@ -57,9 +57,9 @@
     </form>
   </div>
 </app-modal-container>
-<app-toast [message]="successToastMessage" [type]="'success'" [position]="'top-right'" [autoCloseDuration]="5000"
+<app-toast [message]="successToastMessage" [type]="'success'" [position]="'center'" [autoCloseDuration]="50000"
   (closed)="onSuccessToastClosed()" [isOpen]="isSuccessToastOpen()">
 </app-toast>
-<app-toast [message]="errorToastMessage" [type]="'error'" [position]="'top-right'" [isOpen]="isErrorToastOpen()"
+<app-toast [message]="errorToastMessage" [type]="'error'" [position]="'center'" [isOpen]="isErrorToastOpen()"
   (closed)="onErrorToastClosed()" [autoCloseDuration]="5000">
 </app-toast>
