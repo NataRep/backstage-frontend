@@ -6,13 +6,14 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { confirmPasswordReset } from 'firebase/auth';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 import { passwordsMatchGroupValidator, passwordsMatchValidator, passwordValidator } from './reset-password.validators';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, ToastComponent],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -30,6 +31,12 @@ export class ResetPasswordComponent implements OnInit {
   passwordErrorMessage = signal('');
   passwordWasFocused = signal(false);
 
+  isSuccessToastOpen = signal(false);
+  isErrorToastOpen = signal(false);
+  successToastMessage = "Пароль успешно изменен!";
+  errorToastMessage = "Что-то пошло не так. Попробуйте запросить ссылку на сброс пароля повторно.";
+
+
   form = new FormGroup({
     password: new FormControl('', [Validators.required, Validators.minLength(6), passwordValidator()]),
     repeat: new FormControl('', [Validators.required, passwordsMatchValidator('password', 'repeat')],),
@@ -37,7 +44,6 @@ export class ResetPasswordComponent implements OnInit {
     {
       validators: passwordsMatchGroupValidator('password', 'repeat')
     });
-
 
   ngOnInit() {
     this.initPasswordInput();
@@ -101,16 +107,25 @@ export class ResetPasswordComponent implements OnInit {
 
     confirmPasswordReset(this.auth, this.oobCode, newPassword)
       .then(() => {
-        console.log('Пароль успешно сброшен');
-        setTimeout(() => this.router.navigate(['/login']), 2000)
+        this.isSuccessToastOpen.set(true);
+        setTimeout(() => this.router.navigate(['/login']), 4000)
       })
       .catch(error => {
-        console.error('Ошибка сброса пароля', error);
+        this.isErrorToastOpen.set(true);
+        setTimeout(() => this.router.navigate(['/login']), 5000)
       });
   }
 
   togglePasswordVisibility() {
     this.isPasswordVisibility.update(v => !v);
+  }
+
+  onSuccessToastClosed() {
+    this.isSuccessToastOpen.set(false);
+  }
+
+  onErrorToastClosed() {
+    this.isErrorToastOpen.set(true);
   }
 
   get passwordControl() {

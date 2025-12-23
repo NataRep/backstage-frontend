@@ -9,12 +9,13 @@ import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.a
 import { selectAuthError } from '../../core/store/auth/auth.selectors';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
+import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, ModalContainerComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, ModalContainerComponent, ToastComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,6 +36,10 @@ export class LoginComponent implements OnInit {
   resetEmailWasFocused = signal(false);
 
   isModalOpen = false;
+  isSuccessToastOpen = signal(false);
+  isErrorToastOpen = signal(false);
+  successToastMessage = 'Ссылка для сброса пароля отправлена! Проверьте электронную почту.';
+  errorToastMessage = 'Что-то пошло не так. Попробуйте повторить запрос позже';
 
   authForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -185,7 +190,6 @@ export class LoginComponent implements OnInit {
 
   openResetModal() {
     this.isModalOpen = true;
-    console.log(this.isModalOpen)
   }
 
   handleModalAction(action: ModalAction) {
@@ -212,10 +216,12 @@ export class LoginComponent implements OnInit {
 
     sendPasswordResetEmail(this.auth, emailControl.value)
       .then(() => {
-        this.resetEmailErrorMessage.set('Если такой email зарегистрирован, ссылка для сброса пароля отправлена.');
+        this.resetEmailErrorMessage.set('');
+        this.isSuccessToastOpen.set(true);
       })
       .catch((error) => {
-        this.resetEmailErrorMessage.set('Произошла ошибка. Попробуйте снова.');
+        this.isErrorToastOpen.set(true);
+        this.resetEmailErrorMessage.set('Произошла ошибка. Попробуйте еще раз');
       })
       .finally(() => {
         this.closeResetPasswordForm();
@@ -228,6 +234,14 @@ export class LoginComponent implements OnInit {
     this.isResetEmailError.set(false);
     this.resetEmailErrorMessage.set('');
     this.resetEmailWasFocused.set(false);
+  }
+
+  onSuccessToastClosed() {
+    this.isSuccessToastOpen.set(false);
+  }
+
+  onErrorToastClosed() {
+    this.isErrorToastOpen.set(false);
   }
 
   get email() {

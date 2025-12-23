@@ -33,11 +33,9 @@
     </div>
     }
   </div>
-
   @if(loginError){
-  <div class="form__error">Неверный пароль или емейл</div>
+  <div class="form__error">Неверный пароль или эл.адрес</div>
   }
-
   <button type="submit" class="button button--big button--yellow-gradient">Login</button>
   <div class="reset-password" (click)="openResetModal()">Forgot your password?</div>
 </form>
@@ -59,3 +57,9 @@
     </form>
   </div>
 </app-modal-container>
+<app-toast [message]="successToastMessage" [type]="'success'" [position]="'top-right'" [autoCloseDuration]="5000"
+  (closed)="onSuccessToastClosed()" [isOpen]="isSuccessToastOpen()">
+</app-toast>
+<app-toast [message]="errorToastMessage" [type]="'error'" [position]="'top-right'" [isOpen]="isErrorToastOpen()"
+  (closed)="onErrorToastClosed()" [autoCloseDuration]="5000">
+</app-toast>
