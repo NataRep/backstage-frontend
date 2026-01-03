@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
-import { IconComponent } from '../../icons/components/icons/icons.component';
+import { IconComponent } from '../icons/icons.component';
 
 export type Toast = 'success' | 'error';
 

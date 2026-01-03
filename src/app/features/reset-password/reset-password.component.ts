@@ -6,8 +6,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { confirmPasswordReset } from 'firebase/auth';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
-import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 import { passwordsMatchGroupValidator, passwordsMatchValidator, passwordValidator } from './reset-password.validators';
 
 @Component({

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { IconComponent } from '../../../shared/icons/components/icons/icons.component';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { PAGE_LINKS_LIST } from '../models/main-layout.models';
 
 @Component({

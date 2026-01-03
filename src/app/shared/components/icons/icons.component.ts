@@ -3,7 +3,7 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { Observable, map } from 'rxjs';
-import { IconService } from '../../icons.service';
+import { IconService } from './icons.service';
 
 @Component({
   selector: 'app-icon',

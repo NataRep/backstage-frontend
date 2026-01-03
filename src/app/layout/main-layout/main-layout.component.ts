@@ -5,8 +5,8 @@ import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/rout
 import { Store } from '@ngrx/store';
 import { filter } from 'rxjs';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
+import { IconComponent } from '../../shared/components/icons/icons.component';
 import { TEXT } from '../../shared/constants/texts/common.texts';
-import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
 import { PAGE_LINKS_LIST } from './models/main-layout.models';

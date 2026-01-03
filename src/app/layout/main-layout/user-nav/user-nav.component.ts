@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, Input, 
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { logoutAction } from '../../../core/store/auth/auth.actions';
-import { IconComponent } from '../../../shared/icons/components/icons/icons.component';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { PAGE_LINKS_LIST } from '../models/main-layout.models';
 
 @Component({

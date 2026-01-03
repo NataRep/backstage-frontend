@@ -8,10 +8,10 @@ import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.actions';
 import { selectAuthError, selectAuthUser } from '../../core/store/auth/auth.selectors';
+import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
-import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 
 @Component({
   selector: 'app-login',
