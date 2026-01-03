@@ -39,14 +39,6 @@ export class FirebaseService {
   private db = inject(Firestore);
 
   constructor() {
-    console.log('🔥 FirebaseService constructor called');
-    console.log('🔥 Firestore instance:', this.db);
-
-    if (!this.db) {
-      console.error('❌ Firestore is not available!');
-    } else {
-      console.log('✅ Firestore injected successfully');
-    }
   }
 
   // ---- Helpers ----

@@ -6,26 +6,9 @@ export const authGuard: CanActivateFn = async (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.role() === null) {
-    await new Promise<void>((resolve) => {
-      const maxWait = 2000;
-      const interval = 10;
-      let elapsed = 0;
+  await authService.authReady;
 
-      const wait = () => {
-        if (authService.role() !== null || elapsed >= maxWait) {
-          resolve();
-        } else {
-          elapsed += interval;
-          setTimeout(wait, interval);
-        }
-      };
-
-      wait();
-    });
-  }
-
-  const role = authService.role();
+  let role = authService.role();
   const url = state.url;
 
   if (url.startsWith('/login') || url.startsWith('/reset-password')) {

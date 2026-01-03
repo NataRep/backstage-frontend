@@ -51,11 +51,7 @@ export class AuthEffects {
           personal: this.personService.getPersonById(user.personId),
           employee: this.employeeService.getByPersonId(user.personId),
         }).pipe(
-
-
-
           map(({ personal, employee }) => {
-
             if (!personal) {
               throw new Error('Person not found');
             }
@@ -72,8 +68,6 @@ export class AuthEffects {
               personId: employee.personId,
               accessLevel: employee.accessLevel,
             };
-
-            this.router.navigate(['/dashboard']);
 
             return setUserDataAction({
               user: {

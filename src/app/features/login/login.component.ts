@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
 import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.actions';
-import { selectAuthError } from '../../core/store/auth/auth.selectors';
+import { selectAuthError, selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
@@ -24,6 +25,8 @@ export class LoginComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private store = inject(Store);
   private auth = inject(Auth);
+  private router = inject(Router)
+  private currentUser = this.store.selectSignal(selectAuthUser);
 
   loginErrorMessage = this.store.selectSignal(selectAuthError);
   isPasswordVisibility = false;
@@ -49,6 +52,14 @@ export class LoginComponent implements OnInit {
   resetPasswordForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
   });
+
+  constructor() {
+    effect(() => {
+      if (this.currentUser()) {
+        this.router.navigate(['/dashboard']);
+      }
+    });
+  }
 
   ngOnInit() {
     this.initLoginForm();
@@ -87,6 +98,7 @@ export class LoginComponent implements OnInit {
   login() {
     this.authForm.markAllAsTouched();
     const emailControl = this.authForm.get('email') as FormControl;
+
     this.updateEmailError(
       emailControl,
       this.isEmailError,

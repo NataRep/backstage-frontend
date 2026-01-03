@@ -13,7 +13,7 @@ import {
 } from 'firebase/auth';
 import { loginSuccessAction } from '../store/auth/auth.actions';
 
-export type UserAuthRole = 'guest' | 'user' | null;
+export type UserAuthRole = 'guest' | 'user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -22,13 +22,21 @@ export class AuthService {
 
   private _user = signal<User | null>(null);
   private _token = signal<string | null>(null);
-  private _role = signal<UserAuthRole>(null);
+  private _role = signal<UserAuthRole>('guest');
+
+  private authReadyResolver!: () => void;
+  private authInitialized = false;
+  authReady: Promise<void>;
 
   user = this._user.asReadonly();
   token = this._token.asReadonly();
   role = this._role.asReadonly();
 
   constructor() {
+    this.authReady = new Promise<void>((resolve) => {
+      this.authReadyResolver = resolve;
+    });
+
     this.initAuth();
 
     effect(() => {
@@ -55,10 +63,18 @@ export class AuthService {
         } else {
           this._role.set('guest');
         }
+
+        if (!this.authInitialized) {
+          this.authInitialized = true;
+          this.authReadyResolver();
+        }
       });
     } catch (err) {
-      console.error('Failed to initialize auth:', err);
       this._role.set('guest');
+      if (!this.authInitialized) {
+        this.authInitialized = true;
+        this.authReadyResolver();
+      }
     }
   }
 
@@ -66,7 +82,7 @@ export class AuthService {
     const user = this._user();
     if (user) {
       try {
-        const tokenResult = await getIdTokenResult(user); // ← правильный метод
+        const tokenResult = await getIdTokenResult(user);
         this._token.set(tokenResult.token);
       } catch (error) {
         console.error('Failed to get user token:', error);
@@ -79,12 +95,9 @@ export class AuthService {
 
   async login(email: string, password: string): Promise<UserCredential> {
     try {
-      console.log('Attempting login for:', email);
       const result = await signInWithEmailAndPassword(this.auth, email, password);
-      console.log('Login successful:', result.user.email);
       return result;
     } catch (error) {
-      console.error('Login failed:', error);
       throw error;
     }
   }
@@ -92,13 +105,10 @@ export class AuthService {
   async logout(): Promise<void> {
     try {
       await signOut(this.auth);
-      console.log('Logout successful');
     } catch (error) {
-      console.error('Logout failed:', error);
       throw error;
     }
   }
-
 
   async refreshToken(): Promise<string | null> {
     const user = this._user();
@@ -110,7 +120,6 @@ export class AuthService {
       this._token.set(tokenResult.token);
       return tokenResult.token;
     } catch (error) {
-      console.error('Failed to refresh token:', error);
       return null;
     }
   }
@@ -141,7 +150,6 @@ export class AuthService {
         willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000
       };
     } catch (error) {
-      console.error('Error decoding token:', error);
       return { isValid: false, isExpired: true };
     }
   }
