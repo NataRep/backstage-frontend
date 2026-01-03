@@ -36,7 +36,6 @@ export class ResetPasswordComponent implements OnInit {
   successToastMessage = "Пароль успешно изменен!";
   errorToastMessage = "Что-то пошло не так. Попробуйте запросить ссылку на сброс пароля повторно.";
 
-
   form = new FormGroup({
     password: new FormControl('', [Validators.required, Validators.minLength(6), passwordValidator()]),
     repeat: new FormControl('', [Validators.required, passwordsMatchValidator('password', 'repeat')],),
@@ -50,7 +49,6 @@ export class ResetPasswordComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.oobCode = params['oobCode'];
     });
-
   }
 
   initPasswordInput() {

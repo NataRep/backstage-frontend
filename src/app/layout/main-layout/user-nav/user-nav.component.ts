@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { logoutAction } from '../../../core/store/auth/auth.actions';
 import { IconComponent } from '../../../shared/icons/components/icons/icons.component';
+import { PAGE_LINKS_LIST } from '../models/main-layout.models';
 
 @Component({
   selector: 'app-user-nav',
@@ -16,13 +17,9 @@ export class UserNavComponent {
   @Input() userName: string[] | undefined = [];
 
   private store = inject(Store);
-  isOpen = signal(false);
-
-  logout() {
-    this.store.dispatch(logoutAction())
-  }
-
   private clickListener?: (event: MouseEvent) => void;
+  isOpen = signal(false);
+  navList = PAGE_LINKS_LIST;
 
   constructor(private elementRef: ElementRef) {
     effect(() => {
@@ -36,6 +33,10 @@ export class UserNavComponent {
 
   toggle(): void {
     this.isOpen.set(!this.isOpen());
+  }
+
+  logout() {
+    this.store.dispatch(logoutAction());
   }
 
   private addClickListener(): void {
@@ -67,5 +68,4 @@ export class UserNavComponent {
   ngOnDestroy(): void {
     this.removeClickListener();
   }
-
 }

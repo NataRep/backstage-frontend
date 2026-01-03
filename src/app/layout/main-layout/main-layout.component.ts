@@ -8,7 +8,8 @@ import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { TEXT } from '../../shared/constants/texts/common.texts';
 import { IconComponent } from '../../shared/icons/components/icons/icons.component';
 import { FooterComponent } from '../shared/footer/footer.component';
-import { MAIN_NAV, MainNavComponent } from './main-nav/main-nav.component';
+import { MainNavComponent } from './main-nav/main-nav.component';
+import { PAGE_LINKS_LIST } from './models/main-layout.models';
 import { WelcomeMessageService } from './services/welcome-message.service';
 import { UserNavComponent } from './user-nav/user-nav.component';
 
@@ -36,7 +37,7 @@ export class MainLayoutComponent implements OnInit {
   userName: string = "";
   fullName: string[] = ["", ""];
   TEXT = TEXT;
-  dashboard = MAIN_NAV.find((item) => item.link === "dashboard");
+  dashboard = PAGE_LINKS_LIST.find((item) => item.link === "dashboard");
 
   ngOnInit() {
     this.router.events.pipe(
@@ -79,7 +80,6 @@ export class MainLayoutComponent implements OnInit {
   }
 
   getTitleFromRoute(route: string): string {
-    return MAIN_NAV.find(item => item.link == route)?.title || 'Current Page';
+    return PAGE_LINKS_LIST.find(item => item.link == route)?.title || 'Current Page';
   }
-
 }

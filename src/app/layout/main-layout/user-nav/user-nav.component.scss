@@ -75,7 +75,7 @@
     &-link {
       display: flex;
       align-items: center;
-      width: 100%;
+      width: max-content;
       background: none;
       color: var(--color-grey-text);
       text-decoration: none;
@@ -96,7 +96,6 @@
 
       &.active {
         color: var(--color-yellow);
-        font-weight: 500;
       }
     }
 

@@ -1,0 +1,34 @@
+@let user = currentUser();
+
+@if(isEditMode){
+<button class="button button--yellow" (click)="toggleEditMode()">
+  Show
+</button>
+}
+@else{
+<div class="info">
+  <div class="row">
+    <div class="propperty">Name:</div>
+    <div class="value">{{user?.personal?.full_name}}</div>
+  </div>
+  <div class="row">
+    <div class="propperty">Phone:</div>
+    <div class="value">{{user?.personal?.phone}}</div>
+  </div>
+  <div class="row">
+    <div class="propperty">Email:</div>
+    <div class="value">{{user?.personal?.email}}</div>
+  </div>
+  <div class="row">
+    <div class="propperty">Social links:</div>
+    <div class="value">
+      @for (link of user?.personal?.social_links; track link.url){
+      <span>{{link.type}}</span>{{link.url}}
+      }
+    </div>
+  </div>
+</div>
+<button class="button button--yellow" (click)="toggleEditMode()">
+  Edit
+</button>
+}

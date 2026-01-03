@@ -1,12 +1,14 @@
 <nav>
   <ul>
-    @for (item of nav; track item.title){
+    @for (item of navList; track item.title){
+    @if(item.isMainNav){
     <li class="nav_item nav_item--{{item.icon}}">
       <a [routerLink]="item.link" routerLinkActive="active" [class]="item.icon">
         <app-icon [name]="item.icon"></app-icon>
-        <span class="tooltip tooltip_right">{{ item.title }} </span>
+        <span class="tooltip tooltip--right">{{ item.title }} </span>
       </a>
     </li>
+    }
     }
   </ul>
 </nav>

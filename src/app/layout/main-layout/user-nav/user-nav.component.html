@@ -7,11 +7,15 @@
   @if(isOpen()){
   <nav class="menu__content" [class.open]="isOpen()">
     <ul class="menu__list">
+      @for (item of navList; track item.title){
+      @if(item.isUserNav){
       <li class="menu__item">
-        <a routerLink="profile" routerLinkActive="active" class="menu__item-link">
-          <app-icon name="user" class="menu__item-icon"></app-icon>
-          Profile</a>
+        <a [routerLink]="item.link" routerLinkActive="active" class="menu__item-link" (click)="toggle()">
+          <app-icon [name]="item.icon" class="menu__item-icon"></app-icon>
+          {{ item.title }}</a>
       </li>
+      }
+      }
       <li class="menu__item">
         <button class="button button--yellow" (click)="logout()">Logout</button>
       </li>

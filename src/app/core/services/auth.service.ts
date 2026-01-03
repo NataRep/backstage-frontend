@@ -41,7 +41,6 @@ export class AuthService {
       await setPersistence(this.auth, browserLocalPersistence);
 
       onAuthStateChanged(this.auth, (user) => {
-        console.log('Auth state changed:', user);
         this._user.set(user);
 
         if (user) {
