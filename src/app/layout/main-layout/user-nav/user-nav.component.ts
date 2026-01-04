@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, Input, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { PAGE_LINKS_LIST } from '../../../core/models/page-links.models';
 import { logoutAction } from '../../../core/store/auth/auth.actions';
 import { IconComponent } from '../../../shared/components/icons/icons.component';
-import { PAGE_LINKS_LIST } from '../models/main-layout.models';
 
 @Component({
   selector: 'app-user-nav',

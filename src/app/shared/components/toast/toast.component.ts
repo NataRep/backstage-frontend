@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
 import { IconComponent } from '../icons/icons.component';
 
 export type Toast = 'success' | 'error';
@@ -8,7 +8,8 @@ export type Toast = 'success' | 'error';
   standalone: true,
   imports: [IconComponent],
   templateUrl: './toast.component.html',
-  styleUrl: './toast.component.scss'
+  styleUrl: './toast.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastComponent implements OnChanges, OnDestroy {
   @Input() message: string = 'Текст сообщения';

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { PAGE_LINKS_LIST } from '../../../core/models/page-links.models';
 import { IconComponent } from '../../../shared/components/icons/icons.component';
-import { PAGE_LINKS_LIST } from '../models/main-layout.models';
 
 @Component({
   selector: 'app-main-nav',

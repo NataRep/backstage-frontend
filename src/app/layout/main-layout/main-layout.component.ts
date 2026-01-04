@@ -4,12 +4,12 @@ import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { filter } from 'rxjs';
+import { PAGE_LINKS_LIST } from '../../core/models/page-links.models';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { TEXT } from '../../shared/constants/texts/common.texts';
 import { FooterComponent } from '../shared/footer/footer.component';
 import { MainNavComponent } from './main-nav/main-nav.component';
-import { PAGE_LINKS_LIST } from './models/main-layout.models';
 import { WelcomeMessageService } from './services/welcome-message.service';
 import { UserNavComponent } from './user-nav/user-nav.component';
 

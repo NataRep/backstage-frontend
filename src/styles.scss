@@ -27,6 +27,25 @@ body {
   line-height: 120%;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      color: var(--color-yellow);
+    }
+  }
+
+  &:active {
+    color: var(--color-yellow);
+  }
+}
+
+p {
+  margin-block-start: 0em;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -151,5 +170,76 @@ input:-webkit-autofill {
     left: 100%;
     top: 50%;
     transform: translate(0.5rem, -50%);
+  }
+}
+
+.content-container {
+  position: relative;
+  padding: 1.5rem 1rem;
+  border-radius: 24px;
+  background: var(--color-grey-dark);
+
+  @media (min-width:768px) {
+    padding: 2.25rem 4rem 2rem;
+    background: var(--gradient-grey-y);
+    box-shadow: inset 0 0 20px var(--color-black);
+    border: solid 2px var(--color-black);
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      width: 1rem;
+      height: 1rem;
+      border-radius: 1rem;
+      background-color: var(--color-black);
+    }
+  }
+}
+
+.content-container__title {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 0.25rem 1rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+  color: var(--color-grey-dark);
+  background-color: var(--color-green);
+  border-radius: 6px;
+
+  app-icon {
+    --icon-size: 0.75rem;
+    --icon-fill-color: var(--color-grey-dark);
+    margin-right: 0.5rem;
+  }
+
+  @media (min-width:768px) {
+    border-radius: 16px 6px 6px 6px;
+    color: var(--color-grey);
+
+    app-icon {
+      --icon-size: 0.75rem;
+      --icon-fill-color: var(--color-grey);
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.75rem;
+
+  button {
+    margin-right: 2rem;
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }

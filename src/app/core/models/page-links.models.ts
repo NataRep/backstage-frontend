@@ -8,7 +8,7 @@ interface MainLayoutLink {
 
 export const PAGE_LINKS_LIST: MainLayoutLink[] = [
   {
-    title: "Your profile",
+    title: "Profile",
     link: "profile",
     icon: "user",
     isMainNav: false,

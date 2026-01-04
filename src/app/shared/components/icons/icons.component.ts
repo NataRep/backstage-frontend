@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, inject } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { Observable, map } from 'rxjs';
@@ -10,7 +10,8 @@ import { IconService } from './icons.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './icon.component.html',
-  styleUrl: './icon.component.scss'
+  styleUrl: './icon.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconComponent implements OnInit {
   private iconService = inject(IconService);
