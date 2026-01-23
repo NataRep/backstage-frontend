@@ -1,0 +1,66 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background: var(--color-grey-extra-light);
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
+
+  @media (max-width: 768px) {
+    font-size: 0.75rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      filter: brightness(0.85);
+    }
+  }
+
+  &:active {
+    filter: brightness(0.85);
+  }
+
+  &--big {
+    padding: 0.625rem 2rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+  }
+
+  &--small {
+    padding: 0.375rem 0.75rem;
+    text-transform: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 100%;
+  }
+
+  &--yellow-gradient {
+    background-image: var(--gradient-yellow);
+  }
+
+  &--yellow {
+    background: var(--color-yellow);
+  }
+
+  &--green {
+    background: var(--color-green);
+  }
+
+  &--red {
+    background: var(--color-red);
+  }
+
+  &--disabled,
+  &:disabled {
+    background: var(--color-grey);
+    pointer-events: none;
+  }
+}

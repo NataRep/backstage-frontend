@@ -210,4 +210,8 @@ export class EmployeeFormComponent {
 
     return availableRoles;
   }
+
+  get isCheckedAdmin() {
+    return this.form.get('isAdmin')?.value;
+  }
 }

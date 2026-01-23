@@ -75,11 +75,12 @@
   </div>
 
   @if(canAppointAdmin()){
-  <div class="form__row" [class.invalid]="">
+  <div class="form__row">
     <div class="checkbox chekbox--with-label">
       <input id="admin" type="checkbox" formControlName="isAdmin" placeholder="" />
       <span class="checkbox__box"></span>
-      <label for="admin" class="label">Is admin</label>
+      <label for="admin" class="label">{{ isCheckedAdmin ? 'Is admin in Backstage' : 'Appoint as admin in Backstage'
+        }}</label>
     </div>
   </div>
   }

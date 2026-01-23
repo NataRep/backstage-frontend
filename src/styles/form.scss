@@ -1,0 +1,120 @@
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .form--error {
+    color: var(--color-red);
+  }
+}
+
+input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+  color: var(--color-grey-extra-light);
+  background-clip: content-box !important;
+  border: none;
+}
+
+input :focus-visible,
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-grey-extra-light) !important;
+  caret-color: var(--color-grey-extra-light) !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.checkbox__box {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #666;
+  border-radius: 4px;
+  box-sizing: border-box;
+  position: relative;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.checkbox__box::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.checkbox input:checked+.checkbox__box {
+  background-color: var(--color-blue);
+  border-color: var(--color-blue);
+}
+
+.checkbox input:checked+.checkbox__box::after {
+  opacity: 1;
+}
+
+.checkbox input:focus-visible+.checkbox__box {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+.checkbox input:disabled+.checkbox__box {
+  background-color: #eee;
+  border-color: #aaa;
+  cursor: not-allowed;
+}
+
+.checkbox input:disabled~.checkbox__label {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.form__row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 1.625rem;
+  margin-bottom: 1.75rem;
+  color: var(--color-grey-extra-light);
+  border-bottom: solid 1px rgba(120, 120, 120, 0.2);
+
+  &.invalid {
+    border-bottom: solid 1px rgba(186, 13, 24, 0.42);
+
+    .error-message {
+      position: absolute;
+      bottom: -1.25rem;
+      width: 100%;
+      font-size: 0.7rem;
+      color: var(--color-red);
+      text-align: center;
+    }
+  }
+}

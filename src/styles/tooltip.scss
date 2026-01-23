@@ -1,0 +1,19 @@
+.tooltip {
+  display: flex;
+  position: absolute;
+  width: max-content;
+  padding: 4px 8px;
+  background-color: var(--color-black);
+  font-size: 0.75rem;
+  color: var(--color-orange-text);
+  border-radius: 4px;
+  transition: opacity 0.25s;
+  opacity: 0;
+  pointer-events: none;
+
+  &.tooltip--right {
+    left: 100%;
+    top: 50%;
+    transform: translate(0.5rem, -50%);
+  }
+}
