@@ -2,7 +2,7 @@
   <app-main-nav></app-main-nav>
   <div class="sidebar__logo"></div>
 </aside>
-<div class="main-content">
+<div class="layout-content">
   <header class="header">
     <div class="header__left-group">
       <h1>
@@ -25,7 +25,9 @@
     </div>
   </header>
   <main class="content-area" role="main">
-    <router-outlet></router-outlet>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+    <app-footer class="footer"></app-footer>
   </main>
-  <app-footer class="footer"></app-footer>
 </div>
