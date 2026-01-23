@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { IconComponent } from '../icons/icons.component';
 
 export type Toast = 'success' | 'error';
@@ -9,12 +18,17 @@ export type Toast = 'success' | 'error';
   imports: [IconComponent],
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastComponent implements OnChanges, OnDestroy {
   @Input() message: string = 'Текст сообщения';
   @Input() type: Toast = 'success';
-  @Input() position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'center';
+  @Input() position?:
+    | 'top-right'
+    | 'top-left'
+    | 'bottom-right'
+    | 'bottom-left'
+    | 'center';
   @Input() autoCloseDuration?: number;
   @Input() isOpen = false;
 
@@ -27,13 +41,15 @@ export class ToastComponent implements OnChanges, OnDestroy {
       this.startAutoClose();
     }
 
-    if (changes['isOpen']?.currentValue === false || changes['autoCloseDuration']) {
+    if (
+      changes['isOpen']?.currentValue === false ||
+      changes['autoCloseDuration']
+    ) {
       this.clearTimeout();
     }
   }
 
   close() {
-    console.log('close');
     this.clearTimeout();
     this.isOpen = false;
     this.closed.emit();

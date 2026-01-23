@@ -1,0 +1,44 @@
+@if (hasEmployee) {
+<div class="row">
+  <h2>
+    <span class="name">{{ fullName }}</span>
+    <span class="role">{{ roles | titlecase }}</span>
+  </h2>
+</div>
+<div class="row">
+  <app-icon name="phone"></app-icon>
+  <div class="value">
+    @if (showLinks) {
+    <a [href]="phone | socialLink: 'phone'" target="_blank" rel="noopener noreferrer">{{ phone }}</a>
+    } @else {
+    {{ phone }}
+    }
+  </div>
+</div>
+<div class="row">
+  <app-icon name="email"></app-icon>
+  <div class="value">
+    {{ email }}
+  </div>
+</div>
+@for (link of socialLinks; track link.url) {
+<div class="row">
+  <app-icon [name]="link.type"></app-icon>
+  <div class="value">
+    @if (showLinks) {
+    <a [href]="link.url | socialLink: link.type" target="_blank" rel="noopener noreferrer">{{ link.url }}</a>
+    } @else {
+    {{ link.url }}
+    }
+  </div>
+</div>
+}
+} @else {
+<div class="row row__name-skeleton"><app-skeleton /></div>
+<div class="row"><app-skeleton /></div>
+<div class="row"><app-skeleton /></div>
+<div class="row"><app-skeleton /></div>
+<div class="row"><app-skeleton /></div>
+<div class="row"><app-skeleton /></div>
+<div class="row"><app-skeleton /></div>
+}

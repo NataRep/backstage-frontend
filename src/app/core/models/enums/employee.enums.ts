@@ -1,8 +1,8 @@
-
 export enum Role {
-  Manager = "manager",
-  Artist = "artist",
-  Pirotech = "pirotech",
-  Tech = "tech",
-  Driver = "driver"
+  Owner = 'owner',
+  Manager = 'manager',
+  Artist = 'artist',
+  Fireworker = 'fireworker',
+  Staff = 'staff',
+  Driver = 'driver',
 }

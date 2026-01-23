@@ -7,7 +7,7 @@ import { Person } from "./person.model";
 export interface User {
   personal: Person | null;
   employee: EmployeeProfile | null;
-  auth: AuthInfo;
+  auth: AuthInfo | null;
 }
 
 //авторизация firebase

@@ -1,0 +1,31 @@
+.row {
+  app-icon {
+    --icon-fill-color: var(--color-green);
+    margin-right: 0.75rem;
+  }
+}
+
+h2 {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  line-height: 100%;
+  font-weight: normal;
+}
+
+.name {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.role {
+  font-size: 0.75rem;
+}
+
+app-skeleton {
+  min-width: 200px;
+}
+
+.row__name-skeleton {
+  height: 3rem;
+}

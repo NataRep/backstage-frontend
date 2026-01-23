@@ -1,0 +1,90 @@
+<form [formGroup]="form">
+  <div class="form__row" [class.invalid]="">
+    <label for="lastame" class="label">Surname:</label>
+    <input id="lastname" type="text" formControlName="lastName" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+  <div class="form__row" [class.invalid]="">
+    <label for="firstname" class="label">Name:</label>
+    <input id="firstname" type="text" formControlName="firstName" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+  @if (canEditRole()) {
+  <div class="form__row">
+    <div class="label">Roles:</div>
+    <div class="roles-list" formArrayName="roles">
+      @for (control of rolesArray.controls; let i = $index; track i) {
+      <div class="role-item">
+        <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)">
+          @if (!control.value) {
+          <option [value]="null" disabled>Select role...</option>
+          }
+          @for (role of getAvailableRolesForControl(i); track role) {
+          <option [value]="role">{{ role | upperFirstLetter }}</option>
+          }
+        </select>
+        <button class="button button--icon remove" (click)="removeRole(i)" title="Remove role">
+          −
+        </button>
+      </div>
+      }
+    </div>
+    @if (canAddRole()) {
+    <button class="button button--small" (click)="addRole()">＋&nbsp;Add&nbsp;role</button>
+    }
+  </div>
+  }
+  <div class="form__row" [class.invalid]="">
+    <label for="phone" class="label"><app-icon name="phone"></app-icon></label>
+    <input id="phone" type="phone" formControlName="phone" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+  <div class="form__row" [class.invalid]="">
+    <label for="email" class="label" title="Email"><app-icon name="email"></app-icon></label>
+    <input id="email" type="email" formControlName="email" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+  <div class="form__row" [class.invalid]="">
+    <label for="telegram" class="label" title="Telegram"><app-icon name="telegram"></app-icon></label>
+    <input id="telegram" type="text" formControlName="telegram" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+  <div class="form__row" [class.invalid]="">
+    <label for="vk" class="label" title="Vk"><app-icon name="vk"></app-icon></label>
+    <input id="vk" type="text" formControlName="vk" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+  <div class="form__row" [class.invalid]="">
+    <label for="whatsapp" class="label" title="Whatsapp"><app-icon name="whatsapp"></app-icon></label>
+    <input id="whatsapp" type="text" formControlName="whatsapp" placeholder="" />
+    <div class="error-message">
+      <span></span>
+    </div>
+  </div>
+
+  @if(canAppointAdmin()){
+  <div class="form__row" [class.invalid]="">
+    <div class="checkbox chekbox--with-label">
+      <input id="admin" type="checkbox" formControlName="isAdmin" placeholder="" />
+      <span class="checkbox__box"></span>
+      <label for="admin" class="label">Is admin</label>
+    </div>
+  </div>
+  }
+  <div class="row row--buttons">
+    <button class="button button--yellow" (click)="onSave()">Save</button>
+    <button class="button button--yellow" (click)="onCancel()">Cancel</button>
+  </div>
+</form>

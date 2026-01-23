@@ -2,16 +2,22 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
-import { IconComponent } from "../../shared/components/icons/icons.component";
-import { EmployerInfoComponent } from '../emploeer-info/employer-info.component';
+import { IconComponent } from '../../shared/components/icons/icons.component';
+import { EmployeeFormComponent } from '../employee-form/employee-form.component';
+import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [CommonModule, EmployerInfoComponent, IconComponent],
+  imports: [
+    CommonModule,
+    IconComponent,
+    EmployeeInfoComponent,
+    EmployeeFormComponent,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserProfileComponent {
   private store = inject(Store);
@@ -19,6 +25,6 @@ export class UserProfileComponent {
   currentUser = this.store.selectSignal(selectAuthUser);
 
   toggleEditMode() {
-    this.isEditMode = !this.isEditMode
+    this.isEditMode = !this.isEditMode;
   }
 }
