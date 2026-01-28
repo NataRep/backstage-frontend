@@ -5,6 +5,7 @@ import { Person, PersonsProps } from "../models/interfaces/person.model";
 
 /**
  * во всех методах в качестве id используется localId персоны из firebase
+ * 
  */
 
 @Injectable({ providedIn: 'root' })
@@ -30,6 +31,14 @@ export class PersonsService {
     }
 
     return this.http.get<Person[]>(`persons`, { params });
+  }
+
+  getAllEmployees() {
+
+  }
+
+  getAllClients() {
+
   }
 
   createPerson(body: Person): Observable<Person> {

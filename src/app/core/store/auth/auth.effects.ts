@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, exhaustMap, forkJoin, from, map, of, switchMap, tap } from "rxjs";
+import { catchError, exhaustMap, forkJoin, from, map, of, retry, switchMap, tap } from "rxjs";
 import { AuthService } from "../../services/auth.service";
 import { EmployeeService } from "../../services/firebase/employee.service";
 import { PersonsService } from "../../services/persons.service";
@@ -61,6 +61,7 @@ export class AuthEffects {
               else {
                 errorText = "Error: load User employee context failed"
               }
+
               return loginFailureAction({ error: errorText });
             }
 
@@ -79,10 +80,11 @@ export class AuthEffects {
               }
             });
           }),
-          catchError(error =>
-            of(loginFailureAction({
+          catchError(error => {
+            return of(loginFailureAction({
               error: "Error: load User context failed"
             }))
+          }
           )
         )
       )
@@ -128,4 +130,20 @@ export class AuthEffects {
       })
     );
   });
+
+  logoutOnLoginFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginFailureAction),
+      switchMap(() =>
+        from(this.authService.logout()).pipe(
+          retry(1),
+          map(() => logoutSuccessAction()),
+          catchError(error => {
+            console.error("Logout failed twice", error);
+            return of(logoutSuccessAction());
+          })
+        )
+      )
+    )
+  );
 }

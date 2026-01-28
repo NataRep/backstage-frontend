@@ -16,7 +16,7 @@ export interface Person extends PersonBase {
 
 export interface SocialLink {
   type: SocialType;
-  url: string;
+  link: string;
 }
 
 export interface PersonsProps {

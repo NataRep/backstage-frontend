@@ -72,7 +72,7 @@ export class EmployeeFormComponent {
 
     socialMappings.forEach(({ control, type }) => {
       if (control.value) {
-        socialLinks.push({ type, url: control.value });
+        socialLinks.push({ type, link: control.value });
       }
     });
 
@@ -130,9 +130,9 @@ export class EmployeeFormComponent {
         isAdmin: this.isAdmin,
         email: this.employee.personal?.email ?? '-',
         phone: this.employee.personal?.phone ?? '-',
-        telegram: this.employee.personal?.social_links?.find(link => link.type === SocialType.TELEGRAM)?.url ?? '-',
-        vk: this.employee.personal?.social_links?.find(link => link.type === SocialType.VK)?.url ?? '-',
-        whatsapp: this.employee.personal?.social_links?.find(link => link.type === SocialType.WHATSAPP)?.url ?? '-',
+        telegram: this.employee.personal?.social_links?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '-',
+        vk: this.employee.personal?.social_links?.find(link => link.type === SocialType.VK)?.link ?? '-',
+        whatsapp: this.employee.personal?.social_links?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '-',
       },
       { emitEvent: false },
     );

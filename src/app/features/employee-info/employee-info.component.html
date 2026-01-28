@@ -21,14 +21,14 @@
     {{ email }}
   </div>
 </div>
-@for (link of socialLinks; track link.url) {
+@for (item of socialLinks; track item.link) {
 <div class="row">
-  <app-icon [name]="link.type"></app-icon>
+  <app-icon [name]="item.type"></app-icon>
   <div class="value">
     @if (showLinks) {
-    <a [href]="link.url | socialLink: link.type" target="_blank" rel="noopener noreferrer">{{ link.url }}</a>
+    <a [href]="item.link | socialLink: item.type" target="_blank" rel="noopener noreferrer">{{ item.link }}</a>
     } @else {
-    {{ link.url }}
+    {{ item.link }}
     }
   </div>
 </div>
