@@ -1,6 +1,8 @@
-//персональные данные по всем персонам в приложении хранятся в отдельной базе для соблюдения закона о персональных данных
+//персональные данные по всем персонам в приложении хранятся в отдельной базе для соблюдения закона о персональных данных (Firebase не подходит)
+export type PersonType = 'employee' | 'client';
 
 export interface PersonBase {
+  type: PersonType;
   full_name: string;
   email: string;
   phone?: string;

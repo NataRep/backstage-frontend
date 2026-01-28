@@ -2,7 +2,6 @@ import { inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, forkJoin, from, map, of, switchMap, tap } from "rxjs";
-import { EmployeeProfile } from "../../models/interfaces/auth.models";
 import { AuthService } from "../../services/auth.service";
 import { EmployeeService } from "../../services/firebase/employee.service";
 import { PersonsService } from "../../services/persons.service";
@@ -43,8 +42,8 @@ export class AuthEffects {
     )
   })
 
-  loginSuccess$ = createEffect(() => {
-    return this.actions$.pipe(
+  loginSuccess$ = createEffect(() =>
+    this.actions$.pipe(
       ofType(loginSuccessAction),
       switchMap(({ user }) =>
         forkJoin({
@@ -52,47 +51,43 @@ export class AuthEffects {
           employee: this.employeeService.getByPersonId(user.personId),
         }).pipe(
           map(({ personal, employee }) => {
-            if (!personal) {
-              throw new Error('Person not found');
+            if (!personal || !employee) {
+              let errorText;
+              if (!personal && !employee) {
+                errorText = "Error: load User context failed"
+              } else if (!personal) {
+                errorText = "Error: load User personal context failed"
+              }
+              else {
+                errorText = "Error: load User employee context failed"
+              }
+              return loginFailureAction({ error: errorText });
             }
-
-            if (!employee) {
-              throw new Error('Employee not found');
-            }
-
-            const employeeProfile: EmployeeProfile = {
-              id: employee.id,
-              roles: employee.roles,
-              availability: employee.availability,
-              isActive: employee.isActive,
-              personId: employee.personId,
-              accessLevel: employee.accessLevel,
-            };
 
             return setUserDataAction({
               user: {
+                auth: user,
                 personal,
-                employee: employeeProfile,
-                auth: user
+                employee: {
+                  id: employee.id,
+                  roles: employee.roles,
+                  availability: employee.availability,
+                  isActive: employee.isActive,
+                  personId: employee.personId,
+                  accessLevel: employee.accessLevel,
+                }
               }
             });
           }),
-          catchError(error => {
-            console.error('Failed to load user data:', error);
-            // Все равно создаем пользователя, даже если часть данных не загрузилась
-            return of(setUserDataAction({
-              user: {
-                personal: null,
-                employee: null,
-                auth: user
-              }
-            }));
-          }
+          catchError(error =>
+            of(loginFailureAction({
+              error: "Error: load User context failed"
+            }))
           )
         )
       )
-    );
-  });
+    )
+  );
 
   logout$ = createEffect(() => {
     return this.actions$.pipe(

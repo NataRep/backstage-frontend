@@ -77,6 +77,7 @@ export class EmployeeFormComponent {
     });
 
     const personalData: PersonBase = {
+      type: "employee",
       full_name: `${firstName.value} ${lastName.value}`,
       email: email.value || "",
       phone: phone.value || undefined,
