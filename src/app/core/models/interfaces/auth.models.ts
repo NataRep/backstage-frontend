@@ -1,28 +1,7 @@
-import { Timestamp } from "rxjs";
-import { AccessLevel } from "../enums/auth.enums";
-import { Role } from "../enums/employee.enums";
-import { Person } from "./person.model";
-
-
-export interface User {
-  personal: Person | null;
-  employee: EmployeeProfile | null;
-  auth: AuthInfo | null;
-}
 
 //авторизация firebase
 export interface AuthInfo {
   email: string | null,
   personId: string,
   name: string | null,
-}
-
-//данные пользователе как о сотруднике
-export interface EmployeeProfile {
-  id: string,
-  roles: Role[],
-  availability: Timestamp<string>[],
-  isActive: boolean,
-  personId: string,
-  accessLevel: AccessLevel,
 }

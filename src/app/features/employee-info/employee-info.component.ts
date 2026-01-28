@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { User } from '../../core/models/interfaces/auth.models';
+import { EmployeeProfile } from '../../core/models/interfaces/employee.models';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 import { SocialLinkPipe } from '../../shared/pipes/social-link.pipe';
@@ -13,7 +13,7 @@ import { SocialLinkPipe } from '../../shared/pipes/social-link.pipe';
   styleUrl: './employee-info.component.scss',
 })
 export class EmployeeInfoComponent {
-  @Input({ required: true }) employee: User | null = null;
+  @Input({ required: true }) employee: EmployeeProfile | null = null;
   @Input() showLinks = true;
 
   get hasEmployee(): boolean {
@@ -25,7 +25,7 @@ export class EmployeeInfoComponent {
   }
 
   get roles(): string {
-    return this.employee?.employee?.roles?.join(', ') ?? '';
+    return this.employee?.employment?.roles?.join(', ') ?? '';
   }
 
   get phone(): string {

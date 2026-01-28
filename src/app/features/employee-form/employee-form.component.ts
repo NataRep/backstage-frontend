@@ -17,8 +17,7 @@ import {
 import { Store } from '@ngrx/store';
 import { AccessLevel } from '../../core/models/enums/auth.enums';
 import { Role } from '../../core/models/enums/employee.enums';
-import { User } from '../../core/models/interfaces/auth.models';
-import { EmployeeBase } from '../../core/models/interfaces/emploeey.models';
+import { EmployeeBase, EmployeeProfile } from '../../core/models/interfaces/employee.models';
 import { PersonBase, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
@@ -33,7 +32,7 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeFormComponent {
-  @Input() employee: User | null = null;
+  @Input() employee: EmployeeProfile | null = null;
   @Output() save = new EventEmitter<{ person: PersonBase, employee: EmployeeBase }>();
   @Output() cancel = new EventEmitter<void>();
 
@@ -100,7 +99,7 @@ export class EmployeeFormComponent {
       roles: [...roles.value as Role[]],
       isActive: true,
       accessLevel: accessLevel(),
-      availability: this.employee?.employee?.availability || []
+      availability: this.employee?.employment?.availability || []
     }
 
     return { person: personalData, employee: employeeData };
@@ -121,7 +120,7 @@ export class EmployeeFormComponent {
 
     const nameParts = this.employee.personal?.full_name?.split(' ') ?? [];
     const [firstName, lastName] = [nameParts[0] ?? '', nameParts[1] ?? ''];
-    this.isAdmin = this.employee?.employee?.accessLevel === AccessLevel.Admin;
+    this.isAdmin = this.employee?.employment?.accessLevel === AccessLevel.Admin;
 
     this.form.patchValue(
       {
@@ -148,8 +147,8 @@ export class EmployeeFormComponent {
     if (!this.employee) return;
     this.rolesArray.clear();
 
-    if (this.employee.employee) {
-      for (const role of this.employee.employee.roles) {
+    if (this.employee.employment) {
+      for (const role of this.employee.employment.roles) {
         this.rolesArray.push(new FormControl(role));
       }
     }
@@ -166,7 +165,7 @@ export class EmployeeFormComponent {
   }
 
   canEditRole() {
-    const accessLevel = this.currentUser()?.employee?.accessLevel;
+    const accessLevel = this.currentUser()?.employment?.accessLevel;
     return (
       accessLevel === AccessLevel.Owner ||
       accessLevel === AccessLevel.Manager ||
@@ -175,7 +174,7 @@ export class EmployeeFormComponent {
   }
 
   canAppointAdmin() {
-    const accessLevel = this.currentUser()?.employee?.accessLevel;
+    const accessLevel = this.currentUser()?.employment?.accessLevel;
     return (
       accessLevel === AccessLevel.Owner ||
       accessLevel === AccessLevel.Admin
@@ -202,7 +201,7 @@ export class EmployeeFormComponent {
       (role) => !selectedRoles.includes(role) || role === currentControlValue,
     );
 
-    const accessLevel = this.currentUser()?.employee?.accessLevel;
+    const accessLevel = this.currentUser()?.employment?.accessLevel;
 
     //назначать владельцами могут только админы и владельцы
     if (accessLevel != AccessLevel.Admin && accessLevel != AccessLevel.Owner) {

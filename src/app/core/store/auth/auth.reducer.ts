@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store";
-import { User } from "../../models/interfaces/auth.models";
+import { EmployeeProfile } from "../../models/interfaces/employee.models";
 import {
   clearLoginErrorAction,
   loginAction,
@@ -10,7 +10,7 @@ import {
 } from "./auth.actions";
 
 export interface UserState {
-  profile: User | null,
+  profile: EmployeeProfile | null,
   loading: boolean,
   error: unknown
 };

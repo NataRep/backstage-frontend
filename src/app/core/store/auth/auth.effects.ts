@@ -69,7 +69,7 @@ export class AuthEffects {
               user: {
                 auth: user,
                 personal,
-                employee: {
+                employment: {
                   id: employee.id,
                   roles: employee.roles,
                   availability: employee.availability,
