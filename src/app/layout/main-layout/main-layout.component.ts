@@ -74,10 +74,13 @@ export class MainLayoutComponent implements OnInit {
   }
 
   updateTitle() {
-    const route = this.router.url.split('/')[1];
+    const urlPath = this.router.url.split('?')[0].split('#')[0];
+    const route = urlPath.split('/')[1];
+
     const title = this.getTitleFromRoute(route);
     this.pageTitle = title;
     this.titleService.setTitle(`${title} | CRM Backspace`);
+    this.cdr.markForCheck();
   }
 
   getTitleFromRoute(route: string): string {

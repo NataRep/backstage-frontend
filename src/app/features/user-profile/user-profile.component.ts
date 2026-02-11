@@ -87,9 +87,6 @@ export class UserProfileComponent {
   }
 
   updateUser(data: { personal: PersonBase; employment: EmployeeBase }) {
-    console.log("this.currentUser()", this.currentUser());
-    console.log("this.currentUser()?.personal?.personId", this.currentUser()?.personal?.personId);
-
     this.store.dispatch(updateEmployeeAction({
 
       personId: this.currentUser()?.personal?.personId!,
