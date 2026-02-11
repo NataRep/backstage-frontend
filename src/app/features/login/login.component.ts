@@ -12,11 +12,12 @@ import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
+import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, ModalContainerComponent, ToastComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, ModalContainerComponent, ToastComponent, TrimOnBlurDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -156,13 +157,6 @@ export class LoginComponent implements OnInit {
       }
     } else {
       errorMessage.set('');
-    }
-  }
-
-  trimOnBlur(controlName: string) {
-    const control = this.authForm.get(controlName);
-    if (control && typeof control.value === 'string') {
-      control.setValue(control.value.trim(), { emitEvent: true });
     }
   }
 

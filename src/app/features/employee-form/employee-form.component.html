@@ -1,7 +1,7 @@
 <form [formGroup]="form">
   <div class="form__row" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
     <label for="lastame" class="label">Surname:</label>
-    <input id="lastname" type="text" formControlName="lastName" placeholder="" (blur)="trimOnBlur('lastName')" />
+    <input id="lastname" type="text" formControlName="lastName" placeholder="" appTrimOnBlur />
 
     @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
     <div class="error-message">
@@ -17,7 +17,7 @@
   </div>
   <div class="form__row" [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched">
     <label for="firstname" class="label">Name:</label>
-    <input id="firstname" type="text" formControlName="firstName" (blur)="trimOnBlur('firstName')" />
+    <input id="firstname" type="text" formControlName="firstName" appTrimOnBlur />
 
     @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
     <div class="error-message">
@@ -65,7 +65,7 @@
   }
   <div class="form__row" [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched">
     <label for="phone" class="label"><app-icon name="phone"></app-icon></label>
-    <input id="phone" type="phone" formControlName="phone" placeholder="" (blur)="trimOnBlur('phone')" />
+    <input id="phone" type="phone" formControlName="phone" placeholder="" appTrimOnBlur />
     @if (form.controls.phone.invalid && form.controls.phone.touched) {
     <div class="error-message">
       @if (form.controls.phone.errors?.['required']) {
@@ -78,7 +78,7 @@
   </div>
   <div class="form__row" [class.invalid]="form.controls.email.invalid && form.controls.email.touched">
     <label for="email" class="label" title="Email"><app-icon name="email"></app-icon></label>
-    <input id="email" type="email" formControlName="email" placeholder="" (blur)="trimOnBlur('email')" />
+    <input id="email" type="email" formControlName="email" placeholder="" appTrimOnBlur />
     @if (form.controls.email.invalid && form.controls.email.touched) {
     <div class="error-message">
       @if (form.controls.email.errors?.['required']) {
@@ -91,7 +91,7 @@
   </div>
   <div class="form__row" [class.invalid]="form.controls.telegram.invalid && form.controls.telegram.touched">
     <label for="telegram" class="label" title="Telegram"><app-icon name="telegram"></app-icon></label>
-    <input id="telegram" type="text" formControlName="telegram" placeholder="" (blur)="trimOnBlur('telegram')" />
+    <input id="telegram" type="text" formControlName="telegram" placeholder="" appTrimOnBlur />
     @if (form.controls.telegram.invalid && form.controls.telegram.touched) {
     <div class="error-message">
       @if (form.controls.telegram.errors?.['pattern']) {
@@ -102,7 +102,7 @@
   </div>
   <div class="form__row" [class.invalid]="form.controls.vk.invalid && form.controls.vk.touched">
     <label for="vk" class="label" title="Vk"><app-icon name="vk"></app-icon></label>
-    <input id="vk" type="text" formControlName="vk" placeholder="" (blur)="trimOnBlur('vk')" />
+    <input id="vk" type="text" formControlName="vk" placeholder="" appTrimOnBlur />
     @if (form.controls.vk.invalid && form.controls.vk.touched) {
     <div class="error-message">
       @if (form.controls.vk.errors?.['pattern']) {
@@ -113,7 +113,7 @@
   </div>
   <div class="form__row" [class.invalid]="form.controls.whatsapp.invalid && form.controls.whatsapp.touched">
     <label for="whatsapp" class="label" title="Whatsapp"><app-icon name="whatsapp"></app-icon></label>
-    <input id="whatsapp" type="text" formControlName="whatsapp" placeholder="" (blur)="trimOnBlur('whatsapp')" />
+    <input id="whatsapp" type="text" formControlName="whatsapp" placeholder="" appTrimOnBlur />
     @if (form.controls.whatsapp.invalid && form.controls.whatsapp.touched) {
     <div class="error-message">
       @if (form.controls.whatsapp.errors?.['pattern']) {

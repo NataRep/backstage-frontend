@@ -5,7 +5,7 @@
 <form [formGroup]="authForm" (ngSubmit)="login()">
   <div class="form__row" [class.invalid]="emailError">
     <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" (blur)="trimOnBlur('email')" placeholder="" autocomplete="on"
+    <input id="email" type="email" formControlName="email" appTrimOnBlur placeholder="" autocomplete="on"
       (focus)="onEmailFocus()" (blur)="onEmailBlur()">
     @if (emailError) {
     <div class="error-message">

@@ -21,12 +21,13 @@ import { EmployeeBase, EmployeeProfile } from '../../core/models/interfaces/empl
 import { PersonBase, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
+import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, UppercaseFirstLetter],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent, UppercaseFirstLetter, TrimOnBlurDirective],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -211,13 +212,6 @@ export class EmployeeFormComponent {
     }
 
     return availableRoles;
-  }
-
-  trimOnBlur(controlName: string) {
-    const control = this.form.get(controlName);
-    if (control && typeof control.value === 'string') {
-      control.setValue(control.value.trim(), { emitEvent: true });
-    }
   }
 
   get rolesArray() {
