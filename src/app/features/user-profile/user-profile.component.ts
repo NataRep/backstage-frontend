@@ -10,9 +10,11 @@ import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { selectEmployeesError, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
+import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -22,7 +24,9 @@ import { EmployeeInfoComponent } from '../employee-info/employee-info.component'
     IconComponent,
     EmployeeInfoComponent,
     EmployeeFormComponent,
-    ToastComponent
+    ToastComponent,
+    ModalContainerComponent,
+    ResetPasswordComponent
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
@@ -43,6 +47,8 @@ export class UserProfileComponent {
   isErrorToastOpen = signal(false);
   successToastMessage = "Данные сохранены";
   errorToastMessage = "Что-то пошло не так. Попробуйте сохранить изменения еще раз.";
+
+  isPasswordModalOpen = signal(false);
 
   isEditMode = computed(() => {
     console.log("currentUser", this.currentUser())
@@ -94,6 +100,15 @@ export class UserProfileComponent {
         ...data.employment
       }
     }))
+  }
+
+  openPasswordModal() {
+    this.isPasswordModalOpen.set(true)
+  }
+
+
+  handleUpdatePasswordAction() {
+    this.isPasswordModalOpen.set(false);
   }
 
 }

@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Auth } from '@angular/fire/auth';
+import { Auth, updatePassword } from '@angular/fire/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Actions } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { confirmPasswordReset } from 'firebase/auth';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { logoutAction } from '../../core/store/auth/auth.actions';
+import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { passwordsMatchGroupValidator, passwordsMatchValidator, passwordValidator } from './reset-password.validators';
@@ -23,8 +27,16 @@ export class ResetPasswordComponent implements OnInit {
   private auth = inject(Auth);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private store = inject(Store);
+  private actions$ = inject(Actions);
+
+  action = output();
 
   oobCode = "";
+
+  currentUser = this.store.selectSignal(selectAuthUser);
+  isResetMode = computed(() => !!this.oobCode);
+  isUpdateMode = computed(() => !!this.currentUser && !this.oobCode);
 
   isPasswordVisibility = signal(false);
   isPasswordError = signal(false);
@@ -94,25 +106,78 @@ export class ResetPasswordComponent implements OnInit {
     }
   }
 
-  reset() {
+  saveNewPassword() {
     this.form.markAllAsTouched();
     this.updatePasswordError();
+
     const newPassword = this.passwordControl?.value;
 
-    if (this.form.invalid || !this.oobCode || !newPassword) {
+    if (this.form.invalid || !newPassword) return;
+
+    if (this.isResetMode()) {
+      // СЦЕНАРИЙ 1: Сброс через почту (нужен oobCode)
+      this.handleConfirmReset(newPassword);
+    } else if (this.isUpdateMode()) {
+      // СЦЕНАРИЙ 2: Прямое обновление в ЛК (нужна свежая сессия)
+      this.handleUpdatePassword(newPassword);
+    }
+  }
+
+  private handleConfirmReset(password: string) {
+    confirmPasswordReset(this.auth, this.oobCode, password)
+      .then(() => this.handleSuccess())
+      .catch(error => this.handleError(error));
+  }
+
+  private handleUpdatePassword(password: string) {
+    if (!this.auth.currentUser) return;
+
+    updatePassword(this.auth.currentUser, password)
+      .then(() => this.handleSuccess())
+      .catch(error => {
+        if (error.code === 'auth/requires-recent-login') {
+          this.errorToastMessage = "Требуется повторный вход в систему для смены пароля.";
+        }
+        this.handleError(error);
+      });
+  }
+
+  private handleSuccess() {
+    this.isSuccessToastOpen.set(true);
+    const target = this.isResetMode() ? '/login' : '/profile';
+    this.action.emit();
+    setTimeout(() => this.router.navigate([target]), 3000);
+  }
+
+  private handleError(error: any) {
+    console.error('Full error object:', error);
+    this.isErrorToastOpen.set(true);
+
+    // 1. Ошибка безопасности: нужно залогиниться заново
+    if (error.code === 'auth/requires-recent-login' || error.code === 'auth/user-token-expired') {
+      this.errorToastMessage = "Для безопасности нужно перезайти в систему перед сменой пароля.";
+
+      setTimeout(() => {
+        this.action.emit();
+        this.store.dispatch(logoutAction());
+      }, 3000);
       return;
     }
 
-    confirmPasswordReset(this.auth, this.oobCode, newPassword)
-      .then(() => {
-        this.isSuccessToastOpen.set(true);
-        setTimeout(() => this.router.navigate(['/login']), 4000)
-      })
-      .catch(error => {
-        this.isErrorToastOpen.set(true);
-        setTimeout(() => this.router.navigate(['/login']), 5000)
-      });
+    // 2. Ошибка ссылки (если это ResetMode)
+    if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
+      this.errorToastMessage = "Ссылка устарела или уже была использована. Запросите новую.";
+      setTimeout(() => {
+        this.action.emit();
+        this.router.navigate(['/login']);
+      }, 3000);
+      return;
+    }
+
+    // 3. Все остальные ошибки
+    this.errorToastMessage = "Ошибка: " + (error.message || "Попробуйте позже");
   }
+
 
   togglePasswordVisibility() {
     this.isPasswordVisibility.update(v => !v);
@@ -124,13 +189,6 @@ export class ResetPasswordComponent implements OnInit {
 
   onErrorToastClosed() {
     this.isErrorToastOpen.set(true);
-  }
-
-  trimOnBlur(controlName: string) {
-    const control = this.form.get(controlName);
-    if (control && typeof control.value === 'string') {
-      control.setValue(control.value.trim(), { emitEvent: true });
-    }
   }
 
   get passwordControl() {

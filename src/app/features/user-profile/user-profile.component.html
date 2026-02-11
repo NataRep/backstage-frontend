@@ -13,7 +13,7 @@
       <button class="button button--yellow" (click)="toggleEditMode()" [disabled]="!currentUser()">
         Edit information
       </button>
-      <button class="button button--yellow" (click)="toggleEditMode()" [disabled]="!currentUser()">
+      <button class="button button--yellow" (click)="openPasswordModal()" [disabled]="!currentUser()">
         Change password
       </button>
     </div>
@@ -28,7 +28,8 @@
   [autoCloseDuration]="4000">
 </app-toast>
 
-@if(error()){
-{{error()}}
-
-}
+<app-modal-container [(isOpen)]="isPasswordModalOpen" type="default" actionButton="Save">
+  <div class="modal__body">
+    <app-reset-password (action)="handleUpdatePasswordAction()"></app-reset-password>
+  </div>
+</app-modal-container>
