@@ -5,7 +5,7 @@ import {
   EventEmitter,
   inject,
   Input,
-  Output,
+  Output
 } from '@angular/core';
 import {
   FormArray,
@@ -33,32 +33,37 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
 })
 export class EmployeeFormComponent {
   @Input() employee: EmployeeProfile | null = null;
-  @Output() save = new EventEmitter<{ person: PersonBase, employee: EmployeeBase }>();
+  @Output() save = new EventEmitter<{ personal: PersonBase, employment: EmployeeBase }>();
   @Output() cancel = new EventEmitter<void>();
 
   private store = inject(Store);
   currentUser = this.store.selectSignal(selectAuthUser);
+
   isAdmin: boolean = false;
   readonly roles: Role[] = Object.values(Role);
 
   form = new FormGroup({
-    lastName: new FormControl('', [Validators.required]),
-    firstName: new FormControl('', [Validators.required]),
-    roles: new FormArray<FormControl<Role | null>>([]),
-    isAdmin: new FormControl(),
-    email: new FormControl('', [Validators.required]),
-    phone: new FormControl('', [Validators.required]),
-    telegram: new FormControl('', []),
-    vk: new FormControl('', []),
-    whatsapp: new FormControl('', [])
+    lastName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
+    firstName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
+    roles: new FormArray<FormControl<Role>>([], { validators: [Validators.required] }),
+    isAdmin: new FormControl<boolean>(false, { nonNullable: true }),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    phone: new FormControl('', [Validators.required, Validators.pattern(/^\+?[78]\d{10}$/)]),
+    telegram: new FormControl('', [Validators.pattern(/^\S+$/)]),
+    vk: new FormControl('', [Validators.pattern(/^\S+$/)]),
+    whatsapp: new FormControl('', [Validators.pattern(/^\S+$/)])
   });
 
   onSave() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
     const newEmployeeData = this.createNewEmployeeData();
     this.save.emit(newEmployeeData);
   }
 
-  private createNewEmployeeData(): { person: PersonBase, employee: EmployeeBase } {
+  private createNewEmployeeData(): { personal: PersonBase, employment: EmployeeBase } {
     const { email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
 
     const socialLinks: SocialLink[] = [];
@@ -77,10 +82,10 @@ export class EmployeeFormComponent {
 
     const personalData: PersonBase = {
       type: "employee",
-      full_name: `${firstName.value} ${lastName.value}`,
+      fullName: `${firstName.value} ${lastName.value}`,
       email: email.value || "",
       phone: phone.value || undefined,
-      social_links: socialLinks
+      socialLinks: socialLinks
     };
 
     const accessLevel = () => {
@@ -102,7 +107,7 @@ export class EmployeeFormComponent {
       availability: this.employee?.employment?.availability || []
     }
 
-    return { person: personalData, employee: employeeData };
+    return { personal: personalData, employment: employeeData };
   }
 
   onCancel() {
@@ -118,7 +123,7 @@ export class EmployeeFormComponent {
   setFormByEmployee() {
     if (!this.employee) return;
 
-    const nameParts = this.employee.personal?.full_name?.split(' ') ?? [];
+    const nameParts = this.employee.personal?.fullName?.split(' ') ?? [];
     const [firstName, lastName] = [nameParts[0] ?? '', nameParts[1] ?? ''];
     this.isAdmin = this.employee?.employment?.accessLevel === AccessLevel.Admin;
 
@@ -127,20 +132,16 @@ export class EmployeeFormComponent {
         firstName,
         lastName,
         isAdmin: this.isAdmin,
-        email: this.employee.personal?.email ?? '-',
-        phone: this.employee.personal?.phone ?? '-',
-        telegram: this.employee.personal?.social_links?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '-',
-        vk: this.employee.personal?.social_links?.find(link => link.type === SocialType.VK)?.link ?? '-',
-        whatsapp: this.employee.personal?.social_links?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '-',
+        email: this.employee.personal?.email ?? '',
+        phone: this.employee.personal?.phone ?? '',
+        telegram: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '',
+        vk: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.VK)?.link ?? '',
+        whatsapp: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '',
       },
-      { emitEvent: false },
+      { emitEvent: true },
     );
 
     this.setRolesByEmployee();
-  }
-
-  get rolesArray() {
-    return this.form.get('roles') as FormArray<FormControl<Role | null>>;
   }
 
   setRolesByEmployee() {
@@ -162,6 +163,7 @@ export class EmployeeFormComponent {
 
   removeRole(index: number) {
     this.rolesArray.removeAt(index);
+    this.rolesArray.markAsTouched();
   }
 
   canEditRole() {
@@ -209,6 +211,17 @@ export class EmployeeFormComponent {
     }
 
     return availableRoles;
+  }
+
+  trimOnBlur(controlName: string) {
+    const control = this.form.get(controlName);
+    if (control && typeof control.value === 'string') {
+      control.setValue(control.value.trim(), { emitEvent: true });
+    }
+  }
+
+  get rolesArray() {
+    return this.form.get('roles') as FormArray<FormControl<Role | null>>;
   }
 
   get isCheckedAdmin() {

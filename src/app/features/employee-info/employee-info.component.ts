@@ -21,7 +21,7 @@ export class EmployeeInfoComponent {
   }
 
   get fullName(): string {
-    return this.employee?.personal?.full_name ?? '';
+    return this.employee?.personal?.fullName ?? '';
   }
 
   get roles(): string {
@@ -37,6 +37,6 @@ export class EmployeeInfoComponent {
   }
 
   get socialLinks() {
-    return this.employee?.personal?.social_links ?? [];
+    return this.employee?.personal?.socialLinks ?? [];
   }
 }

@@ -3,14 +3,14 @@ export type PersonType = 'employee' | 'client';
 
 export interface PersonBase {
   type: PersonType;
-  full_name: string;
+  fullName: string;
   email: string;
   phone?: string;
-  social_links: SocialLink[];
+  socialLinks: SocialLink[];
 }
 
 export interface Person extends PersonBase {
-  id: number;
+  id?: number;
   personId: string;
 }
 

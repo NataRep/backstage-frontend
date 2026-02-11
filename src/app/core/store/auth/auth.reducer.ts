@@ -6,7 +6,8 @@ import {
   loginFailureAction,
   logoutFailureAction,
   logoutSuccessAction,
-  setUserDataAction
+  setUserDataAction,
+  setUserProfileAction
 } from "./auth.actions";
 
 export interface UserState {
@@ -60,4 +61,12 @@ export const authReducer = createReducer(
     ...state,
     error: null
   })),
+
+  on(setUserProfileAction, (state, user) => ({
+    ...state,
+    profile: user,
+    loading: false,
+    error: null
+  })),
+
 );

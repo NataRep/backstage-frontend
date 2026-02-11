@@ -159,6 +159,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  trimOnBlur(controlName: string) {
+    const control = this.authForm.get(controlName);
+    if (control && typeof control.value === 'string') {
+      control.setValue(control.value.trim(), { emitEvent: true });
+    }
+  }
+
   onEmailFocus() {
     this.emailWasFocused.set(true);
   }

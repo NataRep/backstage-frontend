@@ -126,6 +126,13 @@ export class ResetPasswordComponent implements OnInit {
     this.isErrorToastOpen.set(true);
   }
 
+  trimOnBlur(controlName: string) {
+    const control = this.form.get(controlName);
+    if (control && typeof control.value === 'string') {
+      control.setValue(control.value.trim(), { emitEvent: true });
+    }
+  }
+
   get passwordControl() {
     return this.form.get('password');
   }

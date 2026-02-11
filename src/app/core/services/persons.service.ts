@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { Person, PersonsProps } from "../models/interfaces/person.model";
+import { Person, PersonBase, PersonsProps } from "../models/interfaces/person.model";
 
 /**
  * во всех методах в качестве id используется localId персоны из firebase
@@ -42,22 +42,34 @@ export class PersonsService {
   }
 
   createPerson(body: Person): Observable<Person> {
-    return this.http.post<Person>(`persons`, body);
+    return this.http.post<Person>(`persons`, convertObjectKeysToSnake(body));
   }
 
-  updatePerson(id: string, body: {
-    full_name?: string,
-    email?: string,
-    phone?: string,
-    telegram?: string,
-    whatsapp?: string,
-    vk?: string,
-  }): Observable<Person> {
-    return this.http.patch<Person>(`persons/${id}`, body);
+  updatePerson(personId: string, body: PersonBase): Observable<Person> {
+    return this.http.patch<Person>(`persons/${personId}`, convertObjectKeysToSnake(body));
   }
 
   deletePerson(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`persons/${id}`);
   }
 
+}
+
+interface AnyObject {
+  [key: string]: any;
+}
+
+function convertObjectKeysToSnake(obj: AnyObject): AnyObject {
+  const result: AnyObject = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    const snakeKey = key
+      .replace(/([a-z])([A-Z])/g, '$1_$2')
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+      .toLowerCase();
+
+    result[snakeKey] = value;
+  }
+
+  return result;
 }

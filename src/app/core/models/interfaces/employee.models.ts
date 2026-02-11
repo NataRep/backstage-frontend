@@ -11,7 +11,7 @@ export interface EmployeeBase {
 }
 
 export interface Employee extends EmployeeBase {
-  id: string;
+  id?: string;
   personId: string;
 }
 

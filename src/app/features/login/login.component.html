@@ -3,10 +3,10 @@
 
 <h1 class="title">Backstage entrance</h1>
 <form [formGroup]="authForm" (ngSubmit)="login()">
-  <div class="form__row" [class.invalid]=" emailError">
+  <div class="form__row" [class.invalid]="emailError">
     <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" placeholder="" autocomplete="on" (focus)="onEmailFocus()"
-      (blur)="onEmailBlur()">
+    <input id="email" type="email" formControlName="email" (blur)="trimOnBlur('email')" placeholder="" autocomplete="on"
+      (focus)="onEmailFocus()" (blur)="onEmailBlur()">
     @if (emailError) {
     <div class="error-message">
       <span>{{emailErrorMessage()}}</span>

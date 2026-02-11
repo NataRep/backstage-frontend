@@ -52,8 +52,9 @@ export class MainLayoutComponent implements OnInit {
     this.store.select(selectAuthUser).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(user => {
-      if (user?.personal?.full_name) {
-        this.fullName = user.personal.full_name.split(" ");
+      console.log("user", this.user())
+      if (user?.personal?.fullName) {
+        this.fullName = user.personal.fullName.split(" ");
         this.userName = this.fullName[0] || "";
         this.showWelcomeMessage();
       }
