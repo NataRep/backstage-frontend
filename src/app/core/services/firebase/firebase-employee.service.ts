@@ -6,7 +6,7 @@ import { FirebaseService, WithId } from "./firebase-base.service";
 
 
 @Injectable({ providedIn: 'root' })
-export class EmployeeService {
+export class FirebaseEmployeeService {
   private readonly collectionName = 'employees';
 
   constructor(private firebase: FirebaseService) { }

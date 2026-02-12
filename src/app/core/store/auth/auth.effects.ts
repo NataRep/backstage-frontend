@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, forkJoin, from, map, of, retry, switchMap, tap } from "rxjs";
 import { AuthService } from "../../services/auth.service";
-import { EmployeeService } from "../../services/firebase/employee.service";
+import { FirebaseEmployeeService } from "../../services/firebase/firebase-employee.service";
 import { PersonsService } from "../../services/persons.service";
 import {
   loginAction,
@@ -22,7 +22,7 @@ export class AuthEffects {
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
   private personService = inject(PersonsService);
-  private employeeService = inject(EmployeeService);
+  private employeeService = inject(FirebaseEmployeeService);
   private router = inject(Router);
 
 
