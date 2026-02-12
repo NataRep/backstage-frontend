@@ -3,6 +3,8 @@ import { EmployeeProfile } from "../../models/interfaces/employee.models";
 import {
   clearLoginErrorAction,
   loginAction,
+  loginContextFailureAction,
+  loginCredentialsFailureAction,
   loginFailureAction,
   logoutFailureAction,
   logoutSuccessAction,
@@ -13,7 +15,7 @@ import {
 export interface UserState {
   profile: EmployeeProfile | null,
   loading: boolean,
-  error: unknown
+  error: string | null
 };
 
 const initialState: UserState = {
@@ -65,6 +67,19 @@ export const authReducer = createReducer(
   on(setUserProfileAction, (state, user) => ({
     ...state,
     profile: user,
+    loading: false,
+    error: null
+  })),
+
+  on(loginCredentialsFailureAction, loginContextFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
+
+  on(logoutSuccessAction, (state) => ({
+    ...state,
+    profile: null,
     loading: false,
     error: null
   })),

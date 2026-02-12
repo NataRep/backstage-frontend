@@ -7,6 +7,8 @@ import { EmployeeService } from "../../services/firebase/employee.service";
 import { PersonsService } from "../../services/persons.service";
 import {
   loginAction,
+  loginContextFailureAction,
+  loginCredentialsFailureAction,
   loginFailureAction,
   loginSuccessAction,
   logoutAction,
@@ -37,7 +39,9 @@ export class AuthEffects {
                 name: response.user.displayName
               }
             })),
-            catchError(error => of(loginFailureAction({ error })))
+            catchError(error => {
+              return of(loginCredentialsFailureAction({ error: 'Incorrect email or password' }))
+            })
           ))
     )
   })
@@ -54,7 +58,8 @@ export class AuthEffects {
             if (!personal || !employee) {
               let errorText;
               if (!personal && !employee) {
-                errorText = "Error: load User context failed"
+                console.log("loginSuccess$")
+                return loginContextFailureAction({ error: 'Error: load User context failed' });
               } else if (!personal) {
                 errorText = "Error: load User personal context failed"
               }
@@ -81,9 +86,7 @@ export class AuthEffects {
             });
           }),
           catchError(error => {
-            return of(loginFailureAction({
-              error: "Error: load User context failed"
-            }))
+            return of(loginFailureAction({ error }));
           }
           )
         )
@@ -131,13 +134,15 @@ export class AuthEffects {
     );
   });
 
-  logoutOnLoginFailure$ = createEffect(() =>
+  loginFailure$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginFailureAction),
       switchMap(() =>
         from(this.authService.logout()).pipe(
           retry(1),
-          map(() => logoutSuccessAction()),
+          map(() => {
+            return logoutSuccessAction()
+          }),
           catchError(error => {
             console.error("Logout failed twice", error);
             return of(logoutSuccessAction());

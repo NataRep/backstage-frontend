@@ -15,7 +15,7 @@ export const loginSuccessAction = createAction(
 
 export const loginFailureAction = createAction(
   '[Auth] Login Failure',
-  props<{ error: unknown }>()
+  props<{ error: string }>()
 );
 
 export const logoutAction = createAction(
@@ -28,7 +28,7 @@ export const logoutSuccessAction = createAction(
 
 export const logoutFailureAction = createAction(
   '[Auth] Logout Failure',
-  props<{ error: unknown }>()
+  props<{ error: string }>()
 );
 
 export const setUserDataAction = createAction(
@@ -45,4 +45,14 @@ export const autoLoginAction = createAction('[Auth] Auto Login');
 export const setUserProfileAction = createAction(
   '[Auth] Set User Profile',
   props<{ personal: Person, employment: Employee }>()
+);
+
+export const loginCredentialsFailureAction = createAction(
+  '[Auth] Login Credentials Failure',
+  props<{ error: string }>()
+);
+
+export const loginContextFailureAction = createAction(
+  '[Auth] Login Context Failure',
+  props<{ error: string }>()
 );
