@@ -21,22 +21,22 @@ export class EmployeeInfoComponent {
   }
 
   get fullName(): string {
-    return this.employee?.personal?.fullName ?? '';
+    return this.employee?.person?.fullName ?? '';
   }
 
   get roles(): string {
-    return this.employee?.employment?.roles?.join(', ') ?? '';
+    return this.employee?.worker?.roles?.join(', ') ?? '';
   }
 
   get phone(): string {
-    return this.employee?.personal?.phone ?? '';
+    return this.employee?.person?.phone ?? '';
   }
 
   get email(): string {
-    return this.employee?.personal?.email ?? '';
+    return this.employee?.person?.email ?? '';
   }
 
   get socialLinks() {
-    return this.employee?.personal?.socialLinks ?? [];
+    return this.employee?.person?.socialLinks ?? [];
   }
 }

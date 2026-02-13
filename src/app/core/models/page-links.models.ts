@@ -22,21 +22,21 @@ export const PAGE_LINKS_LIST: MainLayoutLink[] = [
     icon: "home",
   },
   {
-    title: "Orders",
+    title: "Orders calendar",
     link: "orders",
     isMainNav: true,
     isUserNav: false,
     icon: "calendar"
   },
   {
-    title: "Team Management",
+    title: "Team",
     link: "team",
     isMainNav: true,
     isUserNav: false,
     icon: "team"
   },
   {
-    title: "Shows & Events",
+    title: "Shows",
     link: "shows",
     isMainNav: true,
     isUserNav: false,
@@ -50,7 +50,7 @@ export const PAGE_LINKS_LIST: MainLayoutLink[] = [
     icon: "storage"
   },
   {
-    title: "Statistics & Analytics",
+    title: "Statistics",
     link: "statistics",
     isMainNav: true,
     isUserNav: false,

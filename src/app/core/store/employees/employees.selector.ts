@@ -10,7 +10,7 @@ export const selectAllEmployees = createSelector(
 
 export const selectEmployeeById = (personId: string) => createSelector(
   selectEmployeesState,
-  (state) => state.employees.find(emp => emp.personal?.personId === personId)
+  (state) => state.employees.find(emp => emp.person?.personId === personId)
 );
 
 export const selectEmployeesLoading = createSelector(

@@ -17,7 +17,7 @@ import {
 import { Store } from '@ngrx/store';
 import { AccessLevel } from '../../core/models/enums/auth.enums';
 import { Role } from '../../core/models/enums/employee.enums';
-import { EmployeeBase, EmployeeProfile } from '../../core/models/interfaces/employee.models';
+import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
 import { PersonBase, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
@@ -34,7 +34,7 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
 })
 export class EmployeeFormComponent {
   @Input() employee: EmployeeProfile | null = null;
-  @Output() save = new EventEmitter<{ personal: PersonBase, employment: EmployeeBase }>();
+  @Output() save = new EventEmitter<{ person: PersonBase, worker: WorkerBase }>();
   @Output() cancel = new EventEmitter<void>();
 
   private store = inject(Store);
@@ -64,7 +64,7 @@ export class EmployeeFormComponent {
     this.save.emit(newEmployeeData);
   }
 
-  private createNewEmployeeData(): { personal: PersonBase, employment: EmployeeBase } {
+  private createNewEmployeeData(): { person: PersonBase, worker: WorkerBase } {
     const { email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
 
     const socialLinks: SocialLink[] = [];
@@ -101,14 +101,14 @@ export class EmployeeFormComponent {
       return AccessLevel.Employee
     }
 
-    const employeeData: EmployeeBase = {
+    const employeeData: WorkerBase = {
       roles: [...roles.value as Role[]],
       isActive: true,
       accessLevel: accessLevel(),
-      availability: this.employee?.employment?.availability || []
+      availability: this.employee?.worker?.availability || []
     }
 
-    return { personal: personalData, employment: employeeData };
+    return { person: personalData, worker: employeeData };
   }
 
   onCancel() {
@@ -124,20 +124,20 @@ export class EmployeeFormComponent {
   setFormByEmployee() {
     if (!this.employee) return;
 
-    const nameParts = this.employee.personal?.fullName?.split(' ') ?? [];
+    const nameParts = this.employee.person?.fullName?.split(' ') ?? [];
     const [firstName, lastName] = [nameParts[0] ?? '', nameParts[1] ?? ''];
-    this.isAdmin = this.employee?.employment?.accessLevel === AccessLevel.Admin;
+    this.isAdmin = this.employee?.worker?.accessLevel === AccessLevel.Admin;
 
     this.form.patchValue(
       {
         firstName,
         lastName,
         isAdmin: this.isAdmin,
-        email: this.employee.personal?.email ?? '',
-        phone: this.employee.personal?.phone ?? '',
-        telegram: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '',
-        vk: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.VK)?.link ?? '',
-        whatsapp: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '',
+        email: this.employee.person?.email ?? '',
+        phone: this.employee.person?.phone ?? '',
+        telegram: this.employee.person?.socialLinks?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '',
+        vk: this.employee.person?.socialLinks?.find(link => link.type === SocialType.VK)?.link ?? '',
+        whatsapp: this.employee.person?.socialLinks?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '',
       },
       { emitEvent: true },
     );
@@ -149,8 +149,8 @@ export class EmployeeFormComponent {
     if (!this.employee) return;
     this.rolesArray.clear();
 
-    if (this.employee.employment) {
-      for (const role of this.employee.employment.roles) {
+    if (this.employee.worker) {
+      for (const role of this.employee.worker.roles) {
         this.rolesArray.push(new FormControl(role));
       }
     }
@@ -168,7 +168,7 @@ export class EmployeeFormComponent {
   }
 
   canEditRole() {
-    const accessLevel = this.currentUser()?.employment?.accessLevel;
+    const accessLevel = this.currentUser()?.worker?.accessLevel;
     return (
       accessLevel === AccessLevel.Owner ||
       accessLevel === AccessLevel.Manager ||
@@ -177,7 +177,7 @@ export class EmployeeFormComponent {
   }
 
   canAppointAdmin() {
-    const accessLevel = this.currentUser()?.employment?.accessLevel;
+    const accessLevel = this.currentUser()?.worker?.accessLevel;
     return (
       accessLevel === AccessLevel.Owner ||
       accessLevel === AccessLevel.Admin
@@ -204,7 +204,7 @@ export class EmployeeFormComponent {
       (role) => !selectedRoles.includes(role) || role === currentControlValue,
     );
 
-    const accessLevel = this.currentUser()?.employment?.accessLevel;
+    const accessLevel = this.currentUser()?.worker?.accessLevel;
 
     //назначать владельцами могут только админы и владельцы
     if (accessLevel != AccessLevel.Admin && accessLevel != AccessLevel.Owner) {

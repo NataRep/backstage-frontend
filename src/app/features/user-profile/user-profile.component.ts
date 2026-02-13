@@ -4,7 +4,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { EmployeeBase } from '../../core/models/interfaces/employee.models';
+import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { PersonBase } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
@@ -76,7 +76,6 @@ export class UserProfileComponent {
     });
   }
 
-
   toggleEditMode() {
     const next = !this.isEditMode();
     this.router.navigate([], {
@@ -86,15 +85,15 @@ export class UserProfileComponent {
     });
   }
 
-  updateUser(data: { personal: PersonBase; employment: EmployeeBase }) {
+  updateUser(data: { person: PersonBase; worker: WorkerBase }) {
     this.store.dispatch(updateEmployeeAction({
 
-      personId: this.currentUser()?.personal?.personId!,
-      personal: {
-        ...data.personal,
+      personId: this.currentUser()?.person?.personId!,
+      person: {
+        ...data.person,
       },
-      employment: {
-        ...data.employment
+      worker: {
+        ...data.worker
       }
     }))
   }

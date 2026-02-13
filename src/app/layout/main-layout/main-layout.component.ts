@@ -53,8 +53,8 @@ export class MainLayoutComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(user => {
       console.log("user", this.user())
-      if (user?.personal?.fullName) {
-        this.fullName = user.personal.fullName.split(" ");
+      if (user?.person?.fullName) {
+        this.fullName = user.person.fullName.split(" ");
         this.userName = this.fullName[0] || "";
         this.showWelcomeMessage();
       }

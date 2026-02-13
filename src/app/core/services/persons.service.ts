@@ -9,7 +9,7 @@ import { Person, PersonBase, PersonsProps } from "../models/interfaces/person.mo
  */
 
 @Injectable({ providedIn: 'root' })
-export class PersonsService {
+export class PersonDataService {
   private http = inject(HttpClient);
 
   getPersonById(id: string): Observable<Person> {

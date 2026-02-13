@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { EmployeeProfile } from "../../models/interfaces/employee.models";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, updateEmployeeAction, updateEmployeeSuccessAction } from "./employees.actions";
+import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeSuccessAction } from "./employees.actions";
 
 export interface EmployeesState {
   employees: EmployeeProfile[],
@@ -45,10 +45,29 @@ export const employeeReducer = createReducer(
   on(updateEmployeeSuccessAction, (state, { employee }) => ({
     ...state,
     employees: [
-      ...state.employees.filter((item) => item.personal?.personId != employee.personal?.personId),
+      ...state.employees.filter((item) => item.person?.personId != employee.person?.personId),
       employee],
     loading: false,
     error: null,
   })),
 
+  on(getAllEmployeesAction, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(getAllEmployeesSuccessAction, (state, { employees }) => ({
+    ...state,
+    employees: [
+      ...employees],
+    loading: false,
+    error: null,
+  })),
+
+  on(getAllEmployeesFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
 )

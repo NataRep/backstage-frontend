@@ -1,10 +1,10 @@
 import { createAction, props } from "@ngrx/store";
-import { EmployeeBase, EmployeeProfile } from "../../models/interfaces/employee.models";
+import { EmployeeProfile, WorkerBase } from "../../models/interfaces/employee.models";
 import { Person, PersonBase } from "../../models/interfaces/person.model";
 
 export const createEmployeeAction = createAction(
   '[Employee] Create',
-  props<{ personal: Person, employment: EmployeeBase }>()
+  props<{ person: Person, worker: WorkerBase }>()
 );
 
 export const createEmployeeSuccessAction = createAction(
@@ -19,7 +19,7 @@ export const createEmployeeFailureAction = createAction(
 
 export const updateEmployeeAction = createAction(
   '[Employee] Update',
-  props<{ personId: string, personal: PersonBase, employment: EmployeeBase }>()
+  props<{ personId: string, person: PersonBase, worker: WorkerBase }>()
 );
 
 export const updateEmployeeSuccessAction = createAction(
@@ -31,3 +31,17 @@ export const updateEmployeeFailureAction = createAction(
   '[Employee] Update Failure',
   props<{ error: unknown }>()
 );
+
+export const getAllEmployeesAction = createAction(
+  '[Employee] Get All'
+)
+
+export const getAllEmployeesSuccessAction = createAction(
+  '[Employee] Get All Success',
+  props<{ employees: EmployeeProfile[] }>()
+)
+
+export const getAllEmployeesFailureAction = createAction(
+  '[Employee] Get All Failure',
+  props<{ error: unknown }>()
+)
