@@ -55,6 +55,12 @@ export class EmployeeFormComponent {
     whatsapp: new FormControl('', [Validators.pattern(/^\S+$/)])
   });
 
+  ngOnChanges() {
+    if (this.employee) {
+      this.setFormByEmployee();
+    }
+  }
+
   onSave() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -113,12 +119,22 @@ export class EmployeeFormComponent {
 
   onCancel() {
     this.cancel.emit();
+    this.resetForm();
   }
 
-  ngOnChanges() {
-    if (this.employee) {
-      this.setFormByEmployee();
-    }
+  resetForm() {
+    this.rolesArray.clear();
+
+    this.form.reset({
+      firstName: '',
+      lastName: '',
+      isAdmin: false,
+      email: '',
+      phone: '',
+      telegram: '',
+      vk: '',
+      whatsapp: ''
+    });
   }
 
   setFormByEmployee() {

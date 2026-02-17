@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, map, of } from "rxjs";
 import { EmployeeFacade } from "../../services/employee-facade.service";
 import { setUserProfileAction } from "../auth/auth.actions";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
+import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
 
 @Injectable()
 export class EmployeesEffects {
@@ -15,11 +15,15 @@ export class EmployeesEffects {
       ofType(createEmployeeAction),
       exhaustMap(({ person, worker }) =>
         this.employeeManagerService.createEmployee(person, worker).pipe(
-          map(employee =>
-            createEmployeeSuccessAction({ employee })
+          map(employee => {
+            console.log("createEmployeeSuccessAction", employee)
+            return createEmployeeSuccessAction({ employee })
+          }
           ),
-          catchError(error =>
-            of(createEmployeeFailureAction({ error }))
+          catchError(error => {
+            console.log("createEmployeeFailureAction", error)
+            return of(createEmployeeFailureAction({ error }))
+          }
           )
         )
       )
@@ -54,13 +58,18 @@ export class EmployeesEffects {
     )
   );
 
-  /*
   getAllEmployees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getAllEmployeesAction),
-      exhaustMap()
-    )
-
-  );*/
+      exhaustMap(() =>
+        this.employeeManagerService.getAllEmployees().pipe(
+          map((employees) => getAllEmployeesSuccessAction({
+            employees
+          })),
+          catchError(error => of(getAllEmployeesFailureAction({
+            error
+          }))))
+      ))
+  );
 
 }

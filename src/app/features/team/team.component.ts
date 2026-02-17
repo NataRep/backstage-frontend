@@ -1,12 +1,24 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { getAllEmployeesAction } from '../../core/store/employees/employees.actions';
-import { selectAllEmployees } from '../../core/store/employees/employees.selector';
+import { Role } from '../../core/models/enums/employee.enums';
+import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
+import { PersonBase } from '../../core/models/interfaces/person.model';
+import { createEmployeeAction, createEmployeeSuccessAction, getAllEmployeesAction } from '../../core/store/employees/employees.actions';
+import { selectAllEmployees, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
+import { IconComponent } from '../../shared/components/icons/icons.component';
+import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
+import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 
 @Component({
   selector: 'app-team',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,
+    IconComponent,
+    ModalContainerComponent,
+    EmployeeFormComponent],
   templateUrl: './team.component.html',
   styleUrl: './team.component.scss'
 })
@@ -24,12 +36,99 @@ export class TeamComponent implements OnInit {
 
   // Фильтры по Роли - Фильтрация через Computed Signal
   // Поиск по имени - Фильтрация через Computed Signal
-  private store = inject(Store);
+  @ViewChild('employeeForm') employeeForm!: EmployeeFormComponent;
 
-  employees = this.store.selectSignal(selectAllEmployees);
+  private destroyRef = inject(DestroyRef);
+  private store = inject(Store);
+  private actions = inject(Actions);
+  allEmployees = this.store.selectSignal(selectAllEmployees);
+  isLoading = this.store.selectSignal(selectEmployeesLoading);
+  searchQuery = signal('');
+  selectedRole = signal<Role | 'all'>('all');
+  isCreateNewModalOpen = signal(false);
+  isEditModalOpen = signal(false);
+  selectedEmployee = signal<EmployeeProfile | null>(null);
+
+  readonly roles: Role[] = Object.values(Role);
 
   ngOnInit() {
-    this.store.dispatch(getAllEmployeesAction());
+    if (this.allEmployees().length === 0 && !this.isLoading()) {
+      this.store.dispatch(getAllEmployeesAction());
+    }
+
+    this.actions.pipe(
+      ofType(createEmployeeSuccessAction),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => {
+      this.employeeForm?.resetForm();
+      this.closeEditModal();
+    });
   }
 
+  filteredEmployees = computed(() => {
+    const list = this.allEmployees();
+    const query = this.searchQuery().toLowerCase().trim();
+    const role = this.selectedRole();
+
+    return list.filter(emp => {
+      const matchesName = !query ||
+        emp.person?.fullName.toLowerCase().includes(query)
+
+      const matchesRole = role === 'all' ||
+        emp.worker?.roles.includes(role);
+
+      return matchesName && matchesRole;
+    });
+  });
+
+  onSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQuery.set(value);
+  }
+
+  createNewEmployee(data: { person: PersonBase; worker: WorkerBase }) {
+    console.log(data);
+
+    //TODO id должен быть получен на беке либо вручную из авторизации firebase из параметра uid
+    const personId = generateRandomId(28);
+    const newEmployee = {
+      ...data,
+      person: {
+        ...data.person,
+        personId: personId
+      },
+    };
+
+    this.store.dispatch(createEmployeeAction(newEmployee));
+  }
+
+  closeCreateModal() {
+    this.isCreateNewModalOpen.set(false);
+  }
+
+  openCreateModal() {
+    this.isCreateNewModalOpen.set(true);
+  }
+
+  updateSelectedEmployee(data: { person: PersonBase; worker: WorkerBase }) {
+    console.log(data)
+  }
+
+  closeEditModal() {
+    this.isCreateNewModalOpen.set(false);
+  }
+
+  openEditModal() {
+    this.isEditModalOpen.set(true);
+  }
+}
+
+//хелпер имитирует генерацию id из firebase authDS
+function generateRandomId(length: number = 28): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }

@@ -33,15 +33,16 @@ export class PersonDataService {
     return this.http.get<Person[]>(`persons`, { params });
   }
 
-  getAllEmployees() {
-
+  getAllEmployees(): Observable<Person[]> {
+    return this.http.get<Person[]>(`employees`);
   }
 
-  getAllClients() {
-
+  getAllClients(): Observable<Person[]> {
+    return this.http.get<Person[]>(`clients`);
   }
 
   createPerson(body: Person): Observable<Person> {
+    console.log("createPerson", convertObjectKeysToSnake(body));
     return this.http.post<Person>(`persons`, convertObjectKeysToSnake(body));
   }
 

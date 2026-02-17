@@ -1,1 +1,51 @@
-<p>team works!</p>
+<div class="controls">
+  <select (change)="selectedRole.set($any($event.target).value)">
+    <option value="all">Все роли</option>
+    @for (role of roles; track role) {
+    <option [value]="role">{{ role }}</option>
+    }
+  </select>
+  <input (input)="onSearch($event)" placeholder="Поиск по имени..." class="search">
+  <button class="button button--yellow" (click)="openCreateModal()">Add new</button>
+</div>
+
+<table class="custom-table">
+  <thead>
+    <tr>
+      <th>Сотрудник</th>
+      <th>Роли</th>
+      <th>Статус</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (emp of filteredEmployees(); track emp.worker?.id) {
+    <tr>
+      <td>{{ emp.person?.fullName }}</td>
+      <td>{{ emp.worker?.roles?.join(', ') }}</td>
+      <td>{{ emp.worker?.isActive ? 'Активен' : 'Архив' }}</td>
+    </tr>
+    } @empty {
+    <tr>
+      <td colspan="3">
+        {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default" actionButton="Save">
+  <div class="modal__header">Create new employee</div>
+  <div class="modal__body">
+    <app-employee-form [employee]="null" (save)="createNewEmployee($event)"
+      (cancel)="closeCreateModal()"></app-employee-form>
+  </div>
+</app-modal-container>
+
+<app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">
+  <div class="modal__header">Create new employee</div>
+  <div class="modal__body">
+    <app-employee-form [employee]="selectedEmployee()" (save)="updateSelectedEmployee($event)"
+      (cancel)="closeEditModal()"></app-employee-form>
+  </div>
+</app-modal-container>
