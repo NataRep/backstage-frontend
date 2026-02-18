@@ -1,4 +1,21 @@
 <form [formGroup]="form">
+  @if(isCreateForm){
+  <div class="form__row" [class.invalid]="form.controls.id.invalid && form.controls.id.touched">
+    <label for="personId" class="label">Id:</label>
+    <input id="personId" type="text" formControlName="id" placeholder="" appTrimOnBlur [required]="isCreateForm" />
+    @if (form.controls.id.invalid && form.controls.id.touched) {
+    <div class="error-message">
+      @if (form.controls.lastName.errors?.['required']) {
+      <span>Поле обязательно</span>
+      } @else if (form.controls.id.errors?.['minlength']) {
+      <span>Минимум 16 символов</span>
+      } @else if (form.controls.id.errors?.['pattern']) {
+      <span>Только латинский буквы и цифры</span>
+      }
+    </div>
+    }
+  </div>
+  }
   <div class="form__row" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
     <label for="lastame" class="label">Surname:</label>
     <input id="lastname" type="text" formControlName="lastName" placeholder="" appTrimOnBlur />

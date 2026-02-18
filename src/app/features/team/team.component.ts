@@ -5,7 +5,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Role } from '../../core/models/enums/employee.enums';
 import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
-import { PersonBase } from '../../core/models/interfaces/person.model';
+import { Person, PersonBase } from '../../core/models/interfaces/person.model';
 import { createEmployeeAction, createEmployeeSuccessAction, getAllEmployeesAction } from '../../core/store/employees/employees.actions';
 import { selectAllEmployees, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
@@ -86,20 +86,9 @@ export class TeamComponent implements OnInit {
     this.searchQuery.set(value);
   }
 
-  createNewEmployee(data: { person: PersonBase; worker: WorkerBase }) {
+  createNewEmployee(data: { person: Person; worker: WorkerBase }) {
     console.log(data);
-
-    //TODO id должен быть получен на беке либо вручную из авторизации firebase из параметра uid
-    const personId = generateRandomId(28);
-    const newEmployee = {
-      ...data,
-      person: {
-        ...data.person,
-        personId: personId
-      },
-    };
-
-    this.store.dispatch(createEmployeeAction(newEmployee));
+    this.store.dispatch(createEmployeeAction(data));
   }
 
   closeCreateModal() {
@@ -121,14 +110,4 @@ export class TeamComponent implements OnInit {
   openEditModal() {
     this.isEditModalOpen.set(true);
   }
-}
-
-//хелпер имитирует генерацию id из firebase authDS
-function generateRandomId(length: number = 28): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
 }

@@ -55,7 +55,7 @@ export class MainLayoutComponent implements OnInit {
       console.log("user", this.user())
       if (user?.person?.fullName) {
         this.fullName = user.person.fullName.split(" ");
-        this.userName = this.fullName[0] || "";
+        this.userName = this.fullName[1] || "";
         this.showWelcomeMessage();
       }
     });

@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 import { AccessLevel } from '../../core/models/enums/auth.enums';
 import { Role } from '../../core/models/enums/employee.enums';
 import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
-import { PersonBase, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
+import { Person, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
@@ -33,8 +33,11 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeFormComponent {
+  //TODO - после реализации создания учетки авторизации при создании пользователя на беке убрать полуе id. 
+  // он должен генерироваться в firebase auth и добавляться в данные пользователя на беке из uid
+
   @Input() employee: EmployeeProfile | null = null;
-  @Output() save = new EventEmitter<{ person: PersonBase, worker: WorkerBase }>();
+  @Output() save = new EventEmitter<{ person: Person, worker: WorkerBase }>();
   @Output() cancel = new EventEmitter<void>();
 
   private store = inject(Store);
@@ -44,6 +47,7 @@ export class EmployeeFormComponent {
   readonly roles: Role[] = Object.values(Role);
 
   form = new FormGroup({
+    id: new FormControl('', [Validators.minLength(16), Validators.pattern(/^\S+$/)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
     firstName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
     roles: new FormArray<FormControl<Role>>([], { validators: [Validators.required] }),
@@ -56,8 +60,11 @@ export class EmployeeFormComponent {
   });
 
   ngOnChanges() {
+    console.log()
     if (this.employee) {
       this.setFormByEmployee();
+    } else {
+      console.log(generateRandomId());
     }
   }
 
@@ -67,11 +74,13 @@ export class EmployeeFormComponent {
       return;
     }
     const newEmployeeData = this.createNewEmployeeData();
+    console.log(newEmployeeData)
     this.save.emit(newEmployeeData);
   }
 
-  private createNewEmployeeData(): { person: PersonBase, worker: WorkerBase } {
-    const { email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
+  private createNewEmployeeData(): { person: Person, worker: WorkerBase } {
+
+    const { id, email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
 
     const socialLinks: SocialLink[] = [];
 
@@ -87,9 +96,10 @@ export class EmployeeFormComponent {
       }
     });
 
-    const personalData: PersonBase = {
+    const personalData: Person = {
+      personId: id.value!,
       type: "employee",
-      fullName: `${firstName.value} ${lastName.value}`,
+      fullName: `${lastName.value} ${firstName.value}`,
       email: email.value || "",
       phone: phone.value || undefined,
       socialLinks: socialLinks
@@ -126,6 +136,7 @@ export class EmployeeFormComponent {
     this.rolesArray.clear();
 
     this.form.reset({
+      id: '',
       firstName: '',
       lastName: '',
       isAdmin: false,
@@ -140,12 +151,13 @@ export class EmployeeFormComponent {
   setFormByEmployee() {
     if (!this.employee) return;
 
-    const nameParts = this.employee.person?.fullName?.split(' ') ?? [];
-    const [firstName, lastName] = [nameParts[0] ?? '', nameParts[1] ?? ''];
+    const nameParts = this.employee.person?.fullName?.split(' ')!;
+    const [firstName, lastName] = [nameParts[0], nameParts[1]];
     this.isAdmin = this.employee?.worker?.accessLevel === AccessLevel.Admin;
 
     this.form.patchValue(
       {
+        id: this.employee.person?.personId,
         firstName,
         lastName,
         isAdmin: this.isAdmin,
@@ -237,4 +249,18 @@ export class EmployeeFormComponent {
   get isCheckedAdmin() {
     return this.form.get('isAdmin')?.value;
   }
+
+  get isCreateForm(): boolean {
+    return !this.employee;
+  }
+}
+
+//хелпер имитирует генерацию id из firebase authDS
+function generateRandomId(length: number = 28): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }
