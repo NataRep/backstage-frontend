@@ -1,0 +1,57 @@
+<div class="controls">
+  <select (change)="selectedRole.set($any($event.target).value)">
+    <option value="all">Все роли</option>
+    @for (role of roles; track role) {
+    <option [value]="role">{{ role }}</option>
+    }
+  </select>
+  <input (input)="onSearch($event)" placeholder="Поиск..." class="search">
+</div>
+<table class="table">
+  <thead>
+    <tr>
+      <th>ФИО</th>
+      <th>Роль в команде</th>
+      <th>Телефон</th>
+      <th>Telegram</th>
+      <th>VK</th>
+      <th>WhatsApp</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (emp of filteredEmployees(); track emp.person?.personId) {
+    <tr>
+      <td>{{ emp.person?.fullName }}
+        @if(emp.person?.personId === currentUser()?.person?.personId){
+        (Вы)
+        }
+      </td>
+      <td>{{ emp.worker?.roles?.join(', ') }}</td>
+      <td>{{ emp.person?.phone }}</td>
+      <td>{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
+      <td>{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
+      <td>{{ (emp.person?.socialLinks | getSocialLink: 'whatsapp') || "-"}}</td>
+      <td><app-icon name="edit" (click)="openEditModal(emp)"></app-icon></td>
+      @if(emp.person?.personId != currentUser()?.person?.personId){
+      <th><app-icon name="trash" (click)="openDeleteConfirmModal()"></app-icon></th>
+      }
+    </tr>
+    } @empty {
+    <tr>
+      <td colspan="3">
+        {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+
+<app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">
+  <div class="modal__header">Edit employee info</div>
+  <div class="modal__body">
+    <app-employee-form [employee]="selectedEmployee()" (save)="updateSelectedEmployee($event)"
+      (cancel)="closeEditModal()"></app-employee-form>
+  </div>
+</app-modal-container>

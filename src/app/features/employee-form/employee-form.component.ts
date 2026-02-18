@@ -150,9 +150,10 @@ export class EmployeeFormComponent {
 
   setFormByEmployee() {
     if (!this.employee) return;
+    console.log("this.employee", this.employee)
 
     const nameParts = this.employee.person?.fullName?.split(' ')!;
-    const [firstName, lastName] = [nameParts[0], nameParts[1]];
+    const [lastName, firstName] = [nameParts[0], nameParts[1]];
     this.isAdmin = this.employee?.worker?.accessLevel === AccessLevel.Admin;
 
     this.form.patchValue(

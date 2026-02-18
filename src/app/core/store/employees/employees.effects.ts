@@ -1,14 +1,18 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, exhaustMap, map, of } from "rxjs";
+import { Store } from "@ngrx/store";
+import { catchError, exhaustMap, filter, map, of } from "rxjs";
 import { EmployeeFacade } from "../../services/employee-facade.service";
 import { setUserProfileAction } from "../auth/auth.actions";
+import { selectAuthUser } from "../auth/auth.selectors";
 import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
 
 @Injectable()
 export class EmployeesEffects {
   private actions$ = inject(Actions);
-  private employeeManagerService = inject(EmployeeFacade)
+  private employeeManagerService = inject(EmployeeFacade);
+  private store = inject(Store);
+  private currentUser = this.store.selectSignal(selectAuthUser);
 
   createEmployee$ = createEffect(() =>
     this.actions$.pipe(
@@ -49,6 +53,7 @@ export class EmployeesEffects {
   updateEmployeeSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateEmployeeSuccessAction),
+      filter(({ employee }) => this.currentUser()?.person?.personId === employee.person?.personId),
       map(({ employee }) =>
         setUserProfileAction({
           person: employee.person!,
