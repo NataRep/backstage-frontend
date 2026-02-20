@@ -51,7 +51,6 @@ export class UserProfileComponent {
   isPasswordModalOpen = signal(false);
 
   isEditMode = computed(() => {
-    console.log("currentUser", this.currentUser())
     return this.queryParamMap()?.get('edit') === 'true';
   });
 
@@ -105,6 +104,14 @@ export class UserProfileComponent {
 
   handleUpdatePasswordAction() {
     this.isPasswordModalOpen.set(false);
+  }
+
+  onSuccessToastClosed() {
+    this.isSuccessToastOpen.set(false);
+  }
+
+  onErrorToastClosed() {
+    this.isErrorToastOpen.set(true);
   }
 
 }

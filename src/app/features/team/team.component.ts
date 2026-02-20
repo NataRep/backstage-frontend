@@ -5,9 +5,10 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { Person } from '../../core/models/interfaces/person.model';
-import { createEmployeeAction, createEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
+import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
+import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeesTableComponent } from '../employees-table/employees-table.component';
 
@@ -18,6 +19,7 @@ import { EmployeesTableComponent } from '../employees-table/employees-table.comp
     IconComponent,
     ModalContainerComponent,
     EmployeeFormComponent,
+    ToastComponent,
     EmployeesTableComponent],
   templateUrl: './team.component.html',
   styleUrl: './team.component.scss'
@@ -42,6 +44,14 @@ export class TeamComponent implements OnInit {
   private store = inject(Store);
   private actions = inject(Actions);
   isCreateNewModalOpen = signal(false);
+  isSuccessToastOpen = signal(false);
+  isErrorToastOpen = signal(false);
+  successToastMessage = "Данные сохранены";
+  errorToastMessage = "Что-то пошло не так. Попробуйте еще раз.";
+
+  constructor() {
+    this.initToastSubscriptions();
+  }
 
   ngOnInit() {
     this.actions.pipe(
@@ -53,8 +63,23 @@ export class TeamComponent implements OnInit {
     });
   }
 
+  private initToastSubscriptions() {
+    this.actions.pipe(
+      ofType(createEmployeeSuccessAction),
+      takeUntilDestroyed()
+    ).subscribe(() => {
+      this.isSuccessToastOpen.set(true);
+    });
+
+    this.actions.pipe(
+      ofType(createEmployeeFailureAction),
+      takeUntilDestroyed()
+    ).subscribe(() => {
+      this.isErrorToastOpen.set(true);
+    });
+  }
+
   createNewEmployee(data: { person: Person; worker: WorkerBase }) {
-    console.log(data);
     this.store.dispatch(createEmployeeAction(data));
   }
 
@@ -64,5 +89,13 @@ export class TeamComponent implements OnInit {
 
   openCreateModal() {
     this.isCreateNewModalOpen.set(true);
+  }
+
+  onSuccessToastClosed() {
+    this.isSuccessToastOpen.set(false);
+  }
+
+  onErrorToastClosed() {
+    this.isErrorToastOpen.set(true);
   }
 }

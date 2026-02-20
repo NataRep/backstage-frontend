@@ -1,5 +1,10 @@
-<button class="button button--yellow" (click)="openCreateModal()">Add new</button>
-<app-employees-table></app-employees-table>
+<div class="content-container">
+  <div class="content-container__title"> <app-icon name="team"></app-icon>Team list</div>
+  <div class="content-container__content">
+    <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
+    <app-employees-table></app-employees-table>
+  </div>
+</div>
 <app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default" actionButton="Save">
   <div class="modal__header">Create new employee</div>
   <div class="modal__body">
@@ -7,3 +12,9 @@
       (cancel)="closeCreateModal()"></app-employee-form>
   </div>
 </app-modal-container>
+<app-toast [message]="successToastMessage" [type]="'success'" [position]="'top-right'" [isOpen]="isSuccessToastOpen()"
+  [autoCloseDuration]="2000" (closed)="onSuccessToastClosed()">
+</app-toast>
+<app-toast [message]="errorToastMessage" [type]="'error'" [position]="'top-right'" [isOpen]="isErrorToastOpen()"
+  [autoCloseDuration]="4000" (closed)="onErrorToastClosed()">
+</app-toast>

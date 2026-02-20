@@ -1,57 +1,89 @@
+@let employee = selectedEmployee();
+
 <div class="controls">
-  <select (change)="selectedRole.set($any($event.target).value)">
-    <option value="all">Все роли</option>
-    @for (role of roles; track role) {
-    <option [value]="role">{{ role }}</option>
-    }
-  </select>
-  <input (input)="onSearch($event)" placeholder="Поиск..." class="search">
-</div>
-<table class="table">
-  <thead>
-    <tr>
-      <th>ФИО</th>
-      <th>Роль в команде</th>
-      <th>Телефон</th>
-      <th>Telegram</th>
-      <th>VK</th>
-      <th>WhatsApp</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (emp of filteredEmployees(); track emp.person?.personId) {
-    <tr>
-      <td>{{ emp.person?.fullName }}
-        @if(emp.person?.personId === currentUser()?.person?.personId){
-        (Вы)
-        }
-      </td>
-      <td>{{ emp.worker?.roles?.join(', ') }}</td>
-      <td>{{ emp.person?.phone }}</td>
-      <td>{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
-      <td>{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
-      <td>{{ (emp.person?.socialLinks | getSocialLink: 'whatsapp') || "-"}}</td>
-      <td><app-icon name="edit" (click)="openEditModal(emp)"></app-icon></td>
-      @if(emp.person?.personId != currentUser()?.person?.personId){
-      <th><app-icon name="trash" (click)="openDeleteConfirmModal()"></app-icon></th>
+  <input name="search" (input)="onSearch($event)" placeholder="Search..." class="search">
+  <div class="select-wrapper">
+    <div class="label">Filter:</div>
+    <select name="role" (change)="selectedRole.set($any($event.target).value)">
+      <option value="all">Все роли</option>
+      @for (role of roles; track role) {
+      <option [value]="role">{{ role }}</option>
       }
-    </tr>
-    } @empty {
-    <tr>
-      <td colspan="3">
-        {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
-      </td>
-    </tr>
-    }
-  </tbody>
-</table>
+    </select>
+  </div>
+</div>
+<div class="table-wrapper">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="cell--name sticky-coll">ФИО</th>
+        <th class="cell--role">Роль в команде</th>
+        <th class="cell--phone">Телефон</th>
+        <th class="cell--link">Telegram</th>
+        <th class="cell--link">VK</th>
+        <th class="cell--link">WhatsApp</th>
+        <th class="cell--icon"></th>
+        <th class="cell--icon"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (emp of filteredEmployees(); track emp.person?.personId) {
+      <tr>
+        <td class="cell--name sticky-coll " (click)="showEmployeeInfo(emp)">{{ emp.person?.fullName }}
+          @if(emp.person?.personId === currentUser()?.person?.personId){
+          (Вы)
+          }
+        </td>
+        <td class="cell--role">{{ emp.worker?.roles?.join(', ') }}</td>
+        <td class="cell--phone">{{ emp.person?.phone }}</td>
+        <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
+        <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
+        <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'whatsapp') || "-"}}</td>
+        <td class="cell--icon"><app-icon name="edit" (click)="openEditModal(emp)" class="edit-icon"></app-icon></td>
+        <td class="cell--icon">
+          @if(emp.person?.personId != currentUser()?.person?.personId){<app-icon name="trash"
+            (click)="openConfirmDeleteModal(emp)" class="delete-icon"></app-icon>
+          }
+        </td>
+      </tr>
+      } @empty {
+      <tr>
+        <td colspan="8">
+          {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
 
 <app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">
   <div class="modal__header">Edit employee info</div>
   <div class="modal__body">
-    <app-employee-form [employee]="selectedEmployee()" (save)="updateSelectedEmployee($event)"
+    <app-employee-form [employee]="employee" (save)="updateSelectedEmployee($event)"
       (cancel)="closeEditModal()"></app-employee-form>
   </div>
 </app-modal-container>
+
+<app-modal-container [(isOpen)]="isConfirmDeleteModalOpen" type="action" actionButton="Delete"
+  (action)="handleDeleteAction($event)">
+  <div class="modal__header">Delete employee</div>
+  <div class="modal__body">
+    <p>Вы собираетесь удалить аккаунт и данные сотрудника:</p>
+    <p><strong>{{ employee?.person?.fullName }}</strong></p>
+    <p>Это действие необратимо.</p>
+  </div>
+</app-modal-container>
+
+<app-modal-container [(isOpen)]="isInfoModalOpen" type="info">
+  <div class="modal__body">
+    <app-employee-info [employee]="employee" [showLinks]="true"></app-employee-info>
+  </div>
+</app-modal-container>
+
+<app-toast [message]="successToastMessage" [type]="'success'" [position]="'top-right'" [isOpen]="isSuccessToastOpen()"
+  [autoCloseDuration]="2000" (closed)="onSuccessToastClosed()">
+</app-toast>
+<app-toast [message]="errorToastMessage" [type]="'error'" [position]="'top-right'" [isOpen]="isErrorToastOpen()"
+  [autoCloseDuration]="4000" (closed)="onErrorToastClosed()">
+</app-toast>

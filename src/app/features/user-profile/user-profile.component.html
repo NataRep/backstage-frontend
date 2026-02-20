@@ -22,10 +22,10 @@
 </div>
 
 <app-toast [message]="successToastMessage" [type]="'success'" [position]="'top-right'" [isOpen]="isSuccessToastOpen()"
-  [autoCloseDuration]="3000">
+  [autoCloseDuration]="2000" (closed)="onSuccessToastClosed()">
 </app-toast>
 <app-toast [message]="errorToastMessage" [type]="'error'" [position]="'top-right'" [isOpen]="isErrorToastOpen()"
-  [autoCloseDuration]="4000">
+  [autoCloseDuration]="4000" (closed)="onErrorToastClosed()">
 </app-toast>
 
 <app-modal-container [(isOpen)]="isPasswordModalOpen" type="default" actionButton="Save">

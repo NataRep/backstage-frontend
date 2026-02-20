@@ -58,7 +58,6 @@ export class AuthEffects {
             if (!person || !worker) {
               let errorText;
               if (!person && !worker) {
-                console.log("loginSuccess$")
                 return loginContextFailureAction({ error: 'Error: load User context failed' });
               } else if (!person) {
                 errorText = "Error: load User personal context failed"

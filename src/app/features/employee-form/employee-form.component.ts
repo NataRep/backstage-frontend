@@ -60,7 +60,6 @@ export class EmployeeFormComponent {
   });
 
   ngOnChanges() {
-    console.log()
     if (this.employee) {
       this.setFormByEmployee();
     } else {
@@ -74,7 +73,6 @@ export class EmployeeFormComponent {
       return;
     }
     const newEmployeeData = this.createNewEmployeeData();
-    console.log(newEmployeeData)
     this.save.emit(newEmployeeData);
   }
 
@@ -150,7 +148,6 @@ export class EmployeeFormComponent {
 
   setFormByEmployee() {
     if (!this.employee) return;
-    console.log("this.employee", this.employee)
 
     const nameParts = this.employee.person?.fullName?.split(' ')!;
     const [lastName, firstName] = [nameParts[0], nameParts[1]];

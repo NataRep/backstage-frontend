@@ -1,11 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { catchError, exhaustMap, filter, map, of } from "rxjs";
+import { catchError, exhaustMap, filter, map, of, switchMap } from "rxjs";
 import { EmployeeFacade } from "../../services/employee-facade.service";
 import { setUserProfileAction } from "../auth/auth.actions";
 import { selectAuthUser } from "../auth/auth.selectors";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
+import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
 
 @Injectable()
 export class EmployeesEffects {
@@ -17,15 +17,13 @@ export class EmployeesEffects {
   createEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createEmployeeAction),
-      exhaustMap(({ person, worker }) =>
+      switchMap(({ person, worker }) =>
         this.employeeManagerService.createEmployee(person, worker).pipe(
           map(employee => {
-            console.log("createEmployeeSuccessAction", employee)
             return createEmployeeSuccessAction({ employee })
           }
           ),
           catchError(error => {
-            console.log("createEmployeeFailureAction", error)
             return of(createEmployeeFailureAction({ error }))
           }
           )
@@ -37,7 +35,7 @@ export class EmployeesEffects {
   updateEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateEmployeeAction),
-      exhaustMap(({ personId, person, worker }) =>
+      switchMap(({ personId, person, worker }) =>
         this.employeeManagerService.updateFullEmployeeProfile(personId, person, worker).pipe(
           map((employeeProfile) => updateEmployeeSuccessAction({
             employee: employeeProfile
@@ -63,6 +61,22 @@ export class EmployeesEffects {
     )
   );
 
+  deleteEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteEmployeeAction),
+      switchMap(({ personId }) =>
+        this.employeeManagerService.deleteFullEmployeeProfile(personId).pipe(
+          map((id) => deleteEmployeeSuccessAction({
+            personId: id
+          })),
+          catchError(error => of(deleteEmployeeFailureAction({
+            error: error.message || error
+          })))
+        )
+      )
+    )
+  );
+
   getAllEmployees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getAllEmployeesAction),
@@ -76,5 +90,4 @@ export class EmployeesEffects {
           }))))
       ))
   );
-
 }

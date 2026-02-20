@@ -9,7 +9,7 @@
   <app-icon name="phone"></app-icon>
   <div class="value">
     @if (showLinks) {
-    <a [href]="phone | socialLink: 'phone'" target="_blank" rel="noopener noreferrer">{{ phone }}</a>
+    <a [href]="phone | socialLink: 'phone'">{{ phone }}</a>
     } @else {
     {{ phone }}
     }

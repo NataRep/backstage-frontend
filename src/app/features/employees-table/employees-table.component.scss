@@ -1,0 +1,76 @@
+.table-wrapper {
+  container-type: inline-size;
+  container-name: tableContainer;
+}
+
+.table {
+  width: 100%;
+  min-width: max-content;
+}
+
+@container tableContainer (max-width: 848px) {
+  .cell--link {
+    display: none;
+  }
+}
+
+@container tableContainer (max-width: 560px) {
+  .cell--phone {
+    display: none;
+  }
+}
+
+@container tableContainer (max-width: 560px) {
+  .cell--phone {
+    display: none;
+  }
+}
+
+@container tableContainer (max-width: 420px) {
+  .cell--role {
+    display: none;
+  }
+}
+
+.cell--name {
+  min-width: 140px;
+  cursor: pointer;
+}
+
+.cell--role {
+  min-width: 80px;
+}
+
+.cell--phone,
+.cell--link {
+  min-width: 60px;
+}
+
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  margin: auto;
+  width: max-content;
+  display: block;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.search {
+  max-width: 10rem;
+  margin-right: 3rem;
+}
+
+.select-wrapper {
+  display: flex;
+  align-items: center;
+
+  .label {
+    margin-right: 0.5rem;
+  }
+}

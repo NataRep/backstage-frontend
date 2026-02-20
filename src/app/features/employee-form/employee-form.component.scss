@@ -1,3 +1,7 @@
+:host {
+  width: 100%;
+}
+
 .label {
   margin-right: 1rem;
 }
@@ -9,51 +13,9 @@
 
 .role-item {
   position: relative;
-  display: flex;
-  align-items: stretch;
-  margin-right: 0.5rem;
-  margin-bottom: 0.25rem;
-  padding: 0;
-  color: var(--color-grey-extra-light);
-  border: 1px solid var(--color-grey-text-dark);
-  border-radius: 0.5rem;
-
-  select {
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-  }
-
-  select,
-  ::picker(select) {
-    appearance: base-select;
-  }
-
-  select::picker-icon {
-    opacity: 0;
-  }
-
-  select:open::picker-icon {
-    opacity: 1;
-  }
-
-  ::picker(select) {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  option {
-    padding: 0.5rem 1rem 0.5rem 0.5rem;
-  }
-
-  option:checked {
-    background-color: #e3f2fd;
-  }
+  margin-right: 0.25rem;
+  width: max-content;
+  min-width: max-content;
 
   .remove {
     display: block;
@@ -67,6 +29,10 @@
     border: none;
     padding: 0 0.5rem;
     transform: translateY(-50%);
+  }
+
+  select {
+    margin-bottom: 0.25rem;
   }
 
   select:open+.remove {

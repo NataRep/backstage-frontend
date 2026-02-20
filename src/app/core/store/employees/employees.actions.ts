@@ -32,6 +32,21 @@ export const updateEmployeeFailureAction = createAction(
   props<{ error: unknown }>()
 );
 
+export const deleteEmployeeAction = createAction(
+  '[Employee] Delete by id',
+  props<{ personId: string }>()
+);
+
+export const deleteEmployeeSuccessAction = createAction(
+  '[Employee] Delete Success',
+  props<{ personId: string }>()
+);
+
+export const deleteEmployeeFailureAction = createAction(
+  '[Employee] Delete Failure',
+  props<{ error: unknown }>()
+);
+
 export const getAllEmployeesAction = createAction(
   '[Employee] Get All'
 )

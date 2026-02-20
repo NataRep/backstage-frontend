@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { catchError, combineLatest, forkJoin, from, map, Observable, of, switchMap, throwError } from "rxjs";
+import { catchError, combineLatest, exhaustMap, forkJoin, from, map, Observable, of, switchMap, throwError } from "rxjs";
 import { EmployeeProfile, WorkerBase } from "../models/interfaces/employee.models";
 import { Person, PersonBase } from "../models/interfaces/person.model";
 import { WorkerDataService } from "./firebase/firebase-workers.service";
@@ -38,8 +38,6 @@ export class EmployeeFacade {
   }
 
   createEmployee(person: Person, employmentData: WorkerBase) {
-
-    console.log(person.personId)
     // TODO: MIGRATION-CRITICAL - Этот метод будет заменен на один вызов Cloud Function.
     // Сейчас метод вручную связывает Person и Worker через UID, введенный админом, и предотвращает дубликаты на стороне клиента.
     return forkJoin({
@@ -74,6 +72,23 @@ export class EmployeeFacade {
                 person: updatedPersonal as Person,
                 worker: { ...worker, personId: personId } as WorkerBase
               } as EmployeeProfile))
+            );
+          })
+        )
+      )
+    );
+  }
+
+  deleteFullEmployeeProfile(id: string): Observable<string> {
+    return this.personService.deletePerson(id).pipe(
+      exhaustMap(() =>
+        from(this.workersService.getByPersonId(id)).pipe(
+          switchMap(worker => {
+            if (!worker) {
+              return of(id);
+            }
+            return from(this.workersService.delete(worker.id)).pipe(
+              map(() => id)
             );
           })
         )

@@ -1,38 +1,12 @@
-body {
-  font-family: Roboto, Arial, sans-serif;
-  line-height: 120%;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover:not(:disabled) {
-      color: var(--color-yellow);
-    }
-  }
-
-  &:active {
-    color: var(--color-yellow);
-  }
-}
-
-p {
-  margin-block-start: 0em;
-}
-
-
-
 .content-container {
   position: relative;
   width: max-content;
-  max-width: calc(100% - 2rem);
+  max-width: 1600px;
   padding: 1.5rem 1rem;
   border-radius: 24px;
   background: var(--color-grey-dark);
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
     padding: 2.25rem 4rem 2rem;
     background: var(--gradient-grey-y);
     box-shadow: inset 0 0 20px var(--color-black);
@@ -80,6 +54,10 @@ p {
       margin-right: 0.5rem;
     }
   }
+}
+
+.content-container__content {
+  position: relative;
 }
 
 .row {

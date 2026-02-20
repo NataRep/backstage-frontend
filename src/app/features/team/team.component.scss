@@ -1,7 +1,28 @@
+.content-container {
+  width: calc(100% - 8rem);
+  max-width: 1200px;
+
+  @media (max-width: 768px) {
+    width: calc(100% - 2rem);
+  }
+}
+
 .controls {
   display: flex;
 }
 
 .search {
   max-width: 320px;
+}
+
+.button--add {
+  position: absolute;
+  top: -6px;
+  left: 1rem;
+
+  @media (max-width: 768px) {
+    top: -56px;
+    left: auto;
+    right: 0;
+  }
 }

@@ -1,0 +1,27 @@
+body {
+  font-family: Roboto, Arial, sans-serif;
+  line-height: 120%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      color: var(--color-yellow);
+    }
+  }
+
+  &:active {
+    color: var(--color-yellow);
+  }
+}
+
+p {
+  margin-block-start: 0em;
+}
+
+.orange-text {
+  color: var(--color-orange-text);
+}

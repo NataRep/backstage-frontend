@@ -42,7 +42,6 @@ export class PersonDataService {
   }
 
   createPerson(body: Person): Observable<Person> {
-    console.log("createPerson", convertObjectKeysToSnake(body));
     return this.http.post<Person>(`persons`, convertObjectKeysToSnake(body));
   }
 
