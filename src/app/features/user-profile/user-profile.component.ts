@@ -12,6 +12,7 @@ import { selectEmployeesError, selectEmployeesLoading } from '../../core/store/e
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
+import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
@@ -26,7 +27,8 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
     EmployeeFormComponent,
     ToastComponent,
     ModalContainerComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    RoleTranslatePipe
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',

@@ -13,7 +13,9 @@ import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
+import { ROLE_RU } from '../../shared/constants/texts/common.texts';
 import { GetSocialLinkPipe } from '../../shared/pipes/get-social-link.pipe';
+import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 
@@ -25,7 +27,8 @@ import { EmployeeInfoComponent } from '../employee-info/employee-info.component'
     EmployeeFormComponent,
     GetSocialLinkPipe,
     EmployeeInfoComponent,
-    ToastComponent],
+    ToastComponent,
+    RoleTranslatePipe],
   templateUrl: './employees-table.component.html',
   styleUrl: './employees-table.component.scss'
 })
@@ -39,6 +42,7 @@ export class EmployeesTableComponent {
   private route = inject(ActivatedRoute);
 
   readonly roles: Role[] = Object.values(Role);
+  readonly rolesTranslate = ROLE_RU;
 
   allEmployees = this.store.selectSignal(selectAllEmployees);
   isLoading = this.store.selectSignal(selectEmployeesLoading);
@@ -62,7 +66,7 @@ export class EmployeesTableComponent {
   errorToastMessage = "Что-то пошло не так. Попробуйте еще раз.";
 
   //пагинация
-  pageSize = signal(5);
+  pageSize = signal(7);
   currentPage = signal(Number(this.route.snapshot.queryParamMap.get('page')) || 1);
 
   totalPages = computed(() => {

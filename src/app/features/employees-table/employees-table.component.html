@@ -8,7 +8,7 @@
       (change)="selectedRole.set($any($event.target).value); currentPage.set(1)">
       <option value="all">Все роли</option>
       @for (role of roles; track role) {
-      <option [value]="role" [selected]="selectedRole() === role"> {{ role }}</option>
+      <option [value]="role" [selected]="selectedRole() === role"> {{ role | roleTranslate }}</option>
       }
     </select>
   </div>
@@ -37,7 +37,9 @@
           (Вы)
           }
         </td>
-        <td class="cell--role">{{ emp.worker?.roles?.join(', ') }}</td>
+        <td class="cell--role">@for (role of emp.worker?.roles; track role; let last = $last) {
+          {{ role | roleTranslate }}{{ last ? '' : ', ' }}
+          }</td>
         <td class="cell--phone">{{ emp.person?.phone }}</td>
         <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
         <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
@@ -60,25 +62,25 @@
       }
     </tbody>
   </table>
-  @if (totalPages() > 1) {
-  <div class="pagination">
-    <button [disabled]="currentPage() === 1" (click)="reducePage()">
-      &lt;
-    </button>
-    <div class="pagination__numbers">
-      @for (pageNum of pages(); track pageNum) {
-      <div class="pagination__page-number" [class.is-active]="currentPage() === pageNum"
-        (click)="currentPage.set(pageNum)">
-        {{ pageNum }}
-      </div>
-      }
-    </div>
-    <button [disabled]="currentPage() === totalPages()" (click)="increasePage()">
-      &gt;
-    </button>
-  </div>
-  }
 </div>
+@if (totalPages() > 1) {
+<div class="pagination">
+  <button [disabled]="currentPage() === 1" (click)="reducePage()">
+    &lt;
+  </button>
+  <div class="pagination__numbers">
+    @for (pageNum of pages(); track pageNum) {
+    <div class="pagination__page-number" [class.is-active]="currentPage() === pageNum"
+      (click)="currentPage.set(pageNum)">
+      {{ pageNum }}
+    </div>
+    }
+  </div>
+  <button [disabled]="currentPage() === totalPages()" (click)="increasePage()">
+    &gt;
+  </button>
+</div>
+}
 
 <app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">
   <div class="modal__header">Edit employee info</div>

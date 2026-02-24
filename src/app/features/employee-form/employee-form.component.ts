@@ -22,12 +22,19 @@ import { Person, SocialLink, SocialType } from '../../core/models/interfaces/per
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
+import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, UppercaseFirstLetter, TrimOnBlurDirective],
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    IconComponent,
+    UppercaseFirstLetter,
+    TrimOnBlurDirective,
+    RoleTranslatePipe,
+    UppercaseFirstLetter],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

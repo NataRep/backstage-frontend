@@ -56,10 +56,10 @@
       <div class="role-item">
         <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)" class="float-select">
           @if (!control.value) {
-          <option [value]="null" disabled>Select role...</option>
+          <option [value]="null" disabled>Выберете...</option>
           }
           @for (role of getAvailableRolesForControl(i); track role) {
-          <option [value]="role">{{ role | upperFirstLetter }}</option>
+          <option [value]="role">{{ role | roleTranslate | upperFirstLetter }}</option>
           }
         </select>
         <button class="button button--icon remove" (click)="removeRole(i)" title="Remove role">
