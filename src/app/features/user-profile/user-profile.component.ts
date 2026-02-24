@@ -101,7 +101,6 @@ export class UserProfileComponent {
     this.isPasswordModalOpen.set(true)
   }
 
-
   handleUpdatePasswordAction() {
     this.isPasswordModalOpen.set(false);
   }

@@ -1,13 +1,14 @@
 @let employee = selectedEmployee();
 
 <div class="controls">
-  <input name="search" (input)="onSearch($event)" placeholder="Search..." class="search">
+  <input name="search" [value]="searchQuery()" (input)="onSearch($event)" placeholder="Search..." class="search">
   <div class="select-wrapper">
     <div class="label">Filter:</div>
-    <select name="role" (change)="selectedRole.set($any($event.target).value)">
+    <select name="role" [value]="selectedRole()"
+      (change)="selectedRole.set($any($event.target).value); currentPage.set(1)">
       <option value="all">Все роли</option>
       @for (role of roles; track role) {
-      <option [value]="role">{{ role }}</option>
+      <option [value]="role" [selected]="selectedRole() === role"> {{ role }}</option>
       }
     </select>
   </div>
@@ -22,12 +23,14 @@
         <th class="cell--link">Telegram</th>
         <th class="cell--link">VK</th>
         <th class="cell--link">WhatsApp</th>
+        @if(canEdit()){
         <th class="cell--icon"></th>
         <th class="cell--icon"></th>
+        }
       </tr>
     </thead>
     <tbody>
-      @for (emp of filteredEmployees(); track emp.person?.personId) {
+      @for (emp of paginatedEmployees(); track emp.person?.personId) {
       <tr>
         <td class="cell--name sticky-coll " (click)="showEmployeeInfo(emp)">{{ emp.person?.fullName }}
           @if(emp.person?.personId === currentUser()?.person?.personId){
@@ -39,12 +42,14 @@
         <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
         <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
         <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'whatsapp') || "-"}}</td>
+        @if(canEdit()){
         <td class="cell--icon"><app-icon name="edit" (click)="openEditModal(emp)" class="edit-icon"></app-icon></td>
         <td class="cell--icon">
           @if(emp.person?.personId != currentUser()?.person?.personId){<app-icon name="trash"
             (click)="openConfirmDeleteModal(emp)" class="delete-icon"></app-icon>
           }
         </td>
+        }
       </tr>
       } @empty {
       <tr>
@@ -55,6 +60,24 @@
       }
     </tbody>
   </table>
+  @if (totalPages() > 1) {
+  <div class="pagination">
+    <button [disabled]="currentPage() === 1" (click)="reducePage()">
+      &lt;
+    </button>
+    <div class="pagination__numbers">
+      @for (pageNum of pages(); track pageNum) {
+      <div class="pagination__page-number" [class.is-active]="currentPage() === pageNum"
+        (click)="currentPage.set(pageNum)">
+        {{ pageNum }}
+      </div>
+      }
+    </div>
+    <button [disabled]="currentPage() === totalPages()" (click)="increasePage()">
+      &gt;
+    </button>
+  </div>
+  }
 </div>
 
 <app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">

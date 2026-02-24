@@ -1,11 +1,12 @@
-import { Component, computed, DestroyRef, inject, signal, ViewChild } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Role } from '../../core/models/enums/employee.enums';
 import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
 import { Person } from '../../core/models/interfaces/person.model';
-import { selectAuthUser } from '../../core/store/auth/auth.selectors';
+import { selectAuthUser, selectCanEdit } from '../../core/store/auth/auth.selectors';
 import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { selectAllEmployees, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
@@ -34,26 +35,71 @@ export class EmployeesTableComponent {
   private destroyRef = inject(DestroyRef);
   private store = inject(Store);
   private actions = inject(Actions);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   readonly roles: Role[] = Object.values(Role);
+
   allEmployees = this.store.selectSignal(selectAllEmployees);
   isLoading = this.store.selectSignal(selectEmployeesLoading);
   currentUser = this.store.selectSignal(selectAuthUser);
-  searchQuery = signal('');
-  selectedRole = signal<Role | 'all'>('all');
+  canEdit = this.store.selectSignal(selectCanEdit);
+  selectedEmployee = signal<EmployeeProfile | null>(null);
+
+  searchQuery = signal(this.route.snapshot.queryParamMap.get('search') || '');
+  selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
+
+  //модалки
   isEditModalOpen = signal(false);
   isInfoModalOpen = signal(false);
-  selectedEmployee = signal<EmployeeProfile | null>(null);
   isCreateNewModalOpen = signal(false);
   isConfirmDeleteModalOpen = signal(false)
 
+  //тосты TODO вынести в сервис
   isSuccessToastOpen = signal(false);
   isErrorToastOpen = signal(false);
   successToastMessage = "Данные сохранены";
   errorToastMessage = "Что-то пошло не так. Попробуйте еще раз.";
 
+  //пагинация
+  pageSize = signal(5);
+  currentPage = signal(Number(this.route.snapshot.queryParamMap.get('page')) || 1);
+
+  totalPages = computed(() => {
+    const count = this.filteredEmployees().length;
+    return Math.ceil(count / this.pageSize());
+  });
+  pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
+
+  paginatedEmployees = computed(() => {
+    const list = this.filteredEmployees();
+    const total = this.totalPages();
+    let current = this.currentPage();
+    if (current > total && total > 0) {
+      current = 1;
+    }
+
+    const startIndex = (this.currentPage() - 1) * this.pageSize();
+    const endIndex = startIndex + this.pageSize();
+
+    return this.filteredEmployees().slice(startIndex, endIndex);
+  });
+
   constructor() {
     this.initToastSubscriptions()
     this.initModalsSubscriptions()
+
+    effect(() => {
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          page: this.currentPage(),
+          search: this.searchQuery() || null,
+          role: this.selectedRole() === 'all' ? null : this.selectedRole()
+        },
+        queryParamsHandling: 'merge',
+      });
+    });
   }
 
   ngOnInit() {
@@ -77,7 +123,6 @@ export class EmployeesTableComponent {
     ).subscribe(() => {
       this.closeConfirmDeleteModal();
     });
-
   }
 
   private initToastSubscriptions() {
@@ -101,20 +146,30 @@ export class EmployeesTableComponent {
     const query = this.searchQuery().toLowerCase().trim();
     const role = this.selectedRole();
 
-    return list.filter(emp => {
-      const matchesName = !query ||
-        emp.person?.fullName.toLowerCase().includes(query)
+    if (list.length === 0) return [];
+
+    const filtered = list.filter(emp => {
+      const fullName = emp.person?.fullName.toLowerCase() || '';
+
+      const matchesName = !query || fullName
+        .split(" ")
+        .some(word => word.startsWith(query));
 
       const matchesRole = role === 'all' ||
-        emp.worker?.roles.includes(role);
+        emp.worker?.roles?.some(r => String(r).toLowerCase() === String(role).toLowerCase());
 
       return matchesName && matchesRole;
     });
+
+    return filtered.sort((a, b) =>
+      (a.person?.fullName || '').localeCompare(b.person?.fullName || '')
+    );
   });
 
   onSearch(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.searchQuery.set(value);
+    this.currentPage.set(1);
   }
 
   openEditModal(employee: EmployeeProfile) {
@@ -174,6 +229,14 @@ export class EmployeesTableComponent {
   }
 
   onErrorToastClosed() {
-    this.isErrorToastOpen.set(true);
+    this.isErrorToastOpen.set(false);
+  }
+
+  increasePage() {
+    this.currentPage.update((p) => p + 1)
+  }
+
+  reducePage() {
+    this.currentPage.update((p) => p - 1)
   }
 }

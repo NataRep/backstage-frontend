@@ -5,6 +5,7 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { Person } from '../../core/models/interfaces/person.model';
+import { selectCanEdit } from '../../core/store/auth/auth.selectors';
 import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
@@ -43,6 +44,7 @@ export class TeamComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private store = inject(Store);
   private actions = inject(Actions);
+  canEdit = this.store.selectSignal(selectCanEdit);
   isCreateNewModalOpen = signal(false);
   isSuccessToastOpen = signal(false);
   isErrorToastOpen = signal(false);

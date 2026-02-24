@@ -1,7 +1,9 @@
 <div class="content-container">
   <div class="content-container__title"> <app-icon name="team"></app-icon>Team list</div>
   <div class="content-container__content">
+    @if(canEdit()){
     <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
+    }
     <app-employees-table></app-employees-table>
   </div>
 </div>
