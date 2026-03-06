@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { PersonBase } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
-import { updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
+import { updateEmployeeAction } from '../../core/store/employees/employees.actions';
 import { selectEmployeesError, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
@@ -41,41 +41,13 @@ export class UserProfileComponent {
   private actions$ = inject(Actions);
   private queryParamMap = toSignal(this.route.queryParamMap);
   currentUser = this.store.selectSignal(selectAuthUser);
-
   loading = this.store.selectSignal(selectEmployeesLoading);
   error = this.store.selectSignal(selectEmployeesError);
-
-  isSuccessToastOpen = signal(false);
-  isErrorToastOpen = signal(false);
-  successToastMessage = "Данные сохранены";
-  errorToastMessage = "Что-то пошло не так. Попробуйте сохранить изменения еще раз.";
-
   isPasswordModalOpen = signal(false);
 
   isEditMode = computed(() => {
     return this.queryParamMap()?.get('edit') === 'true';
   });
-
-  constructor() {
-    this.initToastSubscriptions()
-  }
-
-  private initToastSubscriptions() {
-    this.actions$.pipe(
-      ofType(updateEmployeeSuccessAction),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      this.isSuccessToastOpen.set(true);
-      this.toggleEditMode();
-    });
-
-    this.actions$.pipe(
-      ofType(updateEmployeeFailureAction),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      this.isErrorToastOpen.set(true);
-    });
-  }
 
   toggleEditMode() {
     const next = !this.isEditMode();
@@ -105,14 +77,6 @@ export class UserProfileComponent {
 
   handleUpdatePasswordAction() {
     this.isPasswordModalOpen.set(false);
-  }
-
-  onSuccessToastClosed() {
-    this.isSuccessToastOpen.set(false);
-  }
-
-  onErrorToastClosed() {
-    this.isErrorToastOpen.set(true);
   }
 
 }

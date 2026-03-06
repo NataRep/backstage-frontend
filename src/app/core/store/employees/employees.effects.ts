@@ -1,8 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { catchError, exhaustMap, filter, map, of, switchMap } from "rxjs";
+import { catchError, exhaustMap, filter, map, of, switchMap, tap } from "rxjs";
 import { EmployeeFacade } from "../../services/employee-facade.service";
+import { ToastService } from "../../services/toasts.service";
 import { setUserProfileAction } from "../auth/auth.actions";
 import { selectAuthUser } from "../auth/auth.selectors";
 import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
@@ -12,6 +13,7 @@ export class EmployeesEffects {
   private actions$ = inject(Actions);
   private employeeManagerService = inject(EmployeeFacade);
   private store = inject(Store);
+  private toastService = inject(ToastService);
   private currentUser = this.store.selectSignal(selectAuthUser);
 
   createEmployee$ = createEffect(() =>
@@ -89,5 +91,24 @@ export class EmployeesEffects {
             error
           }))))
       ))
+  );
+
+  showSuccessToast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateEmployeeSuccessAction, createEmployeeSuccessAction),
+      tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
+    ),
+    { dispatch: false }
+  );
+
+  showErrorToast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getAllEmployeesFailureAction,
+        deleteEmployeeFailureAction,
+        updateEmployeeFailureAction,
+        createEmployeeFailureAction),
+      tap(() => this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center'))
+    ),
+    { dispatch: false }
   );
 }

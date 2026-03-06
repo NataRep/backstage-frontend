@@ -1,1 +1,8 @@
 <router-outlet></router-outlet>
+<div class="toast-wrapper">
+  @for (toast of toastService.toasts(); track toast.id) {
+  <app-toast [message]="toast.message" [type]="toast.type" [position]="toast.position"
+    (onClose)="toastService.remove(toast.id)">
+  </app-toast>
+  }
+</div>

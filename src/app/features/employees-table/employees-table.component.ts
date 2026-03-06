@@ -7,7 +7,7 @@ import { Role } from '../../core/models/enums/employee.enums';
 import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
 import { Person } from '../../core/models/interfaces/person.model';
 import { selectAuthUser, selectCanEdit } from '../../core/store/auth/auth.selectors';
-import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
+import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { selectAllEmployees, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
@@ -59,12 +59,6 @@ export class EmployeesTableComponent {
   isCreateNewModalOpen = signal(false);
   isConfirmDeleteModalOpen = signal(false)
 
-  //тосты TODO вынести в сервис
-  isSuccessToastOpen = signal(false);
-  isErrorToastOpen = signal(false);
-  successToastMessage = "Данные сохранены";
-  errorToastMessage = "Что-то пошло не так. Попробуйте еще раз.";
-
   //пагинация
   pageSize = signal(7);
   currentPage = signal(Number(this.route.snapshot.queryParamMap.get('page')) || 1);
@@ -76,7 +70,6 @@ export class EmployeesTableComponent {
   pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
 
   paginatedEmployees = computed(() => {
-    const list = this.filteredEmployees();
     const total = this.totalPages();
     let current = this.currentPage();
     if (current > total && total > 0) {
@@ -90,7 +83,6 @@ export class EmployeesTableComponent {
   });
 
   constructor() {
-    this.initToastSubscriptions()
     this.initModalsSubscriptions()
 
     effect(() => {
@@ -126,22 +118,6 @@ export class EmployeesTableComponent {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(() => {
       this.closeConfirmDeleteModal();
-    });
-  }
-
-  private initToastSubscriptions() {
-    this.actions.pipe(
-      ofType(updateEmployeeSuccessAction),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      this.isSuccessToastOpen.set(true);
-    });
-
-    this.actions.pipe(
-      ofType(updateEmployeeFailureAction),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      this.isErrorToastOpen.set(true);
     });
   }
 
@@ -226,14 +202,6 @@ export class EmployeesTableComponent {
   showEmployeeInfo(employee: EmployeeProfile) {
     this.selectedEmployee.set(employee)
     this.isInfoModalOpen.set(true);
-  }
-
-  onSuccessToastClosed() {
-    this.isSuccessToastOpen.set(false);
-  }
-
-  onErrorToastClosed() {
-    this.isErrorToastOpen.set(false);
   }
 
   increasePage() {

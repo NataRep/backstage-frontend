@@ -21,13 +21,6 @@
   }
 </div>
 
-<app-toast [message]="successToastMessage" [type]="'success'" [position]="'top-right'" [isOpen]="isSuccessToastOpen()"
-  [autoCloseDuration]="2000" (closed)="onSuccessToastClosed()">
-</app-toast>
-<app-toast [message]="errorToastMessage" [type]="'error'" [position]="'top-right'" [isOpen]="isErrorToastOpen()"
-  [autoCloseDuration]="4000" (closed)="onErrorToastClosed()">
-</app-toast>
-
 <app-modal-container [(isOpen)]="isPasswordModalOpen" type="default" actionButton="Save">
   <div class="modal__body">
     <app-reset-password (action)="handleUpdatePasswordAction()"></app-reset-password>

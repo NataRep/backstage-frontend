@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { Person } from '../../core/models/interfaces/person.model';
 import { selectCanEdit } from '../../core/store/auth/auth.selectors';
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
+import { createEmployeeAction, createEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ToastComponent } from '../../shared/components/toast/toast.component';
@@ -46,14 +46,6 @@ export class TeamComponent implements OnInit {
   private actions = inject(Actions);
   canEdit = this.store.selectSignal(selectCanEdit);
   isCreateNewModalOpen = signal(false);
-  isSuccessToastOpen = signal(false);
-  isErrorToastOpen = signal(false);
-  successToastMessage = "Данные сохранены";
-  errorToastMessage = "Что-то пошло не так. Попробуйте еще раз.";
-
-  constructor() {
-    this.initToastSubscriptions();
-  }
 
   ngOnInit() {
     this.actions.pipe(
@@ -62,22 +54,6 @@ export class TeamComponent implements OnInit {
     ).subscribe(() => {
       this.employeeForm?.resetForm();
       this.closeCreateModal();
-    });
-  }
-
-  private initToastSubscriptions() {
-    this.actions.pipe(
-      ofType(createEmployeeSuccessAction),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      this.isSuccessToastOpen.set(true);
-    });
-
-    this.actions.pipe(
-      ofType(createEmployeeFailureAction),
-      takeUntilDestroyed()
-    ).subscribe(() => {
-      this.isErrorToastOpen.set(true);
     });
   }
 
@@ -91,13 +67,5 @@ export class TeamComponent implements OnInit {
 
   openCreateModal() {
     this.isCreateNewModalOpen.set(true);
-  }
-
-  onSuccessToastClosed() {
-    this.isSuccessToastOpen.set(false);
-  }
-
-  onErrorToastClosed() {
-    this.isErrorToastOpen.set(true);
   }
 }
