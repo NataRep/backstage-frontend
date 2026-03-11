@@ -78,7 +78,7 @@ export class MainLayoutComponent implements OnInit {
 
     const title = this.getTitleFromRoute(route);
     this.pageTitle = title;
-    this.titleService.setTitle(`${title} | CRM Backspace`);
+    this.titleService.setTitle(`${title} | ERP Backspace`);
     this.cdr.markForCheck();
   }
 

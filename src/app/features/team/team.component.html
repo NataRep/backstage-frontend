@@ -1,16 +1,6 @@
 <div class="content-container">
-  <div class="content-container__title"> <app-icon name="team"></app-icon>Team list</div>
+  <app-tabs [tabs]="tabs"></app-tabs>
   <div class="content-container__content">
-    @if(canEdit()){
-    <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
-    }
-    <app-employees-table></app-employees-table>
+    <router-outlet></router-outlet>
   </div>
 </div>
-<app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default" actionButton="Save">
-  <div class="modal__header">Create new employee</div>
-  <div class="modal__body">
-    <app-employee-form [employee]="null" (save)="createNewEmployee($event)"
-      (cancel)="closeCreateModal()"></app-employee-form>
-  </div>
-</app-modal-container>

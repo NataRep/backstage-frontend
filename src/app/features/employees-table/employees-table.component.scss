@@ -59,6 +59,10 @@
   justify-content: flex-end;
   width: 100%;
   margin-bottom: 12px;
+
+  @media (max-width: 768px) {
+    justify-content: space-between;
+  }
 }
 
 .search {

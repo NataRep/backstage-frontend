@@ -7,22 +7,13 @@
   }
 }
 
-.controls {
-  display: flex;
-}
+.tab-link {
+  // Ваши базовые стили
+  cursor: pointer;
 
-.search {
-  max-width: 320px;
-}
-
-.button--add {
-  position: absolute;
-  top: -6px;
-  left: 1rem;
-
-  @media (max-width: 768px) {
-    top: -56px;
-    left: auto;
-    right: 0;
+  &.active {
+    color: #d4ff00; // Подсветка активного таба
+    pointer-events: none; // Блокировка клика на уровне браузера
+    cursor: default; // Сброс курсора
   }
 }
