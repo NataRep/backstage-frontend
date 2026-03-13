@@ -18,7 +18,7 @@
 
   <ng-container header>
     <th class="cell--name sticky-coll">ФИО</th>
-    <th class="cell--role">Роль в команде</th>
+    <th class="cell--role"></th>
     <th class="cell--phone">Телефон</th>
     <th class="cell--link">Telegram</th>
     <th class="cell--link">VK</th>
@@ -37,8 +37,10 @@
         @if(emp.person?.personId === currentUser()?.person?.personId){ (Вы) }
       </td>
       <td class="cell--role">
-        @for (role of emp.worker?.roles; track role; let last = $last) {
-        {{ role | roleTranslate }}{{ last ? '' : ', ' }}
+        @for (role of emp.worker?.roles; track role;) {
+        <div class="cell__role" [class]="'cell__role--' + role">
+          {{ role | roleTranslate }}
+        </div>
         }
       </td>
       <td class="cell--phone">{{ emp.person?.phone }}</td>

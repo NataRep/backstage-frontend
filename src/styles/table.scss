@@ -43,15 +43,24 @@
 }
 
 .table tr td:first-child,
-.table tr th:first-child {
-  padding-left: 2rem;
+.table th:first-child {
+  padding-left: 1.5rem;
 }
 
 .table tr:last-child td {
   border-bottom: none;
 }
 
-.table td,
+.table td {
+  padding: 0.5rem 1rem;
+
+  &.cell--icon {
+    width: max-content;
+    min-width: 1.5rem;
+    padding: 0;
+  }
+}
+
 .table th {
   padding: 0.75rem 1rem;
 
