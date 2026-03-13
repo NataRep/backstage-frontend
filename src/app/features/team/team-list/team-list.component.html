@@ -5,7 +5,7 @@
 <app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default" actionButton="Save">
   <div class="modal__header">Create new employee</div>
   <div class="modal__body">
-    <app-employee-form [employee]="null" (save)="createNewEmployee($event)"
+    <app-employee-form #employeeForm [employee]="null" (save)="createNewEmployee($event)"
       (cancel)="closeCreateModal()"></app-employee-form>
   </div>
 </app-modal-container>

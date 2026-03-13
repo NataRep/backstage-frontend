@@ -197,7 +197,9 @@ export class EmployeeFormComponent {
 
   removeRole(index: number) {
     this.rolesArray.removeAt(index);
+    this.rolesArray.markAsDirty();
     this.rolesArray.markAsTouched();
+    this.rolesArray.updateValueAndValidity();
   }
 
   canEditRole() {

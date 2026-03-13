@@ -52,7 +52,7 @@
   <div class="form__row" [class.invalid]="rolesArray.hasError('required') && rolesArray.touched">
     <div class="label">Roles:</div>
     <div class="roles-list" formArrayName="roles">
-      @for (control of rolesArray.controls; let i = $index; track i) {
+      @for (control of rolesArray.controls; let i = $index; track control) {
       <div class="role-item">
         <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)" class="float-select">
           @if (!control.value) {

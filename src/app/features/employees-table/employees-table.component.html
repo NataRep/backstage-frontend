@@ -72,7 +72,7 @@
 <app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">
   <div class="modal__header">Edit employee info</div>
   <div class="modal__body">
-    <app-employee-form [employee]="employee" (save)="updateSelectedEmployee($event)"
+    <app-employee-form [employee]="employee" #employeeForm (save)="updateSelectedEmployee($event)"
       (cancel)="closeEditModal()"></app-employee-form>
   </div>
 </app-modal-container>
