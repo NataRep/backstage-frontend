@@ -1,6 +1,5 @@
-import { Component, computed, DestroyRef, effect, inject, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Role } from '../../core/models/enums/employee.enums';
@@ -9,10 +8,11 @@ import { Person } from '../../core/models/interfaces/person.model';
 import { selectAuthUser, selectCanEdit } from '../../core/store/auth/auth.selectors';
 import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { selectAllEmployees, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
+import { BaseTableDirective } from '../../shared/components/data-table/base-table.directive';
+import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
-import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { ROLE_RU } from '../../shared/constants/texts/common.texts';
 import { GetSocialLinkPipe } from '../../shared/pipes/get-social-link.pipe';
 import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
@@ -25,21 +25,26 @@ import { EmployeeInfoComponent } from '../employee-info/employee-info.component'
   imports: [IconComponent,
     ModalContainerComponent,
     EmployeeFormComponent,
-    GetSocialLinkPipe,
     EmployeeInfoComponent,
-    ToastComponent,
-    RoleTranslatePipe],
+    DataTableComponent,
+    RoleTranslatePipe,
+    GetSocialLinkPipe],
   templateUrl: './employees-table.component.html',
-  styleUrl: './employees-table.component.scss'
+  styleUrl: './employees-table.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployeesTableComponent {
+export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile> {
   @ViewChild('employeeForm') employeeForm!: EmployeeFormComponent;
 
   private destroyRef = inject(DestroyRef);
   private store = inject(Store);
   private actions = inject(Actions);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  protected override sourceData = () => this.filteredEmployees();
+  override pageSize = () => 10;
+
+  protected override getExtraParams() {
+    return { role: this.selectedRole() };
+  }
 
   readonly roles: Role[] = Object.values(Role);
   readonly rolesTranslate = ROLE_RU;
@@ -49,8 +54,6 @@ export class EmployeesTableComponent {
   currentUser = this.store.selectSignal(selectAuthUser);
   canEdit = this.store.selectSignal(selectCanEdit);
   selectedEmployee = signal<EmployeeProfile | null>(null);
-
-  searchQuery = signal(this.route.snapshot.queryParamMap.get('search') || '');
   selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
 
   //модалки
@@ -59,49 +62,13 @@ export class EmployeesTableComponent {
   isCreateNewModalOpen = signal(false);
   isConfirmDeleteModalOpen = signal(false)
 
-  //пагинация
-  pageSize = signal(7);
-  currentPage = signal(Number(this.route.snapshot.queryParamMap.get('page')) || 1);
-
-  totalPages = computed(() => {
-    const count = this.filteredEmployees().length;
-    return Math.ceil(count / this.pageSize());
-  });
-  pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
-
-  paginatedEmployees = computed(() => {
-    const total = this.totalPages();
-    let current = this.currentPage();
-    if (current > total && total > 0) {
-      current = 1;
-    }
-
-    const startIndex = (this.currentPage() - 1) * this.pageSize();
-    const endIndex = startIndex + this.pageSize();
-
-    return this.filteredEmployees().slice(startIndex, endIndex);
-  });
-
-  constructor() {
-    this.initModalsSubscriptions()
-
-    effect(() => {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: {
-          page: this.currentPage(),
-          search: this.searchQuery() || null,
-          role: this.selectedRole() === 'all' ? null : this.selectedRole()
-        },
-        queryParamsHandling: 'merge',
-      });
-    });
-  }
-
-  ngOnInit() {
+  override ngOnInit() {
+    super.ngOnInit();
     if (this.allEmployees().length === 0 && !this.isLoading()) {
       this.store.dispatch(getAllEmployeesAction());
     }
+
+    this.initModalsSubscriptions();
   }
 
   private initModalsSubscriptions() {
@@ -146,12 +113,6 @@ export class EmployeesTableComponent {
     );
   });
 
-  onSearch(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchQuery.set(value);
-    this.currentPage.set(1);
-  }
-
   openEditModal(employee: EmployeeProfile) {
     this.isEditModalOpen.set(true);
     this.selectedEmployee.set(employee);
@@ -171,7 +132,6 @@ export class EmployeesTableComponent {
     this.isConfirmDeleteModalOpen.set(false);
     this.selectedEmployee.set(null);
   }
-
 
   updateSelectedEmployee(data: { person: Person; worker: WorkerBase }) {
     const selectedEmployee = this.selectedEmployee();
@@ -202,13 +162,5 @@ export class EmployeesTableComponent {
   showEmployeeInfo(employee: EmployeeProfile) {
     this.selectedEmployee.set(employee)
     this.isInfoModalOpen.set(true);
-  }
-
-  increasePage() {
-    this.currentPage.update((p) => p + 1)
-  }
-
-  reducePage() {
-    this.currentPage.update((p) => p - 1)
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { EmployeeProfile } from '../../core/models/interfaces/employee.models';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
@@ -18,6 +18,7 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
     UppercaseFirstLetter],
   templateUrl: './employee-info.component.html',
   styleUrl: './employee-info.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeInfoComponent {
   @Input({ required: true }) employee: EmployeeProfile | null = null;

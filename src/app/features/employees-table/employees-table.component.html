@@ -1,86 +1,71 @@
 @let employee = selectedEmployee();
 
-<div class="controls">
-  <input name="search" [value]="searchQuery()" (input)="onSearch($event)" placeholder="Search..." class="search">
-  <div class="select-wrapper">
+<app-data-table [searchQuery]="searchQuery()" [currentPage]="currentPage()" [totalPages]="totalPages()"
+  [pages]="pages()" (searchChange)="onSearch($event)" (pageChange)="currentPage.set($event)">
+
+  <div filters class="select-wrapper">
     <div class="label">Filter:</div>
     <select name="role" [value]="selectedRole()"
       (change)="selectedRole.set($any($event.target).value); currentPage.set(1)">
       <option value="all">Все роли</option>
       @for (role of roles; track role) {
-      <option [value]="role" [selected]="selectedRole() === role"> {{ role | roleTranslate }}</option>
+      <option [value]="role" [selected]="selectedRole() === role">
+        {{ role | roleTranslate }}
+      </option>
       }
     </select>
   </div>
-</div>
-<div class="table-wrapper">
-  <table class="table">
-    <thead>
-      <tr>
-        <th class="cell--name sticky-coll">ФИО</th>
-        <th class="cell--role">Роль в команде</th>
-        <th class="cell--phone">Телефон</th>
-        <th class="cell--link">Telegram</th>
-        <th class="cell--link">VK</th>
-        <th class="cell--link">WhatsApp</th>
-        @if(canEdit()){
-        <th class="cell--icon"></th>
-        <th class="cell--icon"></th>
-        }
-      </tr>
-    </thead>
-    <tbody>
-      @for (emp of paginatedEmployees(); track emp.person?.personId) {
-      <tr>
-        <td class="cell--name sticky-coll " (click)="showEmployeeInfo(emp)">{{ emp.person?.fullName }}
-          @if(emp.person?.personId === currentUser()?.person?.personId){
-          (Вы)
-          }
-        </td>
-        <td class="cell--role">@for (role of emp.worker?.roles; track role; let last = $last) {
-          {{ role | roleTranslate }}{{ last ? '' : ', ' }}
-          }</td>
-        <td class="cell--phone">{{ emp.person?.phone }}</td>
-        <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
-        <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
-        <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'whatsapp') || "-"}}</td>
-        @if(canEdit()){
-        <td class="cell--icon"><app-icon name="edit" (click)="openEditModal(emp)" class="edit-icon"></app-icon></td>
-        <td class="cell--icon">
-          @if(emp.person?.personId != currentUser()?.person?.personId){<app-icon name="trash"
-            (click)="openConfirmDeleteModal(emp)" class="delete-icon"></app-icon>
-          }
-        </td>
-        }
-      </tr>
-      } @empty {
-      <tr>
-        <td colspan="8">
-          {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
-        </td>
-      </tr>
-      }
-    </tbody>
-  </table>
-</div>
-@if (totalPages() > 1) {
-<div class="pagination">
-  <button [disabled]="currentPage() === 1" (click)="reducePage()">
-    &lt;
-  </button>
-  <div class="pagination__numbers">
-    @for (pageNum of pages(); track pageNum) {
-    <div class="pagination__page-number" [class.is-active]="currentPage() === pageNum"
-      (click)="currentPage.set(pageNum)">
-      {{ pageNum }}
-    </div>
+
+  <ng-container header>
+    <th class="cell--name sticky-coll">ФИО</th>
+    <th class="cell--role">Роль в команде</th>
+    <th class="cell--phone">Телефон</th>
+    <th class="cell--link">Telegram</th>
+    <th class="cell--link">VK</th>
+    <th class="cell--link">WhatsApp</th>
+    @if(canEdit()){
+    <th class="cell--icon"></th>
+    <th class="cell--icon"></th>
     }
-  </div>
-  <button [disabled]="currentPage() === totalPages()" (click)="increasePage()">
-    &gt;
-  </button>
-</div>
-}
+  </ng-container>
+
+  <ng-container rows>
+    @for (emp of paginatedData(); track emp.person?.personId) {
+    <tr class="table__row">
+      <td class="cell--name sticky-coll" (click)="showEmployeeInfo(emp)">
+        {{ emp.person?.fullName }}
+        @if(emp.person?.personId === currentUser()?.person?.personId){ (Вы) }
+      </td>
+      <td class="cell--role">
+        @for (role of emp.worker?.roles; track role; let last = $last) {
+        {{ role | roleTranslate }}{{ last ? '' : ', ' }}
+        }
+      </td>
+      <td class="cell--phone">{{ emp.person?.phone }}</td>
+      <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'telegram') || "-"}}</td>
+      <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'vk') || "-"}}</td>
+      <td class="cell--link">{{ (emp.person?.socialLinks | getSocialLink: 'whatsapp') || "-"}}</td>
+
+      @if(canEdit()){
+      <td class="cell--icon">
+        <app-icon name="edit" (click)="openEditModal(emp)" class="edit-icon"></app-icon>
+      </td>
+      <td class="cell--icon">
+        @if(emp.person?.personId != currentUser()?.person?.personId){
+        <app-icon name="trash" (click)="openConfirmDeleteModal(emp)" class="delete-icon"></app-icon>
+        }
+      </td>
+      }
+    </tr>
+    } @empty {
+    <tr>
+      <td colspan="8">
+        {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
+      </td>
+    </tr>
+    }
+  </ng-container>
+</app-data-table>
 
 <app-modal-container [(isOpen)]="isEditModalOpen" type="default" actionButton="Save">
   <div class="modal__header">Edit employee info</div>

@@ -1,0 +1,31 @@
+<div class="controls">
+  <input (input)="onSearch($event)" [value]="searchQuery" placeholder="Поиск..." class="search">
+  <ng-content select="[filters]"></ng-content>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead><ng-content select="[header]"></ng-content></thead>
+    <tbody><ng-content select="[rows]"></ng-content></tbody>
+  </table>
+</div>
+
+@if (totalPages > 1) {
+<div class="pagination">
+  <button [disabled]="currentPage === 1" (click)="pageChange.emit(currentPage - 1)">
+    &lt;
+  </button>
+
+  <div class="pagination__numbers">
+    @for (pageNum of pages; track pageNum) {
+    <div class="pagination__page-number" [class.is-active]="currentPage === pageNum" (click)="pageChange.emit(pageNum)">
+      {{ pageNum }}
+    </div>
+    }
+  </div>
+
+  <button [disabled]="currentPage === totalPages" (click)="pageChange.emit(currentPage + 1)">
+    &gt;
+  </button>
+</div>
+}
