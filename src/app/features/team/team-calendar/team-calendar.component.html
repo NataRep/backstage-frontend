@@ -1,1 +1,58 @@
-<p>team-calendar works!</p>
+<!--@let employee = selectedEmployee();-->
+
+<app-calendar-piker (dateChange)="onDateChange($event)"></app-calendar-piker>
+<app-data-table [searchQuery]="searchQuery()" [currentPage]="currentPage()" [totalPages]="totalPages()"
+  [pages]="pages()" (searchChange)="onSearch($event)" (pageChange)="currentPage.set($event)">
+
+  <div filters class="select-wrapper">
+    <div class="label">Filter:</div>
+    <select name="role" [value]="selectedRole()"
+      (change)="selectedRole.set($any($event.target).value); currentPage.set(1)">
+      <option value="all">Все роли</option>
+      @for (role of roles; track role) {
+      <option [value]="role" [selected]="selectedRole() === role">
+        {{ role | roleTranslate }}
+      </option>
+      }
+    </select>
+  </div>
+
+  <ng-container header>
+    <th class="cell--name sticky-coll">ФИО</th>
+
+    @for (day of calendarDays; track day) {
+    <th class="cell--calendar">{{ day + 1 }}</th>
+    }
+    @if(canEdit()){
+    <th class="cell--icon"></th>
+    }
+  </ng-container>
+
+  <ng-container rows>
+    @for (emp of paginatedData(); track emp.person?.personId) {
+    <tr class="table__row">
+      <td class="cell--name sticky-coll">
+        {{ emp.person?.fullName }}
+        @if(emp.person?.personId === currentUser()?.person?.personId){ (Вы) }
+      </td>
+      @for (day of calendarDays; track day) {
+      <td class="cell--calendar-data" [attr.data-emp-id]="emp.person?.personId" [attr.data-day]="day">
+        <div class="calendar-slot"></div>
+      </td>
+      }
+
+      @if(canEdit()){
+      <td class="cell--icon">
+        <app-icon name="edit" class="edit-icon"></app-icon>
+      </td>
+      }
+    </tr>
+    } @empty {
+    <tr>
+      <td colspan="8">
+        {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
+      </td>
+    </tr>
+    }
+  </ng-container>
+</app-data-table>

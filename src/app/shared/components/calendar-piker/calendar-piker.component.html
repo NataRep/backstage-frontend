@@ -1,0 +1,17 @@
+<div class="calender-piker">
+  <div class="calender-piker__date">
+    <div class="calender-piker__tools-container" tabindex="0">
+      <div class="calender-piker__arrow" (click)="changeMonth(-1)"
+        [class.disabled]="selectedMonth() === currentDate.getMonth() && selectedYear() === currentDate.getFullYear()">
+        &#8249;</div>
+      <div class="calender-piker__month">{{selectedMonth() | getMonthRu}}</div>
+      <div class="calender-piker__arrow" (click)="changeMonth(1)">&#8250;</div>
+    </div>
+    <div class="calender-piker__tools-container" tabindex="0">
+      <div class="calender-piker__arrow" (click)="changeYear(-1)"
+        [class.disabled]="selectedYear() === currentDate.getFullYear()">&#8249;</div>
+      <div class="calender-piker__year">{{selectedYear()}}</div>
+      <div class="calender-piker__arrow" (click)="changeYear(1)">&#8250;</div>
+    </div>
+  </div>
+</div>
