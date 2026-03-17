@@ -1,0 +1,73 @@
+app-data-table {
+  width: calc(100dvw - 300px);
+  display: block;
+
+  @media (max-width: 768px) {
+    width: calc(100dvw - 4rem);
+  }
+}
+
+.cell--name {
+  font-weight: 600;
+  border-right: 1px solid var(--color-table-border);
+}
+
+.cell--calendar,
+.cell--calendar-data {
+  width: 42px;
+  padding: 0;
+  border-right: 1px solid var(--color-table-border);
+}
+
+.cell--calendar {
+  padding: 0.5rem 0;
+}
+
+.cell--calendar-data {
+  padding: 0;
+}
+
+.cell--calendar .day-name,
+.cell--calendar .day-number {
+  text-align: center;
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 120%;
+}
+
+.cell--icon {
+  text-align: center;
+}
+
+.edit-icon {
+  width: 16px;
+  display: block;
+  margin: auto;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.fullName {
+  display: none;
+}
+
+.shortName {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .fullName {
+    display: block;
+  }
+
+  .shortName {
+    display: none;
+  }
+}
+
+app-calendar-piker {
+  @media (max-width: 480px) {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+}

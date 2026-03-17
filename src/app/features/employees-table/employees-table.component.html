@@ -17,7 +17,7 @@
   </div>
 
   <ng-container header>
-    <th class="cell--name sticky-coll">ФИО</th>
+    <th class="cell--name sticky-coll sticky-coll--left">ФИО</th>
     <th class="cell--role"></th>
     <th class="cell--phone">Телефон</th>
     <th class="cell--link">Telegram</th>
@@ -32,7 +32,7 @@
   <ng-container rows>
     @for (emp of paginatedData(); track emp.person?.personId) {
     <tr class="table__row">
-      <td class="cell--name sticky-coll" (click)="showEmployeeInfo(emp)">
+      <td class="cell--name sticky-coll sticky-coll--left" (click)="showEmployeeInfo(emp)">
         {{ emp.person?.fullName }}
         @if(emp.person?.personId === currentUser()?.person?.personId){ (Вы) }
       </td>

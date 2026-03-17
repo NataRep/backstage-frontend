@@ -1,19 +1,17 @@
 .content-container {
-  width: calc(100% - 8rem);
-  max-width: 1200px;
+  max-width: calc(100% - 8rem);
+  width: max-content;
 
   @media (max-width: 768px) {
-    width: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
   }
 }
 
 .tab-link {
-  // Ваши базовые стили
   cursor: pointer;
 
   &.active {
-    color: #d4ff00; // Подсветка активного таба
-    pointer-events: none; // Блокировка клика на уровне браузера
-    cursor: default; // Сброс курсора
+    pointer-events: none;
+    cursor: default;
   }
 }

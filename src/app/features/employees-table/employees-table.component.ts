@@ -40,7 +40,7 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
   private store = inject(Store);
   private actions = inject(Actions);
   protected override sourceData = () => this.filteredEmployees();
-  override pageSize = () => 14;
+  override pageSize = () => 10;
 
   protected override getExtraParams() {
     return { role: this.selectedRole() };

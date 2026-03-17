@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { GetMonthRuPipe } from '../../pipes/get-month.ru.pipe';
 
 const DEFAULT_DAYS_COUNT = 31;
@@ -13,11 +13,10 @@ const DEFAULT_DAYS_COUNT = 31;
 })
 export class CalendarPikerComponent {
   @Output() dateChange = new EventEmitter<{ month: number, year: number }>();
+  @Input() currentDate = new Date();
 
-  selectedMonth = signal<number>(new Date().getMonth());
-  selectedYear = signal<number>(new Date().getFullYear());
-  currentDate = new Date();
-  selectData = signal
+  selectedMonth = signal<number>(this.currentDate.getMonth());
+  selectedYear = signal<number>(this.currentDate.getFullYear());
 
   changeMonth(count: number): void {
     this.selectedMonth.update(month => {

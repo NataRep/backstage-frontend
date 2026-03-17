@@ -1,3 +1,16 @@
+app-employees-table {
+  width: 1200px;
+  display: block;
+
+  @media (max-width: 1600px) {
+    width: calc(100dvw - 300px);
+  }
+
+  @media (max-width: 768px) {
+    width: calc(100dvw - 4rem);
+  }
+}
+
 .controls {
   display: flex;
 }
