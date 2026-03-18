@@ -32,14 +32,6 @@
   font-weight: 400;
 }
 
-.table tbody tr {
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-orange-text);
-    }
-  }
-}
-
 .table th {
   line-height: 1.25rem;
   text-align: left;

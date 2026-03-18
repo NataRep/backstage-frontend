@@ -69,3 +69,11 @@ td.cell--name {
   flex-direction: column;
   align-items: center;
 }
+
+.table__row {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-orange-text);
+    }
+  }
+}

@@ -1,5 +1,3 @@
-<!--@let employee = selectedEmployee();-->
-
 <app-calendar-piker (dateChange)="onDateChange($event)"></app-calendar-piker>
 <app-data-table [searchQuery]="searchQuery()" [currentPage]="currentPage()" [totalPages]="totalPages()"
   [pages]="pages()" (searchChange)="onSearch($event)" (pageChange)="currentPage.set($event)">
@@ -21,7 +19,7 @@
     <th class="cell--name sticky-coll sticky-coll--left"></th>
 
     @for (day of calendarDays(); track day) {
-    <th class="cell--calendar">
+    <th class="cell--calendar" [class.is-hovered]="hoverDay() === day" [class.is-past]="isPastDay(day)">
       <div class="day-name">{{ (day | getDayOfWeek:firstDayIndex()).shortNameRu}}</div>
       <div class="day-number">{{ day }}</div>
     </th>
@@ -39,11 +37,22 @@
         <div class="fullName">{{ emp.person.fullName }}</div>
         <div class="shortName"> {{ emp.person.fullName.split(" ")[0] || ''}} {{ emp.person.fullName.split(" ")[1][0] ||
           ''}}.</div>
-        @if(emp.person.personId === currentUser()?.person?.personId){ (Вы) }
       </td>
       @for (day of calendarDays(); track day) {
-      <td class="cell--calendar-data" [attr.data-emp-id]="emp.person.personId" [attr.data-day]="day">
-        <div class="calendar-slot"></div>
+      @let isBusy = availabilityMap().get(emp.person.personId)?.has(day);
+      @let isPast = isPastDay(day);
+
+      <td class="cell--calendar-data" [class.is-busy]="isBusy && !isPast" [class.is-past]="isPast"
+        [attr.data-emp-id]="emp.person.personId" [attr.data-day]="day" (mouseenter)="hoverDay.set(day)"
+        (mouseleave)="hoverDay.set(null)">
+
+        <div class="calendar-slot">
+          @if (isBusy && !isPast) {
+          <span class="forbidden-mark">+</span>
+          } @else if (!isPast) {
+          <span class="forbidden-mark">.</span>
+          }
+        </div>
       </td>
       }
       @if(canEdit()){
