@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { catchError, combineLatest, exhaustMap, forkJoin, from, map, Observable, of, switchMap, throwError } from "rxjs";
-import { EmployeeProfile, WorkerBase } from "../models/interfaces/employee.models";
+import { EmployeeProfile, Worker, WorkerBase } from "../models/interfaces/employee.models";
 import { Person, PersonBase } from "../models/interfaces/person.model";
 import { WorkerDataService } from "./firebase/firebase-workers.service";
 import { PersonDataService } from "./persons.service";
@@ -77,7 +77,14 @@ export class EmployeeFacade {
         )
       )
     );
-  }
+  };
+
+  updateWorkerEmployeeProfile(worker: Worker): Observable<Worker> {
+    return from(this.workersService.update(worker.id!, worker)).pipe(
+      map(() => worker)
+    );
+  };
+
 
   deleteFullEmployeeProfile(id: string): Observable<string> {
     return this.personService.deletePerson(id).pipe(

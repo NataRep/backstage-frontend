@@ -3,10 +3,9 @@ import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Role } from '../../../core/models/enums/employee.enums';
 import { getDaysInMonth } from '../../../core/models/interfaces/calendar.model';
-import { EmployeeProfile, WorkerBase } from '../../../core/models/interfaces/employee.models';
-import { Person } from '../../../core/models/interfaces/person.model';
+import { EmployeeProfile } from '../../../core/models/interfaces/employee.models';
 import { selectAuthUser, selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { getAllEmployeesAction, updateEmployeeAction } from '../../../core/store/employees/employees.actions';
+import { getAllEmployeesAction, updateWorkerEmployeeAction } from '../../../core/store/employees/employees.actions';
 import { selectAllEmployees, selectEmployeesLoading } from '../../../core/store/employees/employees.selector';
 import { CalendarPikerComponent } from '../../../shared/components/calendar-piker/calendar-piker.component';
 import { BaseTableDirective } from '../../../shared/components/data-table/base-table.directive';
@@ -55,12 +54,14 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
   // 5. Local State (Signals)
   hoverDay = signal<number | null>(null);
-  selectedEmployee = signal<EmployeeProfile | null>(null);
+  editingEmployee = signal<EmployeeProfile | null>(null);
+  isEditMode = signal<boolean>(false);
   selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
   selectedPeriod = signal({
     month: new Date().getMonth(),
     year: new Date().getFullYear()
   });
+  editDraft = signal<Set<number>>(new Set());
 
   // 6. Computed Properties
   readonly availabilityMap = computed(() => {
@@ -134,16 +135,10 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     this.selectedPeriod.set(event);
   }
 
-  updateSelectedEmployee(data: { person: Person; worker: WorkerBase }) {
-    const selectedEmployee = this.selectedEmployee();
-    if (!selectedEmployee) return;
-
-    this.store.dispatch(updateEmployeeAction({
-      personId: selectedEmployee.person?.personId!,
-      person: { ...data.person },
-      worker: { ...data.worker }
-    }));
+  hasUnsavedChanges(): boolean {
+    return !!this.editingEmployee();
   }
+
 
   private calculatePageSize() {
     const rowHeight = 37; // Примерная высота строки в пикселях
@@ -161,5 +156,71 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     const { month, year } = this.selectedPeriod();
     const dateToCheck = new Date(year, month, day).getTime();
     return dateToCheck < this.todayMidnight;
+  }
+
+  toggleEdit(employee: EmployeeProfile) {
+    this.editingEmployee.update(current => {
+      if (current?.worker?.id === employee.worker?.id) {
+        this.editDraft.set(new Set()); // Очистка при закрытии
+      }
+
+      const currentAvailability = this.availabilityMap().get(employee.person?.personId!) || new Set();
+      this.editDraft.set(new Set(currentAvailability));
+      return employee;
+    });
+  }
+
+  isRowEditing(emp: EmployeeProfile) {
+    return emp.worker?.id === this.editingEmployee()?.worker?.id
+  }
+
+  // Метод для клика по ячейке
+  toggleDayInDraft(day: number, isPast: boolean) {
+    if (!this.editingEmployee() || isPast) return;
+
+    this.editDraft.update(currentSet => {
+      const newSet = new Set(currentSet);
+      if (newSet.has(day)) {
+        newSet.delete(day);
+      } else {
+        newSet.add(day);
+      }
+      return newSet;
+    });
+  }
+
+  saveChanges() {
+    const employee = this.editingEmployee();
+    if (!employee) return;
+
+    const { month, year } = this.selectedPeriod();
+    const draftDays = this.editDraft();
+    const otherMonthsAvailability = employee.worker?.availability?.filter(ts => {
+      const d = new Date(ts.seconds * 1000);
+      return d.getMonth() !== month || d.getFullYear() !== year;
+    }) || [];
+
+    const newMonthAvailability = Array.from(draftDays).map(day => ({
+      seconds: Math.floor(new Date(year, month, day).getTime() / 1000),
+      nanoseconds: 0
+    }));
+
+    const finalAvailability = [...otherMonthsAvailability, ...newMonthAvailability];
+
+    this.store.dispatch(updateWorkerEmployeeAction({
+      personId: employee.person?.personId!,
+      worker: {
+        ...employee.worker!,
+        availability: finalAvailability
+      }
+    }));
+
+    this.editingEmployee.set(null);
+    this.editDraft.set(new Set());
+  }
+
+  cancelEdit() {
+    this.editingEmployee.set(null);
+    this.editDraft.set(new Set());
   }
 }

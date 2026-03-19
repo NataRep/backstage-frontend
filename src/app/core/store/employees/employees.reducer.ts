@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { EmployeeProfile } from "../../models/interfaces/employee.models";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
+import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction, updateWorkerEmployeeFailureAction, updateWorkerEmployeeSuccessAction } from "./employees.actions";
 
 export interface EmployeesState {
   employees: EmployeeProfile[],
@@ -52,6 +52,23 @@ export const employeeReducer = createReducer(
   })),
 
   on(updateEmployeeFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
+
+  on(updateWorkerEmployeeSuccessAction, (state, { personId, worker }) => ({
+    ...state,
+    employees: state.employees.map((emp) =>
+      emp.person?.personId === personId
+        ? { ...emp, worker: { ...worker } }
+        : emp
+    ),
+    loading: false,
+    error: null,
+  })),
+
+  on(updateWorkerEmployeeFailureAction, (state, { error }) => ({
     ...state,
     loading: false,
     error: error,

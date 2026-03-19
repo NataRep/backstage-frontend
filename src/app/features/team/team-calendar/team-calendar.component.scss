@@ -15,7 +15,6 @@ app-data-table {
 @media (hover: hover) and (pointer: fine) {
   .table__row:hover .cell--name {
     color: var(--color-orange-text);
-
   }
 }
 
@@ -38,6 +37,45 @@ app-data-table {
   }
 }
 
+.table__row {
+  transition: color 0.2s ease, box-shadow 0.2s ease, border 0.2s ease;
+}
+
+.table__row.is-editing {}
+
+.table__row.is-editing td {
+  box-shadow: inset 0 1px 0 0 rgb(var(--color-blue-rgb), 0.7),
+    inset 0 -1px 0 0 rgb(var(--color-blue-rgb), 0.7);
+
+  &.cell--name {
+    color: var(--color-blue);
+  }
+
+  &.cell--icon {
+    .icon {
+      color: var(--color-blue);
+
+      &:active {
+        color: var(--color-orange-text);
+      }
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          color: var(--color-orange-text);
+        }
+      }
+    }
+  }
+}
+
+.table__row.is-editing .cell--calendar-data:not(.is-past) {
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 0 rgb(var(--color-blue-rgb), 0.5),
+    inset 0 -1px 0 0 rgb(var(--color-blue-rgb), 0.5),
+    inset 0px 1px 12px 1px rgb(var(--color-blue-rgb), 0.2);
+}
+
 .cell--calendar-data {
   padding: 0;
 
@@ -51,7 +89,6 @@ app-data-table {
 
   .forbidden-mark {
     display: inline-block;
-    cursor: default;
   }
 
   &.is-past {
@@ -97,12 +134,21 @@ app-data-table {
   text-align: center;
 }
 
-.edit-icon {
+.icons-wrapper {
+  display: flex;
+
+}
+
+.icon {
   width: 16px;
   display: block;
-  margin: auto;
-  padding: 0.25rem 0.5rem;
+  margin: auto 0.25rem;
+  padding: 0.25rem 0;
   cursor: pointer;
+
+  &.edit-icon {
+    padding: 0.25rem 0.75rem;
+  }
 }
 
 .fullName {

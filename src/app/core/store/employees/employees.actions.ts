@@ -1,5 +1,5 @@
 import { createAction, props } from "@ngrx/store";
-import { EmployeeProfile, WorkerBase } from "../../models/interfaces/employee.models";
+import { EmployeeProfile, Worker, WorkerBase } from "../../models/interfaces/employee.models";
 import { Person, PersonBase } from "../../models/interfaces/person.model";
 
 export const createEmployeeAction = createAction(
@@ -29,6 +29,21 @@ export const updateEmployeeSuccessAction = createAction(
 
 export const updateEmployeeFailureAction = createAction(
   '[Employee] Update Failure',
+  props<{ error: unknown }>()
+);
+
+export const updateWorkerEmployeeAction = createAction(
+  '[Employee] Update Worker',
+  props<{ personId: string, worker: Worker }>()
+);
+
+export const updateWorkerEmployeeSuccessAction = createAction(
+  '[Employee] Update Worker Success',
+  props<{ personId: string, worker: Worker }>()
+);
+
+export const updateWorkerEmployeeFailureAction = createAction(
+  '[Employee] Update Worker Failure',
   props<{ error: unknown }>()
 );
 

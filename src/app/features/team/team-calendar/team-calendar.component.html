@@ -32,19 +32,20 @@
   <ng-container rows>
     @for (emp of paginatedData(); track emp.person?.personId) {
     @if(emp.person){
-    <tr class="table__row">
+    <tr class="table__row" [class.is-editing]="isRowEditing(emp)">
       <td class="cell--name sticky-coll sticky-coll--left">
         <div class="fullName">{{ emp.person.fullName }}</div>
         <div class="shortName"> {{ emp.person.fullName.split(" ")[0] || ''}} {{ emp.person.fullName.split(" ")[1][0] ||
           ''}}.</div>
       </td>
       @for (day of calendarDays(); track day) {
-      @let isBusy = availabilityMap().get(emp.person.personId)?.has(day);
       @let isPast = isPastDay(day);
+      @let editing = isRowEditing(emp);
+      @let isBusy = editing ? editDraft().has(day) : availabilityMap().get(emp.person.personId)?.has(day);
 
       <td class="cell--calendar-data" [class.is-busy]="isBusy && !isPast" [class.is-past]="isPast"
         [attr.data-emp-id]="emp.person.personId" [attr.data-day]="day" (mouseenter)="hoverDay.set(day)"
-        (mouseleave)="hoverDay.set(null)">
+        (mouseleave)="hoverDay.set(null)" (click)="editing ? toggleDayInDraft(day, isPast) : null">
 
         <div class="calendar-slot">
           @if (isBusy && !isPast) {
@@ -57,7 +58,15 @@
       }
       @if(canEdit()){
       <td class="cell--icon sticky-coll sticky-coll--right">
-        <app-icon name="edit" class="edit-icon"></app-icon>
+        @if(!editingEmployee()){
+        <app-icon name="edit" class="edit-icon icon" (click)="toggleEdit(emp)"></app-icon>
+        }@else if(isRowEditing(emp)){
+        <div class="icons-wrapper">
+          <app-icon name="save" class="save-icon icon" (click)="saveChanges()"></app-icon>
+          <app-icon name="cancel" class="cancel-icon icon" (click)="cancelEdit()"></app-icon>
+        </div>
+        }
+
       </td>
       }
     </tr>

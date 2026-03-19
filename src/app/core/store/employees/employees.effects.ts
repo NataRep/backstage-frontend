@@ -1,12 +1,28 @@
 import { inject, Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
-import { catchError, exhaustMap, filter, map, of, switchMap, tap } from "rxjs";
+import { catchError, concatMap, exhaustMap, filter, map, of, switchMap, tap } from "rxjs";
 import { EmployeeFacade } from "../../services/employee-facade.service";
 import { ToastService } from "../../services/toasts.service";
 import { setUserProfileAction } from "../auth/auth.actions";
 import { selectAuthUser } from "../auth/auth.selectors";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction } from "./employees.actions";
+import {
+  createEmployeeAction,
+  createEmployeeFailureAction,
+  createEmployeeSuccessAction,
+  deleteEmployeeAction,
+  deleteEmployeeFailureAction,
+  deleteEmployeeSuccessAction,
+  getAllEmployeesAction,
+  getAllEmployeesFailureAction,
+  getAllEmployeesSuccessAction,
+  updateEmployeeAction,
+  updateEmployeeFailureAction,
+  updateEmployeeSuccessAction,
+  updateWorkerEmployeeAction,
+  updateWorkerEmployeeFailureAction,
+  updateWorkerEmployeeSuccessAction
+} from "./employees.actions";
 
 @Injectable()
 export class EmployeesEffects {
@@ -63,6 +79,39 @@ export class EmployeesEffects {
     )
   );
 
+
+
+  updateWorkerEmployee$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateWorkerEmployeeAction),
+      concatMap(({ personId, worker }) =>
+        this.employeeManagerService.updateWorkerEmployeeProfile(worker).pipe(
+          map((updatedWorker) => updateWorkerEmployeeSuccessAction({
+            personId,
+            worker: updatedWorker
+          })),
+          catchError((error) => of(updateWorkerEmployeeFailureAction({
+            error: error.message || 'Ошибка сервера'
+          })))
+        )
+      )
+    )
+  );
+
+  updateWorkerSuccessSyncAuth$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateWorkerEmployeeSuccessAction),
+      map(action => ({ action, currentUser: this.currentUser() })),
+      filter(({ action, currentUser }) => currentUser?.person?.personId === action.personId),
+      map(({ action, currentUser }) =>
+        setUserProfileAction({
+          person: currentUser!.person!,
+          worker: action.worker
+        })
+      )
+    )
+  );
+
   deleteEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(deleteEmployeeAction),
@@ -95,7 +144,9 @@ export class EmployeesEffects {
 
   showSuccessToast$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(updateEmployeeSuccessAction, createEmployeeSuccessAction),
+      ofType(updateEmployeeSuccessAction,
+        createEmployeeSuccessAction,
+        updateWorkerEmployeeSuccessAction),
       tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
     ),
     { dispatch: false }
@@ -106,7 +157,8 @@ export class EmployeesEffects {
       ofType(getAllEmployeesFailureAction,
         deleteEmployeeFailureAction,
         updateEmployeeFailureAction,
-        createEmployeeFailureAction),
+        createEmployeeFailureAction,
+        updateWorkerEmployeeFailureAction),
       tap(() => this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center'))
     ),
     { dispatch: false }
