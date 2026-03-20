@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { pendingChangesGuard } from './core/guards/pending-changes.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { LoginComponent } from './features/login/login.component';
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
@@ -40,7 +41,7 @@ export const routes: Routes = [
         component: TeamComponent,
         children: [
           { path: 'list', component: TeamListComponent },
-          { path: 'availability', component: TeamCalendarComponent },
+          { path: 'availability', component: TeamCalendarComponent, canDeactivate: [pendingChangesGuard] },
           { path: '', redirectTo: 'list', pathMatch: 'full' }
         ]
       },

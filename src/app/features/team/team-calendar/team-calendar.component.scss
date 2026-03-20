@@ -175,3 +175,12 @@ app-calendar-piker {
     margin-bottom: 0.5rem;
   }
 }
+
+.select-wrapper {
+
+  transition: color 0.25s ease;
+
+  select {
+    transition: color 0.25s ease, border 0.25s ease;
+  }
+}

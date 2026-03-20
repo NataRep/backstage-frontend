@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnInit, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { HasUnsavedChanges } from '../../../core/guards/pending-changes.guard';
 import { Role } from '../../../core/models/enums/employee.enums';
 import { getDaysInMonth } from '../../../core/models/interfaces/calendar.model';
 import { EmployeeProfile } from '../../../core/models/interfaces/employee.models';
@@ -26,7 +27,7 @@ import { RoleTranslatePipe } from '../../../shared/pipes/translateRole';
   styleUrl: './team-calendar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> implements OnInit {
+export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> implements OnInit, HasUnsavedChanges {
   // 1. HostListeners & Decorations
   @HostListener('window:resize')
   onResize() {
@@ -127,10 +128,6 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     this.selectedPeriod.set(event);
   }
 
-  hasUnsavedChanges(): boolean {
-    return !!this.editingEmployee();
-  }
-
   isPastDay(day: number): boolean {
     const { month, year } = this.selectedPeriod();
     const dateToCheck = new Date(year, month, day).getTime();
@@ -206,5 +203,21 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     const availableHeight = window.innerHeight - headerHeight;
     const calculatedRows = Math.floor(availableHeight / rowHeight);
     this.dynamicPageSize.set(Math.max(calculatedRows, 5));
+  }
+
+  hasUnsavedChanges(): boolean {
+    const employee = this.editingEmployee();
+
+    if (!employee) return false;
+
+    const originalDays = this.availabilityMap().get(employee.person?.personId!) || new Set();
+    const draftDays = this.editDraft();
+
+    if (originalDays.size !== draftDays.size) return true;
+    for (let day of originalDays) {
+      if (!draftDays.has(day)) return true;
+    }
+
+    return false;
   }
 }

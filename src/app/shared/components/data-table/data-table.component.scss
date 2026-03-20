@@ -23,6 +23,10 @@
   max-width: 10rem;
   margin-right: 3rem;
 
+  &::placeholder {
+    transition: color 0.25s ease;
+  }
+
   &:disabled::placeholder {
     color: var(--color-grey-medium);
   }
@@ -46,6 +50,7 @@
     color: var(--color-grey-text);
     border-radius: 9px;
     border: none;
+    transition: color 0.25s ease;
 
     &:disabled {
       cursor: auto;
@@ -67,6 +72,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
+  transition: color 0.5s ease;
 
   &.is-active {
     background: var(--color-green);
