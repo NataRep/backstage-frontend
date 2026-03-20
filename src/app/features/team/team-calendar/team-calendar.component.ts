@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnInit, signal } from '@angular/core';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Role } from '../../../core/models/enums/employee.enums';
 import { getDaysInMonth } from '../../../core/models/interfaces/calendar.model';
@@ -28,65 +27,46 @@ import { RoleTranslatePipe } from '../../../shared/pipes/translateRole';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> implements OnInit {
+  // 1. HostListeners & Decorations
   @HostListener('window:resize')
   onResize() {
     this.calculatePageSize();
-  };
+  }
 
-  // 1. Dependency Injection
+  // 2. Dependency Injection
   private readonly store = inject(Store);
-  private readonly actions = inject(Actions);
 
-  // 2. Overrides (BaseTableDirective)
+  // 3. BaseTableDirective Overrides
+  protected override isTableLocked = () => !!this.editingEmployee();
   readonly dynamicPageSize = signal<number>(14);
-  override pageSize = () => this.dynamicPageSize();;
+  override pageSize = () => this.dynamicPageSize();
   protected override sourceData = () => this.filteredEmployees();
 
-  // 3. Static / Constant Data
+  // 4. Static / Constant Data
   readonly roles: Role[] = Object.values(Role);
   readonly rolesTranslate = ROLE_RU;
+  private readonly todayMidnight = new Date().setHours(0, 0, 0, 0);
 
-  // 4. Store Selectors (Signals)
+  // 5. Store Selectors (Signals)
   readonly allEmployees = this.store.selectSignal(selectAllEmployees);
   readonly isLoading = this.store.selectSignal(selectEmployeesLoading);
   readonly currentUser = this.store.selectSignal(selectAuthUser);
   readonly canEdit = this.store.selectSignal(selectCanEdit);
 
-  // 5. Local State (Signals)
-  hoverDay = signal<number | null>(null);
-  editingEmployee = signal<EmployeeProfile | null>(null);
-  isEditMode = signal<boolean>(false);
-  selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
+  // 6. Local State (Signals)
   selectedPeriod = signal({
     month: new Date().getMonth(),
     year: new Date().getFullYear()
   });
+  selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
+
+  editingEmployee = signal<EmployeeProfile | null>(null);
   editDraft = signal<Set<number>>(new Set());
 
-  // 6. Computed Properties
-  readonly availabilityMap = computed(() => {
-    const { month, year } = this.selectedPeriod();
-    const employees = this.filteredEmployees();
-    const map = new Map<string, Set<number>>();
+  hoverDay = signal<number | null>(null);
+  isEditMode = signal<boolean>(false);
 
-    employees.forEach(emp => {
-      const unavailableDays = new Set<number>();
-
-      emp.worker?.availability?.forEach(timestamp => {
-        const date = new Date(timestamp.seconds * 1000);
-
-        // Проверяем, попадает ли дата в текущий выбранный месяц и год
-        if (date.getMonth() === month && date.getFullYear() === year) {
-          unavailableDays.add(date.getDate());
-        }
-      });
-
-      map.set(emp.person?.personId!, unavailableDays);
-    });
-
-    return map;
-  });
-
+  // 7. Computed Properties
   readonly calendarDays = computed(() =>
     Array.from({ length: getDaysInMonth(this.selectedPeriod().month, this.selectedPeriod().year) }, (_, i) => i + 1)
   );
@@ -94,6 +74,24 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
   readonly firstDayIndex = computed(() => {
     const { month, year } = this.selectedPeriod();
     return new Date(year, month, 1).getDay();
+  });
+
+  readonly availabilityMap = computed(() => {
+    const { month, year } = this.selectedPeriod();
+    const employees = this.filteredEmployees();
+    const map = new Map<string, Set<number>>();
+
+    employees.forEach(emp => {
+      const unavailableDays = new Set<number>();
+      emp.worker?.availability?.forEach(timestamp => {
+        const date = new Date(timestamp.seconds * 1000);
+        if (date.getMonth() === month && date.getFullYear() === year) {
+          unavailableDays.add(date.getDate());
+        }
+      });
+      map.set(emp.person?.personId!, unavailableDays);
+    });
+    return map;
   });
 
   readonly filteredEmployees = computed(() => {
@@ -115,22 +113,16 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     return filtered.sort((a, b) => (a.person?.fullName || '').localeCompare(b.person?.fullName || ''));
   });
 
-  // 7. Lifecycle Hooks
+  // 8. Lifecycle Hooks
   override ngOnInit() {
     super.ngOnInit();
     if (this.allEmployees().length === 0 && !this.isLoading()) {
       this.store.dispatch(getAllEmployeesAction());
     }
     this.calculatePageSize();
-
-    console.log("currentUser", this.currentUser())
   }
 
-  // 8. Event Handlers & Business Logic
-  protected override getExtraParams() {
-    return { role: this.selectedRole() };
-  }
-
+  // 9. Public Business Logic & Event Handlers
   onDateChange(event: { month: number, year: number }) {
     this.selectedPeriod.set(event);
   }
@@ -139,52 +131,34 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     return !!this.editingEmployee();
   }
 
-
-  private calculatePageSize() {
-    const rowHeight = 37; // Примерная высота строки в пикселях
-    const headerHeight = 400; // Суммарная высота всего, что ВНЕ таблицы 
-
-    const availableHeight = window.innerHeight - headerHeight;
-    const calculatedRows = Math.floor(availableHeight / rowHeight);
-
-    // Устанавливаем минимум 5 строк, чтобы таблица не схлопнулась совсем
-    this.dynamicPageSize.set(Math.max(calculatedRows, 5));
-  }
-
-  private readonly todayMidnight = new Date().setHours(0, 0, 0, 0);
   isPastDay(day: number): boolean {
     const { month, year } = this.selectedPeriod();
     const dateToCheck = new Date(year, month, day).getTime();
     return dateToCheck < this.todayMidnight;
   }
 
+  isRowEditing(emp: EmployeeProfile): boolean {
+    return emp.worker?.id === this.editingEmployee()?.worker?.id;
+  }
+
+  // 10. Edit Mode Actions
   toggleEdit(employee: EmployeeProfile) {
     this.editingEmployee.update(current => {
       if (current?.worker?.id === employee.worker?.id) {
-        this.editDraft.set(new Set()); // Очистка при закрытии
+        this.editDraft.set(new Set());
+        return null;
       }
-
       const currentAvailability = this.availabilityMap().get(employee.person?.personId!) || new Set();
       this.editDraft.set(new Set(currentAvailability));
       return employee;
     });
   }
 
-  isRowEditing(emp: EmployeeProfile) {
-    return emp.worker?.id === this.editingEmployee()?.worker?.id
-  }
-
-  // Метод для клика по ячейке
   toggleDayInDraft(day: number, isPast: boolean) {
     if (!this.editingEmployee() || isPast) return;
-
     this.editDraft.update(currentSet => {
       const newSet = new Set(currentSet);
-      if (newSet.has(day)) {
-        newSet.delete(day);
-      } else {
-        newSet.add(day);
-      }
+      newSet.has(day) ? newSet.delete(day) : newSet.add(day);
       return newSet;
     });
   }
@@ -205,22 +179,32 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
       nanoseconds: 0
     }));
 
-    const finalAvailability = [...otherMonthsAvailability, ...newMonthAvailability];
-
     this.store.dispatch(updateWorkerEmployeeAction({
       personId: employee.person?.personId!,
       worker: {
         ...employee.worker!,
-        availability: finalAvailability
+        availability: [...otherMonthsAvailability, ...newMonthAvailability]
       }
     }));
 
-    this.editingEmployee.set(null);
-    this.editDraft.set(new Set());
+    this.cancelEdit();
   }
 
   cancelEdit() {
     this.editingEmployee.set(null);
     this.editDraft.set(new Set());
+  }
+
+  // 11. Private Helpers
+  protected override getExtraParams() {
+    return { role: this.selectedRole() };
+  }
+
+  private calculatePageSize() {
+    const rowHeight = 37;
+    const headerHeight = 400;
+    const availableHeight = window.innerHeight - headerHeight;
+    const calculatedRows = Math.floor(availableHeight / rowHeight);
+    this.dynamicPageSize.set(Math.max(calculatedRows, 5));
   }
 }

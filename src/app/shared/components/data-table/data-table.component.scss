@@ -22,8 +22,15 @@
 .search {
   max-width: 10rem;
   margin-right: 3rem;
+
+  &:disabled::placeholder {
+    color: var(--color-grey-medium);
+  }
 }
 
+.is-locked {
+  color: var(--color-grey-medium);
+}
 
 .pagination {
   display: flex;
@@ -43,6 +50,10 @@
     &:disabled {
       cursor: auto;
       opacity: 0.5;
+
+      &.is-locked {
+        color: var(--color-grey-medium);
+      }
     }
   }
 }
@@ -64,6 +75,16 @@
 
   &:not(.is-active) {
     cursor: pointer;
+  }
+
+  &.is-disabled {
+    cursor: not-allowed; // Меняем курсор
+    color: var(--text-muted); // Или серый цвет
+    pointer-events: none; // Полностью отключаем кликабельность на уровне браузера
+
+    &:hover {
+      background: transparent; // Отключаем подсветку при наведении
+    }
   }
 }
 

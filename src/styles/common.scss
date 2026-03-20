@@ -84,3 +84,13 @@ input:-webkit-autofill:focus {
   -webkit-filter: none !important;
   -webkit-text-fill-color: var(--color-grey-extra-light) !important;
 }
+
+.is-locked {
+  color: var(--color-grey-medium) !important;
+  pointer-events: none;
+
+  select {
+    color: var(--color-grey-medium);
+    border: 1px solid var(--color-grey-medium);
+  }
+}

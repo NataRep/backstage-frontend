@@ -12,11 +12,13 @@ export class DataTableComponent {
   @Input() currentPage = 1;
   @Input() totalPages = 1;
   @Input() pages: number[] = [];
+  @Input() isToolsDisabled = false;
 
   @Output() searchChange = new EventEmitter<string>();
   @Output() pageChange = new EventEmitter<number>();
 
   onSearch(event: Event) {
+    if (this.isToolsDisabled) return;
     const value = (event.target as HTMLInputElement).value;
     this.searchChange.emit(value);
   }
