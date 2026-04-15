@@ -69,7 +69,7 @@ export class AuthService {
           this.authReadyResolver();
         }
       });
-    } catch (err) {
+    } catch {
       this._role.set('guest');
       if (!this.authInitialized) {
         this.authInitialized = true;
@@ -94,20 +94,11 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<UserCredential> {
-    try {
-      const result = await signInWithEmailAndPassword(this.auth, email, password);
-      return result;
-    } catch (error) {
-      throw error;
-    }
+    return await signInWithEmailAndPassword(this.auth, email, password);
   }
 
   async logout(): Promise<void> {
-    try {
-      await signOut(this.auth);
-    } catch (error) {
-      throw error;
-    }
+    await signOut(this.auth);
   }
 
   async refreshToken(): Promise<string | null> {
@@ -119,7 +110,7 @@ export class AuthService {
       const tokenResult = await getIdTokenResult(user);
       this._token.set(tokenResult.token);
       return tokenResult.token;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -149,7 +140,7 @@ export class AuthService {
         isExpired: expiresIn <= 0,
         willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000
       };
-    } catch (error) {
+    } catch {
       return { isValid: false, isExpired: true };
     }
   }

@@ -39,7 +39,7 @@ export class AuthEffects {
                 name: response.user.displayName
               }
             })),
-            catchError(error => {
+            catchError(() => {
               return of(loginCredentialsFailureAction({ error: 'Incorrect email or password' }))
             })
           ))

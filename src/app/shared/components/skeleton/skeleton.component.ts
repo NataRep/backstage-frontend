@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 })
 export class SkeletonComponent {
   @Input() type: 'text' | 'circle' | 'rect' = 'text';
-  @Input() width: string = '100%';
-  @Input() height: string = '1rem';
-  @Input() borderRadius: string = '0.25rem';
+  @Input() width = '100%';
+  @Input() height = '1rem';
+  @Input() borderRadius = '0.25rem';
 }

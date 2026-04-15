@@ -34,7 +34,7 @@ export class MainLayoutComponent implements OnInit {
   user = this.store.selectSignal(selectAuthUser);
 
   pageTitle = "";
-  userName: string = "";
+  userName = "";
   fullName: string[] = ["", ""];
   TEXT = TEXT;
   dashboard = PAGE_LINKS_LIST.find((item) => item.link === "dashboard");

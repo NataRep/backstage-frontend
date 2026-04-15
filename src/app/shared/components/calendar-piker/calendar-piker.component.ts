@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, signal } from '@angular/core';
 import { GetMonthRuPipe } from '../../pipes/get-month.ru.pipe';
 
-const DEFAULT_DAYS_COUNT = 31;
-
 @Component({
   selector: 'app-calendar-piker',
   standalone: true,
@@ -20,7 +18,7 @@ export class CalendarPikerComponent {
 
   changeMonth(count: number): void {
     this.selectedMonth.update(month => {
-      let newMonth = month + count;
+      const newMonth = month + count;
 
       if (newMonth > 11) {
         this.selectedYear.update(y => y + 1);

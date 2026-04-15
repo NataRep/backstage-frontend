@@ -8,12 +8,12 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
+import { environment } from './core/environments/environments';
 import { apiInterceptor } from './core/interceptors/api.interceptor';
 import { AuthEffects } from './core/store/auth/auth.effects';
 import { authReducer } from './core/store/auth/auth.reducer';
 import { EmployeesEffects } from './core/store/employees/employees.effects';
 import { employeeReducer } from './core/store/employees/employees.reducer';
-import { environment } from './environments/environments';
 
 export const appConfig: ApplicationConfig = {
   providers: [

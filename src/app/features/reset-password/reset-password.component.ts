@@ -144,10 +144,11 @@ export class ResetPasswordComponent implements OnInit {
     setTimeout(() => this.router.navigate([target]), 3000);
   }
 
-  private handleError(error: any) {
+  private handleError(error: unknown) {
+    const err = error as { code?: string; message?: string };
 
     // 1. Ошибка безопасности: нужно залогиниться заново
-    if (error.code === 'auth/requires-recent-login' || error.code === 'auth/user-token-expired') {
+    if (err.code === 'auth/requires-recent-login' || err.code === 'auth/user-token-expired') {
       this.errorToastMessage = "Для безопасности нужно перезайти в систему перед сменой пароля.";
 
       setTimeout(() => {
@@ -158,8 +159,9 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     // 2. Ошибка ссылки (если это ResetMode)
-    if (error.code === 'auth/invalid-action-code' || error.code === 'auth/expired-action-code') {
+    if (err.code === 'auth/invalid-action-code' || err.code === 'auth/expired-action-code') {
       this.errorToastMessage = "Ссылка устарела или уже была использована. Запросите новую.";
+
       setTimeout(() => {
         this.action.emit();
         this.router.navigate(['/login']);
@@ -168,10 +170,9 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     // 3. Все остальные ошибки
-    this.errorToastMessage = "Ошибка: " + (error.message || "Попробуйте позже");
-    this.toastService.show(this.errorToastMessage, 'warning', 'center')
+    this.errorToastMessage = "Ошибка: " + (err.message || "Попробуйте позже");
+    this.toastService.show(this.errorToastMessage, 'warning', 'center');
   }
-
 
   togglePasswordVisibility() {
     this.isPasswordVisibility.update(v => !v);

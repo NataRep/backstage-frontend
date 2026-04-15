@@ -5,9 +5,9 @@ import { TEXT } from '../../../shared/constants/texts/common.texts';
   providedIn: 'root'
 })
 export class WelcomeMessageService {
-  message: string = "";
-  needShow: boolean = true;
-  countShow: number = 0;
+  message = "";
+  needShow = true;
+  countShow = 0;
 
   show(userName: string | undefined): void {
     if (!this.needShow) {

@@ -43,7 +43,7 @@
   margin-top: 0.25rem;
   padding: 0.25rem;
 
-  button {
+  button:not(.pagination__page-number) {
     padding: 0.5rem 1rem;
     cursor: pointer;
     background: none;
@@ -64,13 +64,17 @@
 }
 
 .pagination__page-number {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 0.75rem;
-  line-height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 100%;
+  color: var(--color-grey-text);
+  border: none;
+  background: none;
   border-radius: 4px;
   transition: color 0.5s ease;
 
@@ -84,12 +88,12 @@
   }
 
   &.is-disabled {
-    cursor: not-allowed; // Меняем курсор
-    color: var(--text-muted); // Или серый цвет
-    pointer-events: none; // Полностью отключаем кликабельность на уровне браузера
+    cursor: not-allowed;
+    color: var(--text-muted);
+    pointer-events: none;
 
     &:hover {
-      background: transparent; // Отключаем подсветку при наведении
+      background: transparent;
     }
   }
 }

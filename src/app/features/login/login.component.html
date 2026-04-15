@@ -18,13 +18,16 @@
     <label for="password">Password</label>
     <input id="password" [type]="isPasswordVisibility ? 'text' : 'password'" formControlName="password" placeholder=""
       autocomplete="on">
-    <div class="password__eye" [class.isOpen]="isPasswordVisibility" (click)="togglePasswordVisibility()">
+
+    <div class="password__eye" [class.isOpen]="isPasswordVisibility" (click)="togglePasswordVisibility()"
+      (keydown.enter)="togglePasswordVisibility()" tabindex="0" role="button" aria-label="Показать пароль">
       @if(isPasswordVisibility){
       <app-icon name="eye-open"></app-icon>
-      }@else{
+      } @else {
       <app-icon name="eye-close"></app-icon>
       }
     </div>
+
     @if (password?.invalid && password?.touched) {
     <div class="error-message">
       @if (password?.errors?.['required']) {
@@ -33,12 +36,18 @@
     </div>
     }
   </div>
+
   @if(loginError){
   <div class="form__error">Неверный пароль или эл.адрес</div>
   }
+
   <button type="submit" class="button button--big button--yellow-gradient">Login</button>
-  <div class="reset-password" (click)="openResetModal()">Forgot your password?</div>
+
+  <div class="reset-password" (click)="openResetModal()" (keydown.enter)="openResetModal()" tabindex="0" role="button">
+    Forgot your password?
+  </div>
 </form>
+
 <app-modal-container [(isOpen)]="isModalOpen" type="action" actionButton="Ok" (action)="handleModalAction($event)">
   <div class="modal__header">Reset password</div>
   <div class="modal__body">

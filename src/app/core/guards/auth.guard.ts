@@ -8,7 +8,7 @@ export const authGuard: CanActivateFn = async (route, state) => {
 
   await authService.authReady;
 
-  let role = authService.role();
+  const role = authService.role();
   const url = state.url;
 
   if (url.startsWith('/login') || url.startsWith('/reset-password')) {

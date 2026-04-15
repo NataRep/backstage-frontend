@@ -83,6 +83,10 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     const map = new Map<string, Set<number>>();
 
     employees.forEach(emp => {
+      const personId = emp.person?.personId;
+
+      if (!personId) return;
+
       const unavailableDays = new Set<number>();
       emp.worker?.availability?.forEach(timestamp => {
         const date = new Date(timestamp.seconds * 1000);
@@ -90,7 +94,7 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
           unavailableDays.add(date.getDate());
         }
       });
-      map.set(emp.person?.personId!, unavailableDays);
+      map.set(personId, unavailableDays);
     });
     return map;
   });
@@ -140,22 +144,37 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
   // 10. Edit Mode Actions
   toggleEdit(employee: EmployeeProfile) {
+    const personId = employee.person?.personId;
+    if (!personId) return;
+
     this.editingEmployee.update(current => {
-      if (current?.worker?.id === employee.worker?.id) {
+      const currentId = current?.person?.personId;
+
+      if (currentId === personId) {
         this.editDraft.set(new Set());
         return null;
       }
-      const currentAvailability = this.availabilityMap().get(employee.person?.personId!) || new Set();
+
+      const currentAvailability = this.availabilityMap().get(personId) ?? new Set<number>();
+
       this.editDraft.set(new Set(currentAvailability));
+
       return employee;
     });
   }
 
   toggleDayInDraft(day: number, isPast: boolean) {
     if (!this.editingEmployee() || isPast) return;
+
     this.editDraft.update(currentSet => {
       const newSet = new Set(currentSet);
-      newSet.has(day) ? newSet.delete(day) : newSet.add(day);
+
+      if (newSet.has(day)) {
+        newSet.delete(day);
+      } else {
+        newSet.add(day);
+      }
+
       return newSet;
     });
   }
@@ -166,7 +185,10 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
     const { month, year } = this.selectedPeriod();
     const draftDays = this.editDraft();
-    const otherMonthsAvailability = employee.worker?.availability?.filter(ts => {
+
+    const availability = employee.worker?.availability || [];
+
+    const otherMonthsAvailability = availability.filter(ts => {
       const d = new Date(ts.seconds * 1000);
       return d.getMonth() !== month || d.getFullYear() !== year;
     }) || [];
@@ -176,13 +198,20 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
       nanoseconds: 0
     }));
 
-    this.store.dispatch(updateWorkerEmployeeAction({
-      personId: employee.person?.personId!,
-      worker: {
-        ...employee.worker!,
-        availability: [...otherMonthsAvailability, ...newMonthAvailability]
-      }
-    }));
+    const personId = employee.person?.personId;
+    const workerData = employee.worker;
+
+    if (personId && workerData) {
+      this.store.dispatch(updateWorkerEmployeeAction({
+        personId,
+        worker: {
+          ...workerData,
+          availability: [...otherMonthsAvailability, ...newMonthAvailability]
+        }
+      }));
+    } else {
+      console.warn('Не удалось обновить данные: personId или данные сотрудника отсутствуют', employee);
+    }
 
     this.cancelEdit();
   }
@@ -210,11 +239,12 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
     if (!employee) return false;
 
-    const originalDays = this.availabilityMap().get(employee.person?.personId!) || new Set();
+    const personId = employee.person?.personId;
+    const originalDays = (personId ? this.availabilityMap().get(personId) : null) ?? new Set<number>();
     const draftDays = this.editDraft();
 
     if (originalDays.size !== draftDays.size) return true;
-    for (let day of originalDays) {
+    for (const day of originalDays) {
       if (!draftDays.has(day)) return true;
     }
 

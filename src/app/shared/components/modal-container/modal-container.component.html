@@ -1,21 +1,33 @@
 @if(isOpen()){
 <div class="modal-wrapper" [class]="size">
-  <div class="bg" (click)="close()"></div>
-  <div class="modal-container modal" [class]="type">
-    <div class="close" (click)="close()">+</div>
+  <div class="bg" (click)="close()" (window:keydown.escape)="close()" tabindex="-1" aria-hidden="true">
+  </div>
+
+  <div class="modal-container modal" [class]="type" role="dialog" aria-modal="true">
+
+    <button type="button" class="close" (click)="close()" aria-label="Close modal">
+      +
+    </button>
+
     <div class="header">
       <ng-content select=".modal__header"></ng-content>
     </div>
+
     <div class="body">
       <ng-content select=".modal__body"></ng-content>
     </div>
+
     @if(type === 'action'){
     <div class="buttons">
       @if(actionButton){
-      <div class="button" [class]="actionButton === 'Delete' ? 'button--red' : 'button--yellow'" (click)="onConfirm()">
-        {{
-        actionButton }}</div>
-      <div class="button button--yellow" (click)="onCancel()">Cancel</div>
+      <button type="button" class="button" [class]="actionButton === 'Delete' ? 'button--red' : 'button--yellow'"
+        (click)="onConfirm()">
+        {{ actionButton }}
+      </button>
+
+      <button type="button" class="button button--yellow" (click)="onCancel()">
+        Cancel
+      </button>
       }
     </div>
     }

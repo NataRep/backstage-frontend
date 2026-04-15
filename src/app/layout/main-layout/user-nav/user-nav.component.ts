@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, Input, OnDestroy, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { PAGE_LINKS_LIST } from '../../../core/models/page-links.models';
@@ -13,15 +13,16 @@ import { IconComponent } from '../../../shared/components/icons/icons.component'
   styleUrl: './user-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserNavComponent {
+export class UserNavComponent implements OnDestroy {
   @Input() userName: string[] | undefined = [];
 
   private store = inject(Store);
+  private elementRef = inject(ElementRef);
   private clickListener?: (event: MouseEvent) => void;
   isOpen = signal(false);
   navList = PAGE_LINKS_LIST;
 
-  constructor(private elementRef: ElementRef) {
+  constructor() {
     effect(() => {
       if (this.isOpen()) {
         this.addClickListener();

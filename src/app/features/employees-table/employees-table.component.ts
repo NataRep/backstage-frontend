@@ -101,10 +101,12 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
   // 9. API & Store Actions (Бизнес-логика)
   updateSelectedEmployee(data: { person: Person; worker: WorkerBase }) {
     const selectedEmployee = this.selectedEmployee();
-    if (!selectedEmployee) return;
+    const personId = selectedEmployee?.person?.personId
+
+    if (!selectedEmployee || !personId) return;
 
     this.store.dispatch(updateEmployeeAction({
-      personId: selectedEmployee.person?.personId!,
+      personId,
       person: { ...data.person },
       worker: { ...data.worker }
     }));

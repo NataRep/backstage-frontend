@@ -7,7 +7,7 @@ export function passwordValidator(): ValidatorFn {
     const errors: ValidationErrors = {};
 
     // только латиница + цифры + спецсимволы
-    if (!/^[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(value)) {
+    if (!/^[A-Za-z\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]*$/.test(value)) {
       errors['latinOnly'] = true;
     }
 

@@ -17,14 +17,10 @@ export class SocialLinkPipe implements PipeTransform {
         return `https://vk.com/${value}`;
       case 'email':
         return `mailto:${value}`;
-      case 'phone':
-        let tel = value.trim();
-        if (tel.startsWith('+')) {
-          tel = '+' + tel.substring(1).replace(/\D/g, '');
-        } else {
-          tel = tel.replace(/\D/g, '');
-        }
-        return `tel:${tel}`;
+      case 'phone': {
+        const digits = value.replace(/\D/g, '');
+        return value.trim().startsWith('+') ? `tel:+${digits}` : `tel:${digits}`;
+      }
       default:
         return '#';
     }

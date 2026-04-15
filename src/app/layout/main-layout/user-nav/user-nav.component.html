@@ -1,9 +1,13 @@
 <div class="menu">
-  <div class="button user-icon" (click)="toggle()">
-    @if(userName){
-    {{userName[0][0]}}{{userName![1][0]}}
+  <button type="button" class="button user-icon" (click)="toggle()" aria-label="Открыть меню пользователя"
+    [attr.aria-expanded]="isOpen()">
+    @if(userName && userName.length >= 2){
+    {{userName[0][0]}}{{userName[1][0]}}
+    } @else if (userName && userName.length > 0) {
+    {{userName[0][0]}}
     }
-  </div>
+  </button>
+
   @if(isOpen()){
   <nav class="menu__content" [class.open]="isOpen()">
     <ul class="menu__list">
@@ -12,12 +16,15 @@
       <li class="menu__item">
         <a [routerLink]="item.link" routerLinkActive="active" class="menu__item-link" (click)="toggle()">
           <app-icon [name]="item.icon" class="menu__item-icon"></app-icon>
-          {{ item.title }}</a>
+          {{ item.title }}
+        </a>
       </li>
       }
       }
       <li class="menu__item">
-        <button class="button button--yellow" (click)="logout()">Logout</button>
+        <button type="button" class="button button--yellow" (click)="logout()">
+          Logout
+        </button>
       </li>
     </ul>
   </nav>

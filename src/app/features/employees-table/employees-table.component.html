@@ -53,7 +53,7 @@
         <app-icon name="edit" (click)="openEditModal(emp)" class="edit-icon"></app-icon>
       </td>
       <td class="cell--icon">
-        @if(emp.person?.personId != currentUser()?.person?.personId){
+        @if(emp.person?.personId !== currentUser()?.person?.personId){
         <app-icon name="trash" (click)="openConfirmDeleteModal(emp)" class="delete-icon"></app-icon>
         }
       </td>

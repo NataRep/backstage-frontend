@@ -19,8 +19,10 @@ import {
   QuerySnapshot,
   setDoc,
   startAfter,
+  UpdateData,
   updateDoc,
   where,
+  WhereFilterOp,
   writeBatch
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
@@ -38,9 +40,6 @@ export class FirebaseService {
 
   private db = inject(Firestore);
 
-  constructor() {
-  }
-
   // ---- Helpers ----
   private colRef(collectionName: string): CollectionReference<DocumentData> {
     return collectionFn(this.db, collectionName) as CollectionReference<DocumentData>;
@@ -56,7 +55,7 @@ export class FirebaseService {
     return { ...(data as object), id: snap.id } as WithId<T>;
   }
 
-  private querySnapshotToEntities<T>(snap: QuerySnapshot<DocumentData>): Array<WithId<T>> {
+  private querySnapshotToEntities<T>(snap: QuerySnapshot<DocumentData>): WithId<T>[] {
     return snap.docs.map(d => ({ ...(d.data() as T), id: d.id } as WithId<T>));
   }
 
@@ -91,8 +90,8 @@ export class FirebaseService {
   async getAllByField<T>(
     collectionName: string,
     field: string,
-    value: any
-  ): Promise<Array<WithId<T>>> {
+    value: unknown
+  ): Promise<WithId<T>[]> {
     const q = firestoreQuery(
       this.colRef(collectionName),
       where(field, '==', value)
@@ -104,7 +103,7 @@ export class FirebaseService {
   async getOneByField<T>(
     collectionName: string,
     field: string,
-    value: any
+    value: unknown
   ): Promise<WithId<T> | null> {
     const q = firestoreQuery(
       this.colRef(collectionName),
@@ -115,7 +114,7 @@ export class FirebaseService {
     return snap.empty ? null : this.querySnapshotToEntities<T>(snap)[0];
   }
 
-  async getAll<T>(collectionName: string): Promise<Array<WithId<T>>> {
+  async getAll<T>(collectionName: string): Promise<WithId<T>[]> {
     const snap = await getDocs(this.colRef(collectionName));
     return this.querySnapshotToEntities<T>(snap);
   }
@@ -124,7 +123,7 @@ export class FirebaseService {
    * Выполнить запрос с набором QueryConstraint (where, orderBy, limit и т.д.)
    * Пример constraints: [where('status', '==', 'open'), orderBy('createdAt', 'desc'), limit(20)]
    */
-  async query<T>(collectionName: string, constraints: QueryConstraint[] = []): Promise<Array<WithId<T>>> {
+  async query<T>(collectionName: string, constraints: QueryConstraint[] = []): Promise<WithId<T>[]> {
     const q = firestoreQuery(this.colRef(collectionName), ...constraints);
     const snap = await getDocs(q);
     return this.querySnapshotToEntities<T>(snap);
@@ -144,14 +143,14 @@ export class FirebaseService {
   /**
    * Выполнить пачку операций (set/update/delete).
    * operations — массив объектов вида:
-   * { type: 'set'|'update'|'delete', collection: 'name', id?: 'id', data?: any }
+   * { type: 'set'|'update'|'delete', collection: 'name', id?: 'id', data?: unknown }
    */
-  async batch(operations: Array<{ type: 'set' | 'update' | 'delete', collection: string, id: string, data?: any }>): Promise<void> {
+  async batch(operations: { type: 'set' | 'update' | 'delete', collection: string, id: string, data?: unknown }[]): Promise<void> {
     const b = writeBatch(this.db);
     for (const op of operations) {
       const dref = this.docRef(op.collection, op.id);
-      if (op.type === 'set') b.set(dref, op.data);
-      if (op.type === 'update') b.update(dref, op.data);
+      if (op.type === 'set') b.set(dref, op.data as DocumentData);
+      if (op.type === 'update') b.update(dref, op.data as UpdateData<DocumentData>);
       if (op.type === 'delete') b.delete(dref);
     }
     await b.commit();
@@ -163,7 +162,7 @@ export class FirebaseService {
     constraints: QueryConstraint[] = [],
     pageSize = 20,
     startAfterDoc?: DocumentSnapshot<DocumentData>
-  ): Promise<{ data: Array<WithId<T>>, lastDoc?: DocumentSnapshot<DocumentData> }> {
+  ): Promise<{ data: WithId<T>[], lastDoc?: DocumentSnapshot<DocumentData> }> {
     const allConstraints = [...constraints, orderBy('__name__'), limit(pageSize)];
     const q = startAfterDoc ? firestoreQuery(this.colRef(collectionName), ...allConstraints, startAfter(startAfterDoc)) : firestoreQuery(this.colRef(collectionName), ...allConstraints);
     const snap = await getDocs(q);
@@ -172,7 +171,7 @@ export class FirebaseService {
     return { data: items, lastDoc: last };
   }
 
-  queryConstraintWhere(fieldPath: string, opStr: any, value: any): QueryConstraint {
+  queryConstraintWhere(fieldPath: string, opStr: WhereFilterOp, value: unknown): QueryConstraint {
     return where(fieldPath, opStr, value);
   }
 
@@ -193,7 +192,7 @@ export class FirebaseService {
   subscribeCollection<T>(
     collectionName: string,
     constraints: QueryConstraint[] = []
-  ): Observable<Array<WithId<T>>> {
+  ): Observable<WithId<T>[]> {
     return new Observable(subscriber => {
       const q = constraints.length
         ? firestoreQuery(this.colRef(collectionName), ...constraints)

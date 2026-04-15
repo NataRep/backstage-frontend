@@ -13,7 +13,7 @@ export abstract class BaseTableDirective<T> implements OnInit {
   // Абстрактные данные
   protected abstract sourceData: () => T[];
   protected abstract pageSize: () => number;
-  protected abstract getExtraParams(): Record<string, any>;
+  protected abstract getExtraParams(): Record<string, unknown>;
   protected abstract isTableLocked: () => boolean;
 
   // Логика страниц теперь опирается на sourceData().length

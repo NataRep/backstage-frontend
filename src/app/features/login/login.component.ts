@@ -229,7 +229,7 @@ export class LoginComponent implements OnInit {
       .then(() => {
         this.toastService.show('Ссылка для сброса пароля отправлена! Проверьте электронную почту.', 'success', 'center',);
       })
-      .catch((error) => {
+      .catch(() => {
         this.toastService.show('Произошла ошибка. Попробуйте еще раз', 'warning', 'center',);
       })
       .finally(() => {

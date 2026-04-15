@@ -18,15 +18,19 @@ export class PersonDataService {
 
   getAllPersons(props: PersonsProps): Observable<Person[]> {
     let params = new HttpParams();
-    if (props.page) {
-      params = params.append('page', props.page.toString());
-    }
-    if (props.limit) {
-      params = params.append('limit', props.limit.toString());
-    }
-    if (props.ids?.length) {
-      props.ids.forEach(id => {
-        params = params.append('ids', id);
+
+    // Заменяем any на unknown. Теперь это безопасно.
+    const snakeProps = convertToSnakeRecursive(props) as Record<string, unknown>;
+
+    if (snakeProps) {
+      Object.entries(snakeProps).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          if (Array.isArray(value)) {
+            value.forEach(v => params = params.append(key, String(v)));
+          } else {
+            params = params.append(key, String(value));
+          }
+        }
       });
     }
 
@@ -42,33 +46,47 @@ export class PersonDataService {
   }
 
   createPerson(body: Person): Observable<Person> {
-    return this.http.post<Person>(`persons`, convertObjectKeysToSnake(body));
+    // Явно указываем unknown, чтобы HttpClient принял результат трансформации
+    const payload = convertToSnakeRecursive(body);
+    return this.http.post<Person>(`persons`, payload);
   }
 
   updatePerson(personId: string, body: PersonBase): Observable<Person> {
-    return this.http.patch<Person>(`persons/${personId}`, convertObjectKeysToSnake(body));
+    const payload = convertToSnakeRecursive(body);
+    return this.http.patch<Person>(`persons/${personId}`, payload);
   }
 
   deletePerson(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`persons/${id}`);
   }
-
 }
 
-interface AnyObject {
-  [key: string]: any;
-}
+/**
+ * Рекурсивная конвертация ключей объекта из camelCase в snake_case.
+ * Безопасно работает с any/unknown и соблюдает правила линтера.
+ */
+function convertToSnakeRecursive(obj: unknown): unknown {
+  // 1. Обработка null или не объектов
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
 
-function convertObjectKeysToSnake(obj: AnyObject): AnyObject {
-  const result: AnyObject = {};
+  // 2. Обработка массивов (проходим по каждому элементу)
+  if (Array.isArray(obj)) {
+    return obj.map(item => convertToSnakeRecursive(item));
+  }
 
-  for (const [key, value] of Object.entries(obj)) {
+  // 3. Обработка объектов
+  const result: Record<string, unknown> = {};
+  const record = obj as Record<string, unknown>;
+
+  for (const [key, value] of Object.entries(record)) {
     const snakeKey = key
       .replace(/([a-z])([A-Z])/g, '$1_$2')
       .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
       .toLowerCase();
 
-    result[snakeKey] = value;
+    result[snakeKey] = convertToSnakeRecursive(value);
   }
 
   return result;

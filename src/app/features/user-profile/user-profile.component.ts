@@ -59,16 +59,16 @@ export class UserProfileComponent {
   }
 
   updateUser(data: { person: PersonBase; worker: WorkerBase }) {
-    this.store.dispatch(updateEmployeeAction({
+    const user = this.currentUser();
+    const personId = user?.person?.personId;
 
-      personId: this.currentUser()?.person?.personId!,
-      person: {
-        ...data.person,
-      },
-      worker: {
-        ...data.worker
-      }
-    }))
+    if (personId) {
+      this.store.dispatch(updateEmployeeAction({
+        personId,
+        person: { ...data.person },
+        worker: { ...data.worker }
+      }));
+    }
   }
 
   openPasswordModal() {

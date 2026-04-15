@@ -11,7 +11,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, from, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { environment } from '../../environments/environments';
+import { environment } from '../environments/environments';
 import { AuthService } from '../services/auth.service';
 
 export const SKIP_AUTH = new HttpContextToken<boolean>(() => false);
@@ -21,7 +21,7 @@ export const ALLOW_EXTERNAL = new HttpContextToken<boolean>(() => false);
 let refreshInProgress = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
@@ -73,7 +73,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: H
     finalUrl = `${apiBase}/${req.url.replace(/^\/+/, '')}`;
   }
 
-  const handleRequest = (token: string | null): Observable<HttpEvent<any>> => {
+  const handleRequest = (token: string | null): Observable<HttpEvent<unknown>> => {
     const headers: Record<string, string> = {};
 
     if (shouldAddAuth && token) {
@@ -99,7 +99,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: H
     return next(clonedReq);
   };
 
-  const handle401Error = (originalRequest: HttpRequest<any>): Observable<HttpEvent<any>> => {
+  const handle401Error = (): Observable<HttpEvent<unknown>> => {
     if (refreshInProgress) {
       return refreshTokenSubject.pipe(
         filter(token => token !== null),
@@ -166,7 +166,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: H
   return handleRequest(currentToken).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401 && shouldAddAuth) {
-        return handle401Error(req);
+        return handle401Error();
       }
 
       if (error.status === 403) {

@@ -15,7 +15,7 @@ import { IconComponent } from '../icons/icons.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastComponent {
-  @Input() message: string = 'Текст сообщения';
+  @Input() message = 'Текст сообщения';
   @Input() type: ToastType = 'success';
   @Input() position: ToastPosition = 'top-right';
 }

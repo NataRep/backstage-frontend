@@ -5,6 +5,7 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnChanges,
   Output
 } from '@angular/core';
 import {
@@ -39,7 +40,7 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployeeFormComponent {
+export class EmployeeFormComponent implements OnChanges {
   //TODO - после реализации создания учетки авторизации при создании пользователя на беке убрать полуе id. 
   // он должен генерироваться в firebase auth и добавляться в данные пользователя на беке из uid
 
@@ -50,7 +51,7 @@ export class EmployeeFormComponent {
   private store = inject(Store);
   currentUser = this.store.selectSignal(selectAuthUser);
 
-  isAdmin: boolean = false;
+  isAdmin = false;
   readonly roles: Role[] = Object.values(Role);
 
   form = new FormGroup({
@@ -154,23 +155,31 @@ export class EmployeeFormComponent {
   }
 
   setFormByEmployee() {
-    if (!this.employee) return;
+    const employee = this.employee;
+    const person = employee?.person;
 
-    const nameParts = this.employee.person?.fullName?.split(' ')!;
-    const [lastName, firstName] = [nameParts[0], nameParts[1]];
-    this.isAdmin = this.employee?.worker?.accessLevel === AccessLevel.Admin;
+    if (!employee || !person) return;
+
+    const nameParts = person.fullName.trim().split(/\s+/);
+    const lastName = nameParts[0] || '';
+    const firstName = nameParts[1] || '';
+
+    this.isAdmin = employee.worker?.accessLevel === AccessLevel.Admin;
+
+    const findSocial = (type: SocialType) =>
+      person.socialLinks?.find(link => link.type === type)?.link ?? '';
 
     this.form.patchValue(
       {
-        id: this.employee.person?.personId,
+        id: person.personId,
         firstName,
         lastName,
         isAdmin: this.isAdmin,
-        email: this.employee.person?.email ?? '',
-        phone: this.employee.person?.phone ?? '',
-        telegram: this.employee.person?.socialLinks?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '',
-        vk: this.employee.person?.socialLinks?.find(link => link.type === SocialType.VK)?.link ?? '',
-        whatsapp: this.employee.person?.socialLinks?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '',
+        email: person.email ?? '',
+        phone: person.phone ?? '',
+        telegram: findSocial(SocialType.TELEGRAM),
+        vk: findSocial(SocialType.VK),
+        whatsapp: findSocial(SocialType.WHATSAPP),
       },
       { emitEvent: true },
     );
@@ -263,7 +272,7 @@ export class EmployeeFormComponent {
 }
 
 //хелпер имитирует генерацию id из firebase authDS
-function generateRandomId(length: number = 28): string {
+function generateRandomId(length = 28): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {

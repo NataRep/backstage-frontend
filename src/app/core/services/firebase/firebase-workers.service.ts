@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { QueryConstraint } from "firebase/firestore";
 import { Observable } from "rxjs";
 import { Worker } from "../../models/interfaces/employee.models";
@@ -8,8 +8,7 @@ import { FirebaseService, WithId } from "./firebase-base.service";
 @Injectable({ providedIn: 'root' })
 export class WorkerDataService {
   private readonly collectionName = 'employees';
-
-  constructor(private firebase: FirebaseService) { }
+  private firebase = inject(FirebaseService);
 
   // ---- Create ----
   create(worker: Worker): Promise<string> {
