@@ -1,0 +1,62 @@
+.tabs-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.tab-item {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 0.25rem 1rem;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1rem;
+  color: var(--color-green);
+  border: solid 1px var(--color-green);
+  background-color: var(--color-table-bg);
+  border-radius: 6px;
+  transition: all 0.25s;
+  z-index: 1;
+
+  app-icon {
+    --icon-size: 0.75rem;
+    --icon-fill-color: var(--color-green);
+    margin-right: 0.5rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--color-grey-dark);
+      color: var(--color-green);
+    }
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  &--active {
+    background-color: var(--color-green);
+    color: var(--color-grey-dark);
+    border: none;
+    pointer-events: none;
+    z-index: 2;
+
+    app-icon {
+      --icon-fill-color: var(--color-grey-dark);
+    }
+  }
+
+  @media (min-width: 768px) {
+    margin-left: -0.5rem;
+    margin-right: 0;
+
+    &:first-child {
+      border-radius: 16px 6px 6px 6px;
+    }
+
+  }
+}

@@ -1,0 +1,83 @@
+<app-calendar-piker (dateChange)="onDateChange($event)"></app-calendar-piker>
+<app-data-table [searchQuery]="searchQuery()" [currentPage]="currentPage()" [totalPages]="totalPages()"
+  [pages]="pages()" (searchChange)="onSearch($event)" (pageChange)="currentPage.set($event)"
+  [isToolsDisabled]="isTableLocked()">
+
+  <div filters class="select-wrapper" [class.is-locked]="isTableLocked()">
+    <div class="label">Filter:</div>
+    <select name="role" [disabled]="isTableLocked()" [value]="selectedRole()"
+      (change)="selectedRole.set($any($event.target).value); currentPage.set(1)">
+      <option value="all">Все роли</option>
+      @for (role of roles; track role) {
+      <option [value]="role" [selected]="selectedRole() === role">
+        {{ role | roleTranslate }}
+      </option>
+      }
+    </select>
+  </div>
+
+  <ng-container header>
+    <th class="cell--name sticky-coll sticky-coll--left"></th>
+
+    @for (day of calendarDays(); track day) {
+    <th class="cell--calendar" [class.is-hovered]="hoverDay() === day" [class.is-past]="isPastDay(day)">
+      <div class="day-name">{{ (day | getDayOfWeek:firstDayIndex()).shortNameRu}}</div>
+      <div class="day-number">{{ day }}</div>
+    </th>
+    }
+    @if(canEdit()){
+    <th class="cell--icon sticky-coll sticky-coll--right"></th>
+    }
+  </ng-container>
+
+  <ng-container rows>
+    @for (emp of paginatedData(); track emp.person?.personId) {
+    @if(emp.person){
+    <tr class="table__row" [class.is-editing]="isRowEditing(emp)">
+      <td class="cell--name sticky-coll sticky-coll--left" [class.is-locked]="isTableLocked() && !isRowEditing(emp)">
+        <div class="fullName">{{ emp.person.fullName }}</div>
+        <div class="shortName"> {{ emp.person.fullName.split(" ")[0] || ''}} {{ emp.person.fullName.split(" ")[1][0] ||
+          ''}}.</div>
+      </td>
+      @for (day of calendarDays(); track day) {
+      @let isPast = isPastDay(day);
+      @let editing = isRowEditing(emp);
+      @let isBusy = editing ? editDraft().has(day) : availabilityMap().get(emp.person.personId)?.has(day);
+
+      <td class="cell--calendar-data" [class.is-busy]="isBusy && !isPast" [class.is-past]="isPast"
+        [attr.data-emp-id]="emp.person.personId" [attr.data-day]="day" (mouseenter)="hoverDay.set(day)"
+        (mouseleave)="hoverDay.set(null)" (click)="editing ? toggleDayInDraft(day, isPast) : null">
+
+        <div class="calendar-slot">
+          @if (isBusy && !isPast) {
+          <span class="forbidden-mark">+</span>
+          } @else if (!isPast) {
+          <span class="forbidden-mark">.</span>
+          }
+        </div>
+      </td>
+      }
+      @if(canEdit() || emp.person.personId === currentUser()?.person?.personId ){
+      <td class="cell--icon sticky-coll sticky-coll--right">
+        @if(!editingEmployee()){
+        <app-icon name="edit" class="edit-icon icon" (click)="toggleEdit(emp)"></app-icon>
+        }@else if(isRowEditing(emp)){
+        <div class="icons-wrapper">
+          <app-icon name="save" class="save-icon icon" (click)="saveChanges()"></app-icon>
+          <app-icon name="cancel" class="cancel-icon icon" (click)="cancelEdit()"></app-icon>
+        </div>
+        }
+
+      </td>
+      }
+    </tr>
+    }
+    } @empty {
+    <tr>
+      <td colspan="8">
+        {{ isLoading() ? 'Загрузка...' : 'Никого не нашли' }}
+      </td>
+    </tr>
+    }
+  </ng-container>
+</app-data-table>

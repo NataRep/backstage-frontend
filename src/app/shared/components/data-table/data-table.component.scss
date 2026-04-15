@@ -1,0 +1,99 @@
+.table {
+  width: 100%;
+  min-width: max-content;
+}
+
+.table-wrapper {
+  container-type: inline-size;
+  container-name: tableContainer;
+}
+
+.controls {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 12px;
+
+  @media (max-width: 768px) {
+    justify-content: space-between;
+  }
+}
+
+.search {
+  max-width: 10rem;
+  margin-right: 3rem;
+
+  &::placeholder {
+    transition: color 0.25s ease;
+  }
+
+  &:disabled::placeholder {
+    color: var(--color-grey-medium);
+  }
+}
+
+.is-locked {
+  color: var(--color-grey-medium);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.25rem;
+  padding: 0.25rem;
+
+  button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background: none;
+    color: var(--color-grey-text);
+    border-radius: 9px;
+    border: none;
+    transition: color 0.25s ease;
+
+    &:disabled {
+      cursor: auto;
+      opacity: 0.5;
+
+      &.is-locked {
+        color: var(--color-grey-medium);
+      }
+    }
+  }
+}
+
+.pagination__page-number {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 0.75rem;
+  line-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.5s ease;
+
+  &.is-active {
+    background: var(--color-green);
+    color: var(--color-black);
+  }
+
+  &:not(.is-active) {
+    cursor: pointer;
+  }
+
+  &.is-disabled {
+    cursor: not-allowed; // Меняем курсор
+    color: var(--text-muted); // Или серый цвет
+    pointer-events: none; // Полностью отключаем кликабельность на уровне браузера
+
+    &:hover {
+      background: transparent; // Отключаем подсветку при наведении
+    }
+  }
+}
+
+.pagination__numbers {
+  display: flex;
+}

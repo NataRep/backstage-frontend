@@ -1,21 +1,25 @@
-import { Timestamp } from "rxjs";
 import { AccessLevel } from "../enums/auth.enums";
 import { Role } from "../enums/employee.enums";
 import { Person } from "./person.model";
 
-export interface EmployeeBase {
+export interface WorkerBase {
   roles: Role[];
-  availability: Timestamp<string>[];
+  availability: CustomTimestamp[];
   isActive: boolean;
   accessLevel: AccessLevel;
 }
 
-export interface Employee extends EmployeeBase {
+export interface Worker extends WorkerBase {
   id?: string;
   personId: string;
 }
 
 export interface EmployeeProfile {
-  personal: Person | null;
-  employment: Employee | null;
+  person: Person | null;
+  worker: Worker | null;
+}
+
+export interface CustomTimestamp {
+  seconds: number;
+  nanoseconds: number;
 }

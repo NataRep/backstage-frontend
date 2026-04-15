@@ -1,4 +1,21 @@
 <form [formGroup]="form">
+  @if(isCreateForm){
+  <div class="form__row" [class.invalid]="form.controls.id.invalid && form.controls.id.touched">
+    <label for="personId" class="label">Id:</label>
+    <input id="personId" type="text" formControlName="id" placeholder="" appTrimOnBlur [required]="isCreateForm" />
+    @if (form.controls.id.invalid && form.controls.id.touched) {
+    <div class="error-message">
+      @if (form.controls.lastName.errors?.['required']) {
+      <span>Поле обязательно</span>
+      } @else if (form.controls.id.errors?.['minlength']) {
+      <span>Минимум 16 символов</span>
+      } @else if (form.controls.id.errors?.['pattern']) {
+      <span>Только латинский буквы и цифры</span>
+      }
+    </div>
+    }
+  </div>
+  }
   <div class="form__row" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
     <label for="lastame" class="label">Surname:</label>
     <input id="lastname" type="text" formControlName="lastName" placeholder="" appTrimOnBlur />
@@ -35,14 +52,14 @@
   <div class="form__row" [class.invalid]="rolesArray.hasError('required') && rolesArray.touched">
     <div class="label">Roles:</div>
     <div class="roles-list" formArrayName="roles">
-      @for (control of rolesArray.controls; let i = $index; track i) {
+      @for (control of rolesArray.controls; let i = $index; track control) {
       <div class="role-item">
-        <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)">
+        <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)" class="float-select">
           @if (!control.value) {
-          <option [value]="null" disabled>Select role...</option>
+          <option [value]="null" disabled>Выберете...</option>
           }
           @for (role of getAvailableRolesForControl(i); track role) {
-          <option [value]="role">{{ role | upperFirstLetter }}</option>
+          <option [value]="role">{{ role | roleTranslate | upperFirstLetter }}</option>
           }
         </select>
         <button class="button button--icon remove" (click)="removeRole(i)" title="Remove role">

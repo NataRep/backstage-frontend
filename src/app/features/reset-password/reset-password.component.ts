@@ -4,10 +4,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Auth, updatePassword } from '@angular/fire/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { confirmPasswordReset } from 'firebase/auth';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { ToastService } from '../../core/services/toasts.service';
 import { logoutAction } from '../../core/store/auth/auth.actions';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
@@ -28,11 +28,10 @@ export class ResetPasswordComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private store = inject(Store);
-  private actions$ = inject(Actions);
+  private toastService = inject(ToastService);
+  oobCode = "";
 
   action = output();
-
-  oobCode = "";
 
   currentUser = this.store.selectSignal(selectAuthUser);
   isResetMode = computed(() => !!this.oobCode);
@@ -43,8 +42,6 @@ export class ResetPasswordComponent implements OnInit {
   passwordErrorMessage = signal('');
   passwordWasFocused = signal(false);
 
-  isSuccessToastOpen = signal(false);
-  isErrorToastOpen = signal(false);
   successToastMessage = "Пароль успешно изменен!";
   errorToastMessage = "Что-то пошло не так. Попробуйте запросить ссылку на сброс пароля повторно.";
 
@@ -135,23 +132,19 @@ export class ResetPasswordComponent implements OnInit {
     updatePassword(this.auth.currentUser, password)
       .then(() => this.handleSuccess())
       .catch(error => {
-        if (error.code === 'auth/requires-recent-login') {
-          this.errorToastMessage = "Требуется повторный вход в систему для смены пароля.";
-        }
         this.handleError(error);
       });
   }
 
   private handleSuccess() {
-    this.isSuccessToastOpen.set(true);
+    this.toastService.show(this.successToastMessage, 'success', 'top-right');
+    this.form.reset();
     const target = this.isResetMode() ? '/login' : '/profile';
     this.action.emit();
     setTimeout(() => this.router.navigate([target]), 3000);
   }
 
   private handleError(error: any) {
-    console.error('Full error object:', error);
-    this.isErrorToastOpen.set(true);
 
     // 1. Ошибка безопасности: нужно залогиниться заново
     if (error.code === 'auth/requires-recent-login' || error.code === 'auth/user-token-expired') {
@@ -176,19 +169,12 @@ export class ResetPasswordComponent implements OnInit {
 
     // 3. Все остальные ошибки
     this.errorToastMessage = "Ошибка: " + (error.message || "Попробуйте позже");
+    this.toastService.show(this.errorToastMessage, 'warning', 'center')
   }
 
 
   togglePasswordVisibility() {
     this.isPasswordVisibility.update(v => !v);
-  }
-
-  onSuccessToastClosed() {
-    this.isSuccessToastOpen.set(false);
-  }
-
-  onErrorToastClosed() {
-    this.isErrorToastOpen.set(true);
   }
 
   get passwordControl() {

@@ -17,24 +17,34 @@ import {
 import { Store } from '@ngrx/store';
 import { AccessLevel } from '../../core/models/enums/auth.enums';
 import { Role } from '../../core/models/enums/employee.enums';
-import { EmployeeBase, EmployeeProfile } from '../../core/models/interfaces/employee.models';
-import { PersonBase, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
+import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
+import { Person, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
+import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, UppercaseFirstLetter, TrimOnBlurDirective],
+  imports: [CommonModule,
+    ReactiveFormsModule,
+    IconComponent,
+    UppercaseFirstLetter,
+    TrimOnBlurDirective,
+    RoleTranslatePipe,
+    UppercaseFirstLetter],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeFormComponent {
+  //TODO - после реализации создания учетки авторизации при создании пользователя на беке убрать полуе id. 
+  // он должен генерироваться в firebase auth и добавляться в данные пользователя на беке из uid
+
   @Input() employee: EmployeeProfile | null = null;
-  @Output() save = new EventEmitter<{ personal: PersonBase, employment: EmployeeBase }>();
+  @Output() save = new EventEmitter<{ person: Person, worker: WorkerBase }>();
   @Output() cancel = new EventEmitter<void>();
 
   private store = inject(Store);
@@ -44,6 +54,7 @@ export class EmployeeFormComponent {
   readonly roles: Role[] = Object.values(Role);
 
   form = new FormGroup({
+    id: new FormControl('', [Validators.minLength(16), Validators.pattern(/^\S+$/)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
     firstName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
     roles: new FormArray<FormControl<Role>>([], { validators: [Validators.required] }),
@@ -55,6 +66,14 @@ export class EmployeeFormComponent {
     whatsapp: new FormControl('', [Validators.pattern(/^\S+$/)])
   });
 
+  ngOnChanges() {
+    if (this.employee) {
+      this.setFormByEmployee();
+    } else {
+      console.log(generateRandomId());
+    }
+  }
+
   onSave() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -64,8 +83,9 @@ export class EmployeeFormComponent {
     this.save.emit(newEmployeeData);
   }
 
-  private createNewEmployeeData(): { personal: PersonBase, employment: EmployeeBase } {
-    const { email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
+  private createNewEmployeeData(): { person: Person, worker: WorkerBase } {
+
+    const { id, email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
 
     const socialLinks: SocialLink[] = [];
 
@@ -81,9 +101,10 @@ export class EmployeeFormComponent {
       }
     });
 
-    const personalData: PersonBase = {
+    const personalData: Person = {
+      personId: id.value!,
       type: "employee",
-      fullName: `${firstName.value} ${lastName.value}`,
+      fullName: `${lastName.value} ${firstName.value}`,
       email: email.value || "",
       phone: phone.value || undefined,
       socialLinks: socialLinks
@@ -101,43 +122,55 @@ export class EmployeeFormComponent {
       return AccessLevel.Employee
     }
 
-    const employeeData: EmployeeBase = {
+    const employeeData: WorkerBase = {
       roles: [...roles.value as Role[]],
       isActive: true,
       accessLevel: accessLevel(),
-      availability: this.employee?.employment?.availability || []
+      availability: this.employee?.worker?.availability || []
     }
 
-    return { personal: personalData, employment: employeeData };
+    return { person: personalData, worker: employeeData };
   }
 
   onCancel() {
     this.cancel.emit();
+    this.resetForm();
   }
 
-  ngOnChanges() {
-    if (this.employee) {
-      this.setFormByEmployee();
-    }
+  resetForm() {
+    this.rolesArray.clear();
+
+    this.form.reset({
+      id: '',
+      firstName: '',
+      lastName: '',
+      isAdmin: false,
+      email: '',
+      phone: '',
+      telegram: '',
+      vk: '',
+      whatsapp: ''
+    });
   }
 
   setFormByEmployee() {
     if (!this.employee) return;
 
-    const nameParts = this.employee.personal?.fullName?.split(' ') ?? [];
-    const [firstName, lastName] = [nameParts[0] ?? '', nameParts[1] ?? ''];
-    this.isAdmin = this.employee?.employment?.accessLevel === AccessLevel.Admin;
+    const nameParts = this.employee.person?.fullName?.split(' ')!;
+    const [lastName, firstName] = [nameParts[0], nameParts[1]];
+    this.isAdmin = this.employee?.worker?.accessLevel === AccessLevel.Admin;
 
     this.form.patchValue(
       {
+        id: this.employee.person?.personId,
         firstName,
         lastName,
         isAdmin: this.isAdmin,
-        email: this.employee.personal?.email ?? '',
-        phone: this.employee.personal?.phone ?? '',
-        telegram: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '',
-        vk: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.VK)?.link ?? '',
-        whatsapp: this.employee.personal?.socialLinks?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '',
+        email: this.employee.person?.email ?? '',
+        phone: this.employee.person?.phone ?? '',
+        telegram: this.employee.person?.socialLinks?.find(link => link.type === SocialType.TELEGRAM)?.link ?? '',
+        vk: this.employee.person?.socialLinks?.find(link => link.type === SocialType.VK)?.link ?? '',
+        whatsapp: this.employee.person?.socialLinks?.find(link => link.type === SocialType.WHATSAPP)?.link ?? '',
       },
       { emitEvent: true },
     );
@@ -149,8 +182,8 @@ export class EmployeeFormComponent {
     if (!this.employee) return;
     this.rolesArray.clear();
 
-    if (this.employee.employment) {
-      for (const role of this.employee.employment.roles) {
+    if (this.employee.worker) {
+      for (const role of this.employee.worker.roles) {
         this.rolesArray.push(new FormControl(role));
       }
     }
@@ -164,11 +197,13 @@ export class EmployeeFormComponent {
 
   removeRole(index: number) {
     this.rolesArray.removeAt(index);
+    this.rolesArray.markAsDirty();
     this.rolesArray.markAsTouched();
+    this.rolesArray.updateValueAndValidity();
   }
 
   canEditRole() {
-    const accessLevel = this.currentUser()?.employment?.accessLevel;
+    const accessLevel = this.currentUser()?.worker?.accessLevel;
     return (
       accessLevel === AccessLevel.Owner ||
       accessLevel === AccessLevel.Manager ||
@@ -177,7 +212,7 @@ export class EmployeeFormComponent {
   }
 
   canAppointAdmin() {
-    const accessLevel = this.currentUser()?.employment?.accessLevel;
+    const accessLevel = this.currentUser()?.worker?.accessLevel;
     return (
       accessLevel === AccessLevel.Owner ||
       accessLevel === AccessLevel.Admin
@@ -204,7 +239,7 @@ export class EmployeeFormComponent {
       (role) => !selectedRoles.includes(role) || role === currentControlValue,
     );
 
-    const accessLevel = this.currentUser()?.employment?.accessLevel;
+    const accessLevel = this.currentUser()?.worker?.accessLevel;
 
     //назначать владельцами могут только админы и владельцы
     if (accessLevel != AccessLevel.Admin && accessLevel != AccessLevel.Owner) {
@@ -221,4 +256,18 @@ export class EmployeeFormComponent {
   get isCheckedAdmin() {
     return this.form.get('isAdmin')?.value;
   }
+
+  get isCreateForm(): boolean {
+    return !this.employee;
+  }
+}
+
+//хелпер имитирует генерацию id из firebase authDS
+function generateRandomId(length: number = 28): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 }

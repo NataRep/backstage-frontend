@@ -1,0 +1,36 @@
+<div class="controls">
+  <input name="search" (input)="onSearch($event)" [value]="searchQuery" placeholder="Поиск..." class="search"
+    [disabled]="isToolsDisabled">
+  <ng-content select="[filters]"></ng-content>
+</div>
+
+<div class="table-wrapper">
+  <table class="table">
+    <thead><ng-content select="[header]"></ng-content></thead>
+    <tbody><ng-content select="[rows]"></ng-content></tbody>
+  </table>
+</div>
+
+@if (totalPages > 1) {
+<div class="pagination" [class.is-locked]="isToolsDisabled">
+  <button [disabled]="currentPage === 1 || isToolsDisabled" [class.is-locked]="isToolsDisabled"
+    (click)="!isToolsDisabled && pageChange.emit(currentPage - 1)">
+    &lt;
+  </button>
+
+  <div class="pagination__numbers">
+    @for (pageNum of pages; track pageNum) {
+    <div class="pagination__page-number" [class.is-active]="currentPage === pageNum"
+      [class.is-disabled]="isToolsDisabled" (click)="!isToolsDisabled && pageChange.emit(pageNum)">
+      {{ pageNum }}
+    </div>
+    }
+  </div>
+
+  <button [disabled]="currentPage === totalPages || isToolsDisabled"
+    (click)="!isToolsDisabled && pageChange.emit(currentPage + 1)" [class.is-locked]="isToolsDisabled">
+    &gt;
+  </button>
+
+</div>
+}

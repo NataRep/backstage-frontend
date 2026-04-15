@@ -14,7 +14,7 @@ export class SocialLinkPipe implements PipeTransform {
       case 'whatsapp':
         return `https://wa.me/${value.replace('+', '')}`;
       case 'vk':
-        return `https://vk.com/${value.replace('id', '')}`;
+        return `https://vk.com/${value}`;
       case 'email':
         return `mailto:${value}`;
       case 'phone':

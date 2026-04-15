@@ -2,14 +2,18 @@
 <div class="row">
   <h2>
     <span class="name">{{ fullName }}</span>
-    <span class="role">{{ roles | titlecase }}</span>
+    <span class="role">
+      @for (role of employee?.worker?.roles; track role; let last = $last) {
+      {{ role | roleTranslate | upperFirstLetter }}{{ last ? '' : ', ' }}
+      }
+    </span>
   </h2>
 </div>
 <div class="row">
   <app-icon name="phone"></app-icon>
   <div class="value">
     @if (showLinks) {
-    <a [href]="phone | socialLink: 'phone'" target="_blank" rel="noopener noreferrer">{{ phone }}</a>
+    <a [href]="phone | socialLink: 'phone'">{{ phone }}</a>
     } @else {
     {{ phone }}
     }

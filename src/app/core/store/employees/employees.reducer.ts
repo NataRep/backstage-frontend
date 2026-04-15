@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { EmployeeProfile } from "../../models/interfaces/employee.models";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, updateEmployeeAction, updateEmployeeSuccessAction } from "./employees.actions";
+import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction, updateWorkerEmployeeFailureAction, updateWorkerEmployeeSuccessAction } from "./employees.actions";
 
 export interface EmployeesState {
   employees: EmployeeProfile[],
@@ -45,10 +45,72 @@ export const employeeReducer = createReducer(
   on(updateEmployeeSuccessAction, (state, { employee }) => ({
     ...state,
     employees: [
-      ...state.employees.filter((item) => item.personal?.personId != employee.personal?.personId),
+      ...state.employees.filter((item) => item.person?.personId != employee.person?.personId),
       employee],
     loading: false,
     error: null,
   })),
 
+  on(updateEmployeeFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
+
+  on(updateWorkerEmployeeSuccessAction, (state, { personId, worker }) => ({
+    ...state,
+    employees: state.employees.map((emp) =>
+      emp.person?.personId === personId
+        ? { ...emp, worker: { ...worker } }
+        : emp
+    ),
+    loading: false,
+    error: null,
+  })),
+
+  on(updateWorkerEmployeeFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
+
+  on(deleteEmployeeAction, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(deleteEmployeeSuccessAction, (state, { personId }) => ({
+    ...state,
+    employees: [
+      ...state.employees.filter((item) => item.person?.personId != personId)],
+    loading: false,
+    error: null,
+  })),
+
+  on(deleteEmployeeFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
+
+  on(getAllEmployeesAction, (state) => ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+
+  on(getAllEmployeesSuccessAction, (state, { employees }) => ({
+    ...state,
+    employees: [
+      ...employees],
+    loading: false,
+    error: null,
+  })),
+
+  on(getAllEmployeesFailureAction, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error: error,
+  })),
 )

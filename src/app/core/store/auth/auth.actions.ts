@@ -1,6 +1,6 @@
 import { createAction, props } from "@ngrx/store";
 import { AuthInfo, CurrentUser } from "../../models/interfaces/auth.models";
-import { Employee } from "../../models/interfaces/employee.models";
+import { Worker } from "../../models/interfaces/employee.models";
 import { Person } from "../../models/interfaces/person.model";
 
 export const loginAction = createAction(
@@ -44,7 +44,7 @@ export const autoLoginAction = createAction('[Auth] Auto Login');
 
 export const setUserProfileAction = createAction(
   '[Auth] Set User Profile',
-  props<{ personal: Person, employment: Employee }>()
+  props<{ person: Person, worker: Worker }>()
 );
 
 export const loginCredentialsFailureAction = createAction(

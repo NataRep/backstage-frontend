@@ -3,8 +3,8 @@ import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, forkJoin, from, map, of, retry, switchMap, tap } from "rxjs";
 import { AuthService } from "../../services/auth.service";
-import { FirebaseEmployeeService } from "../../services/firebase/firebase-employee.service";
-import { PersonsService } from "../../services/persons.service";
+import { WorkerDataService } from "../../services/firebase/firebase-workers.service";
+import { PersonDataService } from "../../services/persons.service";
 import {
   loginAction,
   loginContextFailureAction,
@@ -21,8 +21,8 @@ import {
 export class AuthEffects {
   private actions$ = inject(Actions);
   private authService = inject(AuthService);
-  private personService = inject(PersonsService);
-  private employeeService = inject(FirebaseEmployeeService);
+  private personService = inject(PersonDataService);
+  private employeeService = inject(WorkerDataService);
   private router = inject(Router);
 
 
@@ -51,16 +51,15 @@ export class AuthEffects {
       ofType(loginSuccessAction),
       switchMap(({ user }) =>
         forkJoin({
-          personal: this.personService.getPersonById(user.personId),
-          employee: this.employeeService.getByPersonId(user.personId),
+          person: this.personService.getPersonById(user.personId),
+          worker: this.employeeService.getByPersonId(user.personId),
         }).pipe(
-          map(({ personal, employee }) => {
-            if (!personal || !employee) {
+          map(({ person, worker }) => {
+            if (!person || !worker) {
               let errorText;
-              if (!personal && !employee) {
-                console.log("loginSuccess$")
+              if (!person && !worker) {
                 return loginContextFailureAction({ error: 'Error: load User context failed' });
-              } else if (!personal) {
+              } else if (!person) {
                 errorText = "Error: load User personal context failed"
               }
               else {
@@ -73,14 +72,14 @@ export class AuthEffects {
             return setUserDataAction({
               user: {
                 auth: user,
-                personal,
-                employment: {
-                  id: employee.id,
-                  roles: employee.roles,
-                  availability: employee.availability,
-                  isActive: employee.isActive,
-                  personId: employee.personId,
-                  accessLevel: employee.accessLevel,
+                person,
+                worker: {
+                  id: worker.id,
+                  roles: worker.roles,
+                  availability: worker.availability,
+                  isActive: worker.isActive,
+                  personId: worker.personId,
+                  accessLevel: worker.accessLevel,
                 }
               }
             });

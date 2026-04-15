@@ -1,19 +1,79 @@
 :root {
   --color-green: #92b701;
+  --color-green-rgb: 146, 183, 1;
+
   --color-yellow: #fed342;
+  --color-yellow-rgb: 254, 211, 66;
+
   --color-orange: #eb671b;
+  --color-orange-rgb: 235, 103, 27;
+
   --color-red: #ba0d18;
+  --color-red-rgb: 186, 13, 24;
+
+  --color-red-light: #ff4d4d;
+  --color-red-light-rgb: 255, 77, 77;
+
   --color-blue: #367dca;
+  --color-blue-rgb: 54, 125, 202;
+
   --color-black: #121212;
+  --color-black-rgb: 18, 18, 18;
+
   --color-grey-dark: #17181a;
+  --color-grey-dark-rgb: 23, 24, 26;
+
+  --color-grey-medium: #1E1E22;
+  --color-grey-medium-rgb: 30, 30, 34;
+
   --color-grey: #2b2e32;
+  --color-grey-rgb: 43, 46, 50;
+
   --color-grey-light: #353535;
+  --color-grey-light-rgb: 53, 53, 53;
+
   --color-grey-extra-light: #d9d9d9;
+  --color-grey-extra-light-rgb: 217, 217, 217;
+
+  --color-table-bg: #242529;
+  --color-table-bg-rgb: 36, 37, 41;
+
+  --color-table-bg-2: #27292d;
+  --color-table-bg-2-rgb: 39, 41, 45;
+
+  --color-table-border: #313336;
+  --color-table-border-rgb: 49, 51, 54;
 
   --color-grey-text: #b0b1b3;
+  --color-grey-text-rgb: 176, 177, 179;
+
   --color-grey-text-dark: #747474;
+  --color-grey-text-dark-rgb: 116, 116, 116;
+
   --color-orange-text: #ffaa0d;
+  --color-orange-text-rgb: 255, 170, 13;
+
   --color-red-text: #9f0808;
+  --color-red-text-rgb: 159, 8, 8;
+
+  /* Role Tags */
+  --color-role-owner: #d96a6a;
+  --color-role-owner-rgb: 217, 106, 106;
+
+  --color-role-manager: #6b94b8;
+  --color-role-manager-rgb: 107, 148, 184;
+
+  --color-role-artist: #eeb154;
+  --color-role-artist-rgb: 238, 177, 84;
+
+  --color-role-fireworker: #705db0;
+  --color-role-fireworker-rgb: 112, 93, 176;
+
+  --color-role-staff: #9ab86b;
+  --color-role-staff-rgb: 154, 184, 107;
+
+  --color-role-driver: #74a974;
+  --color-role-driver-rgb: 116, 169, 116;
 
   --gradient-yellow: linear-gradient(to right, #d4ab03, #fdf118);
   --gradient-grey-y: linear-gradient(to bottom, #363636, #272727);

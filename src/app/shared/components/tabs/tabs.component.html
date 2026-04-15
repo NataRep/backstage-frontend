@@ -1,0 +1,8 @@
+<div class="tabs-container">
+  @for (tab of tabs; track tab.link) {
+  <a [routerLink]="tab.link" routerLinkActive="active" class="tab-item" [class.tab-item--active]="isActive(tab.link)">
+    <app-icon [name]="tab.icon"></app-icon>
+    {{ tab.label }}
+  </a>
+  }
+</div>

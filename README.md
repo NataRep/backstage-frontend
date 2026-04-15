@@ -1,52 +1,57 @@
 @ngrx/entity
 
-
 версия firebase
 fire@7.6.1 firebase@9 --legacy-peer-deps
 
+# 🛠 Архитектурные заметки и Технический долг
 
-Deploy to Firebase Hosting
-You can deploy now or later. To deploy now, open a terminal window, then navigate to or create a root directory for your web app.
+## 1. Текущий процесс создания сотрудника (Manual Mode)
 
-Sign in to Google
-firebase login
-Initiate your project
-Run this command from your app's root directory:
+На текущем этапе, из-за отсутствия Cloud Functions, используется ручной метод синхронизации учетных записей.
 
-firebase init
-When you're ready, deploy your web app
-Put your static files (e.g., HTML, CSS, JS) in your app's deploy directory (the default is "public"). Then, run this command from your app's root directory:
+DEMO MODE: На текущем этапе учетные записи в Firebase Auth не создаются. Для связи сущностей используются случайно сгенерированные ID (UUID). При переходе в продакшн ID должен соответствовать uid из системы авторизации.
 
-firebase deploy
-After deploying, view your app at backstage-77cc6.web.app
+### Алгоритм действий для Администратора:
 
-Need help? Check out the Hosting docs
+1. Зайти в консоль Firebase → Authentication.
 
+2. Создать пользователя (Email/Password), скопировать сгенерированный uid.
 
-# BackstageErp
+3. В приложении нажать "Добавить сотрудника" и вставить скопированный uid в поле personId.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.21.
+4. Заполнить остальные данные (Person, Worker).
 
-## Development server
+Почему так? Клиентское SDK Firebase при вызове createUserWithEmailAndPassword автоматически меняет активную сессию.
+Чтобы админа не «выкидывало» из системы при создании сотрудника, используется ручной ввод ID.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## 2. План миграции на Cloud Functions (Target Flow)
 
-## Code scaffolding
+При появлении возможности использовать Firebase Functions, необходимо перевести процесс на автоматический режим.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Схема взаимодействия:
 
-## Build
+Что нужно сделать:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Backend (Functions): Создать onCall функцию (например, createEmployeeAccount), которая:
 
-## Running unit tests
+Принимает email, password (или генерирует его) и данные профиля.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Выполняет admin.auth().createUser({ uid, email, ... }).
 
-## Running end-to-end tests
+Атомарно записывает данные в Firestore (workers) и во внешнюю базу (persons).
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+2. Frontend (Angular):
 
-## Further help
+В EmployeeFacade заменить цепочку forkJoin запросов на один вызов httpsCallable.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Удалить поле personId (UID) из UI-формы добавления сотрудника.
+
+## 3. Структура связей (Data Consistency)
+
+Для корректной работы системы во всех базах должен использоваться единый идентификатор:
+
+Firebase Auth: uid
+
+Firestore (workers): personId (равен uid)
+
+Host DB (persons): personId (равен uid)

@@ -52,10 +52,9 @@ export class MainLayoutComponent implements OnInit {
     this.store.select(selectAuthUser).pipe(
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(user => {
-      console.log("user", this.user())
-      if (user?.personal?.fullName) {
-        this.fullName = user.personal.fullName.split(" ");
-        this.userName = this.fullName[0] || "";
+      if (user?.person?.fullName) {
+        this.fullName = user.person.fullName.split(" ");
+        this.userName = this.fullName[1] || "";
         this.showWelcomeMessage();
       }
     });
@@ -79,7 +78,7 @@ export class MainLayoutComponent implements OnInit {
 
     const title = this.getTitleFromRoute(route);
     this.pageTitle = title;
-    this.titleService.setTitle(`${title} | CRM Backspace`);
+    this.titleService.setTitle(`${title} | ERP Backspace`);
     this.cdr.markForCheck();
   }
 

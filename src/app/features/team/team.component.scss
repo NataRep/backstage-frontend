@@ -1,0 +1,17 @@
+.content-container {
+  max-width: calc(100% - 8rem);
+  width: max-content;
+
+  @media (max-width: 768px) {
+    max-width: calc(100% - 2rem);
+  }
+}
+
+.tab-link {
+  cursor: pointer;
+
+  &.active {
+    pointer-events: none;
+    cursor: default;
+  }
+}

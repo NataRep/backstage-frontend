@@ -1,0 +1,79 @@
+$roles: 'owner', 'manager', 'artist', 'fireworker', 'staff', 'driver';
+
+:host ::ng-deep {
+  @container tableContainer (max-width: 848px) {
+    .cell--link {
+      display: none;
+    }
+  }
+
+  @container tableContainer (max-width: 560px) {
+    .cell--phone {
+      display: none;
+    }
+  }
+
+  @container tableContainer (max-width: 420px) {
+    .cell--role {
+      display: none;
+    }
+  }
+}
+
+.cell--name {
+  width: 170px;
+  cursor: pointer;
+}
+
+td.cell--name {
+  font-weight: 500;
+}
+
+.cell--role {
+  min-width: 80px;
+  max-width: 120px;
+}
+
+.cell--phone,
+.cell--link {
+  min-width: 60px;
+}
+
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  margin: auto;
+  width: max-content;
+  display: block;
+}
+
+.cell__role {
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  background-color: var(--color-grey-light);
+  width: max-content;
+  display: inline-block;
+  color: var(--color-grey);
+  margin: 0.125rem 0.125rem;
+  font-size: 0.75rem;
+
+  @each $role in $roles {
+    &--#{$role} {
+      background-color: var(--color-role-#{$role});
+    }
+  }
+}
+
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.table__row {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-orange-text);
+    }
+  }
+}

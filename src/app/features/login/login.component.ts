@@ -6,6 +6,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { debounceTime, distinctUntilChanged, tap } from 'rxjs';
+import { ToastService } from '../../core/services/toasts.service';
 import { clearLoginErrorAction, loginAction } from '../../core/store/auth/auth.actions';
 import { selectAuthError, selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private store = inject(Store);
   private auth = inject(Auth);
-  private router = inject(Router)
+  private router = inject(Router);
+  private toastService = inject(ToastService);
   private currentUser = this.store.selectSignal(selectAuthUser);
 
   loginErrorMessage = this.store.selectSignal(selectAuthError);
@@ -40,10 +42,6 @@ export class LoginComponent implements OnInit {
   resetEmailWasFocused = signal(false);
 
   isModalOpen = false;
-  isSuccessToastOpen = signal(false);
-  isErrorToastOpen = signal(false);
-  successToastMessage = 'Ссылка для сброса пароля отправлена! Проверьте электронную почту.';
-  errorToastMessage = 'Что-то пошло не так. Попробуйте повторить запрос позже';
 
   authForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -229,12 +227,10 @@ export class LoginComponent implements OnInit {
 
     sendPasswordResetEmail(this.auth, emailControl.value)
       .then(() => {
-        this.resetEmailErrorMessage.set('');
-        this.isSuccessToastOpen.set(true);
+        this.toastService.show('Ссылка для сброса пароля отправлена! Проверьте электронную почту.', 'success', 'center',);
       })
       .catch((error) => {
-        this.isErrorToastOpen.set(true);
-        this.resetEmailErrorMessage.set('Произошла ошибка. Попробуйте еще раз');
+        this.toastService.show('Произошла ошибка. Попробуйте еще раз', 'warning', 'center',);
       })
       .finally(() => {
         this.closeResetPasswordForm();
@@ -247,14 +243,6 @@ export class LoginComponent implements OnInit {
     this.isResetEmailError.set(false);
     this.resetEmailErrorMessage.set('');
     this.resetEmailWasFocused.set(false);
-  }
-
-  onSuccessToastClosed() {
-    this.isSuccessToastOpen.set(false);
-  }
-
-  onErrorToastClosed() {
-    this.isErrorToastOpen.set(false);
   }
 
   get email() {

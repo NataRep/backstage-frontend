@@ -1,4 +1,3 @@
-@if(isOpen){
 <div class="toast" [class]="'toast--' + type + ' toast--' + position" role="alert" aria-live="polite" aria-atomic="true"
   aria-label="Уведомление" aria-describedby="toast-message">
   <div class="icon">
@@ -6,9 +5,5 @@
   </div>
   <div class="toast-content">
     <p id="message">{{ message }}</p>
-    <div class="toast__close" (click)="close(); $event.stopPropagation()" aria-label="Закрыть уведомление">
-      +
-    </div>
   </div>
 </div>
-}
