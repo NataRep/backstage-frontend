@@ -46,7 +46,7 @@ export class EmployeeFormComponent implements OnChanges {
 
   @Input() employee: EmployeeProfile | null = null;
   @Output() save = new EventEmitter<{ person: Person, worker: WorkerBase }>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelForm = new EventEmitter<void>();
 
   private store = inject(Store);
   currentUser = this.store.selectSignal(selectAuthUser);
@@ -134,7 +134,7 @@ export class EmployeeFormComponent implements OnChanges {
   }
 
   onCancel() {
-    this.cancel.emit();
+    this.cancelForm.emit();
     this.resetForm();
   }
 
