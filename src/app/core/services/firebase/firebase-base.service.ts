@@ -17,7 +17,6 @@ import {
   orderBy,
   QueryConstraint,
   QuerySnapshot,
-  setDoc,
   startAfter,
   UpdateData,
   updateDoc,
@@ -71,14 +70,6 @@ export class FirebaseService {
   async create<T>(collectionName: string, data: T): Promise<string> {
     const ref = await addDoc(this.colRef(collectionName), data as DocumentData);
     return ref.id;
-  }
-
-  /**
-   * Создать/перезаписать документ с указанным id.
-   * Если нужно только обновить поля — используйте update().
-   */
-  async setWithId<T>(collectionName: string, id: string, data: T): Promise<void> {
-    await setDoc(this.docRef(collectionName, id), data as DocumentData);
   }
 
   // ---- Read ----

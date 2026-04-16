@@ -6,7 +6,7 @@ import { getDaysInMonth } from '../../../core/models/interfaces/calendar.model';
 import { EmployeeProfile } from '../../../core/models/interfaces/employee.models';
 import { selectAuthUser, selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { getAllEmployeesAction, updateWorkerEmployeeAction } from '../../../core/store/employees/employees.actions';
-import { selectAllEmployees, selectEmployeesLoading } from '../../../core/store/employees/employees.selector';
+import { selectAllActiveEmployees, selectEmployeesLoading } from '../../../core/store/employees/employees.selector';
 import { CalendarPikerComponent } from '../../../shared/components/calendar-piker/calendar-piker.component';
 import { BaseTableDirective } from '../../../shared/components/data-table/base-table.directive';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
@@ -49,7 +49,7 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
   private readonly todayMidnight = new Date().setHours(0, 0, 0, 0);
 
   // 5. Store Selectors (Signals)
-  readonly allEmployees = this.store.selectSignal(selectAllEmployees);
+  readonly allEmployees = this.store.selectSignal(selectAllActiveEmployees);
   readonly isLoading = this.store.selectSignal(selectEmployeesLoading);
   readonly currentUser = this.store.selectSignal(selectAuthUser);
   readonly canEdit = this.store.selectSignal(selectCanEdit);

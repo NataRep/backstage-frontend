@@ -13,6 +13,7 @@ import {
   deleteEmployeeAction,
   deleteEmployeeFailureAction,
   deleteEmployeeSuccessAction,
+  getAllActiveEmployeesAction,
   getAllEmployeesAction,
   getAllEmployeesFailureAction,
   getAllEmployeesSuccessAction,
@@ -133,6 +134,20 @@ export class EmployeesEffects {
       ofType(getAllEmployeesAction),
       exhaustMap(() =>
         this.employeeManagerService.getAllEmployees().pipe(
+          map((employees) => getAllEmployeesSuccessAction({
+            employees
+          })),
+          catchError(error => of(getAllEmployeesFailureAction({
+            error
+          }))))
+      ))
+  );
+
+  getAllActiveEmployees$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getAllActiveEmployeesAction),
+      exhaustMap(() =>
+        this.employeeManagerService.getAllActiveEmployees().pipe(
           map((employees) => getAllEmployeesSuccessAction({
             employees
           })),

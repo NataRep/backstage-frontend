@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Input, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -6,7 +6,7 @@ import { Role } from '../../core/models/enums/employee.enums';
 import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
 import { Person } from '../../core/models/interfaces/person.model';
 import { selectAuthUser, selectCanEdit } from '../../core/store/auth/auth.selectors';
-import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
+import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllActiveEmployeesAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeSuccessAction } from '../../core/store/employees/employees.actions';
 import { selectAllEmployees, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { BaseTableDirective } from '../../shared/components/data-table/base-table.directive';
 import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
@@ -18,6 +18,10 @@ import { GetSocialLinkPipe } from '../../shared/pipes/get-social-link.pipe';
 import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
+
+export type EmployeesViewMode =
+  | 'all'
+  | 'active';
 
 @Component({
   selector: 'app-employees-table',
@@ -34,6 +38,7 @@ import { EmployeeInfoComponent } from '../employee-info/employee-info.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile> {
+  @Input() mode: EmployeesViewMode = 'all';
   // 1. ViewChild (ссылки на DOM/Компоненты)
   @ViewChild('employeeForm') employeeForm!: EmployeeFormComponent;
 
@@ -93,12 +98,27 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
   override ngOnInit() {
     super.ngOnInit();
     if (this.allEmployees().length === 0 && !this.isLoading()) {
-      this.store.dispatch(getAllEmployeesAction());
+      this.loadEmployees();
     }
     this.initModalsSubscriptions();
   }
 
   // 9. API & Store Actions (Бизнес-логика)
+  private loadEmployees() {
+    switch (this.mode) {
+      case 'all':
+        this.store.dispatch(getAllEmployeesAction());
+        break;
+
+      case 'active':
+        this.store.dispatch(getAllActiveEmployeesAction());
+        break;
+
+      default:
+        this.store.dispatch(getAllEmployeesAction());
+    }
+  };
+
   updateSelectedEmployee(data: { person: Person; worker: WorkerBase }) {
     const selectedEmployee = this.selectedEmployee();
     const personId = selectedEmployee?.person?.personId

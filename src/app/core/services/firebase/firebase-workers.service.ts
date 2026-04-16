@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { QueryConstraint } from "firebase/firestore";
+import { QueryConstraint, where } from "firebase/firestore";
 import { Observable } from "rxjs";
 import { Worker } from "../../models/interfaces/employee.models";
 import { FirebaseService, WithId } from "./firebase-base.service";
@@ -15,21 +15,18 @@ export class WorkerDataService {
     return this.firebase.create<Worker>(this.collectionName, worker);
   }
 
-  setWithId(id: string, worker: Worker): Promise<void> {
-    return this.firebase.setWithId<Worker>(this.collectionName, id, worker);
-  }
-
   // ---- Read ----
-  getOne(id: string): Promise<WithId<Worker> | null> {
-    return this.firebase.getOne<Worker>(this.collectionName, id);
-  }
-
   getByPersonId(personId: string): Promise<WithId<Worker> | null> {
     return this.firebase.getOneByField<Worker>(this.collectionName, 'personId', personId);
   }
 
   getAll(): Promise<WithId<Worker>[]> {
     return this.firebase.getAll<Worker>(this.collectionName);
+  }
+
+  getAllActiveWorkers(): Promise<WithId<Worker>[]> {
+    const activeConstraint = where('isActive', '==', true);
+    return this.firebase.query<Worker>(this.collectionName, [activeConstraint]);
   }
 
   query(constraints: QueryConstraint[]): Promise<WithId<Worker>[]> {

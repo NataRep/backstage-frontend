@@ -37,6 +37,29 @@ export class EmployeeFacade {
     );
   }
 
+  getAllActiveEmployees(): Observable<EmployeeProfile[]> {
+    // TODO: MIGRATION - При росте базы этот клиентский JOIN станет узким местом. 
+    // Перенести сборку EmployeeProfile на Cloud Function для получения агрегированного объекта одним запросом.
+    return combineLatest([
+      this.personService.getAllEmployees(),
+      from(this.workersService.getAllActiveWorkers())
+    ]).pipe(
+      map(([persons, workers]) => {
+        if (!persons || !workers) {
+          return [];
+        }
+
+        const personsMap = new Map(persons.map(p => [p.personId, p]));
+
+        return workers.map((worker): EmployeeProfile => ({
+          person: personsMap.get(worker.personId) ?? null,
+          worker: worker
+        }));
+      })
+    );
+  }
+
+
   createEmployee(person: Person, employmentData: WorkerBase) {
     // TODO: MIGRATION-CRITICAL - Этот метод будет заменен на один вызов Cloud Function.
     // Сейчас метод вручную связывает Person и Worker через UID, введенный админом, и предотвращает дубликаты на стороне клиента.

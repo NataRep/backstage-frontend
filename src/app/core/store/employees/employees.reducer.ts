@@ -100,13 +100,19 @@ export const employeeReducer = createReducer(
     error: null,
   })),
 
-  on(getAllEmployeesSuccessAction, (state, { employees }) => ({
-    ...state,
-    employees: [
-      ...employees],
-    loading: false,
-    error: null,
-  })),
+  on(getAllEmployeesSuccessAction, (state, { employees }) => {
+    const map = new Map(
+      [...state.employees, ...employees]
+        .map(emp => [emp.worker?.personId, emp])
+    );
+
+    return {
+      ...state,
+      employees: Array.from(map.values()),
+      loading: false,
+      error: null,
+    };
+  }),
 
   on(getAllEmployeesFailureAction, (state, { error }) => ({
     ...state,
