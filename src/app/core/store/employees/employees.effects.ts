@@ -146,15 +146,18 @@ export class EmployeesEffects {
   getAllActiveEmployees$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getAllActiveEmployeesAction),
-      exhaustMap(() =>
-        this.employeeManagerService.getAllActiveEmployees().pipe(
+      switchMap(() =>
+        this.employeeManagerService.subscribeAllActiveEmployees().pipe(
           map((employees) => getAllEmployeesSuccessAction({
             employees
           })),
-          catchError(error => of(getAllEmployeesFailureAction({
-            error
-          }))))
-      ))
+          catchError(error => {
+            console.error('Ошибка подписки:', error);
+            return of(getAllEmployeesFailureAction({ error }));
+          })
+        )
+      )
+    )
   );
 
   showSuccessToast$ = createEffect(() =>

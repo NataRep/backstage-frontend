@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, combineLatest, exhaustMap, forkJoin, from, map, Observable, of, switchMap, throwError } from "rxjs";
 import { EmployeeProfile, Worker, WorkerBase } from "../models/interfaces/employee.models";
 import { Person, PersonBase } from "../models/interfaces/person.model";
+import { WithId } from "./firebase/firebase-base.service";
 import { WorkerDataService } from "./firebase/firebase-workers.service";
 import { PersonDataService } from "./persons.service";
 
@@ -124,5 +125,26 @@ export class EmployeeFacade {
         )
       )
     );
+  }
+
+  subscribeAllActiveEmployees(): Observable<EmployeeProfile[]> {
+    return this.workersService.subscribeAllActiveEmployees().pipe(
+      switchMap((workers) => {
+        if (!workers || workers.length === 0) return of([]);
+        return this.personService.getAllEmployees().pipe(
+          map((persons) => this.mapToEmployeeProfiles(persons, workers))
+        );
+      })
+    );
+  }
+
+  private mapToEmployeeProfiles(persons: Person[], workers: WithId<Worker>[]): EmployeeProfile[] {
+    if (!persons || !workers) return [];
+    const personsMap = new Map(persons.map(p => [p.personId, p]));
+
+    return workers.map(worker => ({
+      person: personsMap.get(worker.personId) ?? null,
+      worker: worker
+    }));
   }
 }

@@ -48,6 +48,13 @@ export class WorkerDataService {
     return this.firebase.subscribeCollection<Worker>(this.collectionName, constraints);
   }
 
+  subscribeAllActiveEmployees(): Observable<WithId<Worker>[]> {
+    return this.firebase.subscribeCollection<Worker>(
+      this.collectionName,
+      [where('isActive', '==', true)]
+    );
+  }
+
   subscribeOne(id: string): Observable<WithId<Worker> | null> {
     return this.firebase.subscribeDoc<Worker>(this.collectionName, id);
   }
