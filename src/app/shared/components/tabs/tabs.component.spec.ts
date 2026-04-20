@@ -100,15 +100,19 @@ describe('TabsComponent', () => {
     expect(tabElements[1].getAttribute('href')).toBe('/team');
   });
 
-  it('should pass correct icon name to app-icon', () => {
-    const testTabs: TabItem[] = [{ label: 'Settings', link: '/settings', icon: 'gear' }];
+  it('should pass correct icon names to all app-icons', () => {
+    const testTabs: TabItem[] = [
+      { label: 'Home', link: '/home', icon: 'house' },
+      { label: 'Settings', link: '/settings', icon: 'gear' }
+    ];
     fixture.componentRef.setInput('tabs', testTabs);
     fixture.detectChanges();
 
-    const iconDebugElement = fixture.debugElement.query(By.directive(IconComponent));
+    const iconDebugElements = fixture.debugElement.queryAll(By.directive(IconComponent));
 
-    const iconComponentInstance = iconDebugElement.componentInstance;
+    expect(iconDebugElements.length).toBe(2);
 
-    expect(iconComponentInstance.name).toBe('gear');
+    expect(iconDebugElements[0].componentInstance.name).toBe('house');
+    expect(iconDebugElements[1].componentInstance.name).toBe('gear');
   });
 })
