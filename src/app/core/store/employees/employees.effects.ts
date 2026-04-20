@@ -13,6 +13,7 @@ import {
   deleteEmployeeAction,
   deleteEmployeeFailureAction,
   deleteEmployeeSuccessAction,
+  getAllActiveEmployeesAction,
   getAllEmployeesAction,
   getAllEmployeesFailureAction,
   getAllEmployeesSuccessAction,
@@ -140,6 +141,23 @@ export class EmployeesEffects {
             error
           }))))
       ))
+  );
+
+  getAllActiveEmployees$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getAllActiveEmployeesAction),
+      switchMap(() =>
+        this.employeeManagerService.subscribeAllActiveEmployees().pipe(
+          map((employees) => getAllEmployeesSuccessAction({
+            employees
+          })),
+          catchError(error => {
+            console.error('Ошибка подписки:', error);
+            return of(getAllEmployeesFailureAction({ error }));
+          })
+        )
+      )
+    )
   );
 
   showSuccessToast$ = createEffect(() =>

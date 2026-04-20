@@ -66,6 +66,10 @@ export const getAllEmployeesAction = createAction(
   '[Employee] Get All'
 )
 
+export const getAllActiveEmployeesAction = createAction(
+  '[Employee] Get All Active'
+)
+
 export const getAllEmployeesSuccessAction = createAction(
   '[Employee] Get All Success',
   props<{ employees: EmployeeProfile[] }>()

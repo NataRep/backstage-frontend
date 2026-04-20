@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Actions } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { PersonBase } from '../../core/models/interfaces/person.model';
@@ -11,8 +10,6 @@ import { updateEmployeeAction } from '../../core/store/employees/employees.actio
 import { selectEmployeesError, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
-import { ToastComponent } from '../../shared/components/toast/toast.component';
-import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
@@ -25,10 +22,8 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
     IconComponent,
     EmployeeInfoComponent,
     EmployeeFormComponent,
-    ToastComponent,
     ModalContainerComponent,
     ResetPasswordComponent,
-    RoleTranslatePipe
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
@@ -38,7 +33,6 @@ export class UserProfileComponent {
   private store = inject(Store);
   private router = inject(Router);
   private route = inject(ActivatedRoute)
-  private actions$ = inject(Actions);
   private queryParamMap = toSignal(this.route.queryParamMap);
   currentUser = this.store.selectSignal(selectAuthUser);
   loading = this.store.selectSignal(selectEmployeesLoading);

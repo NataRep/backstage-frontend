@@ -1,4 +1,4 @@
-import { Directive, HostListener, inject } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -6,21 +6,25 @@ import { NgControl } from '@angular/forms';
   standalone: true,
 })
 export class TrimOnBlurDirective {
+  private el = inject(ElementRef<HTMLInputElement>);
   private ngControl = inject(NgControl, { optional: true });
 
   @HostListener('blur')
   onBlur(): void {
     const control = this.ngControl?.control;
-    const value = control?.value;
 
-    if (control && typeof value === 'string') {
-      const trimmedValue = value.trim();
+    if (control) {
+      const value = control.value;
+      if (typeof value === 'string') {
+        control.setValue(value.trim());
+      }
+    } else {
+      const nativeElement = this.el.nativeElement;
+      const value = nativeElement.value;
 
-      if (trimmedValue !== value) {
-        control.setValue(trimmedValue, {
-          emitEvent: true,
-          emitModelToViewChange: true
-        });
+      if (value) {
+        nativeElement.value = value.trim();
+        nativeElement.dispatchEvent(new Event('input'));
       }
     }
   }

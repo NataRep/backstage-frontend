@@ -2,7 +2,7 @@
   @if (isEditMode()) {
   <div class="content-container__title"> <app-icon name="edit"></app-icon> Edit profile</div>
   <app-employee-form [employee]="currentUser()" (save)="updateUser($event)"
-    (cancel)="toggleEditMode()"></app-employee-form>
+    (cancelForm)="toggleEditMode()"></app-employee-form>
   } @else {
   <div class="content-container__title">
     <app-icon name="user"></app-icon> Personal info

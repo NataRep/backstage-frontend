@@ -11,5 +11,4 @@ export class DayOfWeekPipe implements PipeTransform {
     const dayIndex = (dayOfMonth - 1 + firstDayOfMonthIndex) % 7;
     return WEEK_DAYS[dayIndex];
   }
-
 }

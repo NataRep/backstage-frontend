@@ -22,3 +22,8 @@ export const selectEmployeesError = createSelector(
   selectEmployeesState,
   (state) => state.error
 );
+
+export const selectAllActiveEmployees = createSelector(
+  selectEmployeesState,
+  (state) => state.employees.filter(emp => emp.worker?.isActive === true)
+);
