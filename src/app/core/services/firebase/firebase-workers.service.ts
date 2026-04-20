@@ -1,7 +1,8 @@
 import { inject, Injectable } from "@angular/core";
 import { QueryConstraint, where } from "firebase/firestore";
-import { Observable } from "rxjs";
+import { Observable, retry, RetryConfig } from "rxjs";
 import { Worker } from "../../models/interfaces/employee.models";
+import { APP_RETRY_CONFIG } from "../../models/retry-config.model";
 import { FirebaseService, WithId } from "./firebase-base.service";
 
 
@@ -9,6 +10,7 @@ import { FirebaseService, WithId } from "./firebase-base.service";
 export class WorkerDataService {
   private readonly collectionName = 'employees';
   private firebase = inject(FirebaseService);
+  private retryConfig: RetryConfig = inject(APP_RETRY_CONFIG)
 
   // ---- Create ----
   create(worker: Worker): Promise<string> {
@@ -45,21 +47,21 @@ export class WorkerDataService {
 
   // ---- Subscriptions ----
   subscribeAll(constraints: QueryConstraint[] = []): Observable<WithId<Worker>[]> {
-    return this.firebase.subscribeCollection<Worker>(this.collectionName, constraints);
+    return this.firebase.subscribeCollection<Worker>(this.collectionName, constraints).pipe(retry(this.retryConfig));
   }
 
   subscribeAllActiveEmployees(): Observable<WithId<Worker>[]> {
     return this.firebase.subscribeCollection<Worker>(
       this.collectionName,
       [where('isActive', '==', true)]
-    );
+    ).pipe(retry(this.retryConfig));
   }
 
   subscribeOne(id: string): Observable<WithId<Worker> | null> {
-    return this.firebase.subscribeDoc<Worker>(this.collectionName, id);
+    return this.firebase.subscribeDoc<Worker>(this.collectionName, id).pipe(retry(this.retryConfig));
   }
 
   subscribeChanges(constraints: QueryConstraint[] = []): Observable<{ type: 'added' | 'modified' | 'removed', doc: WithId<Worker> }[]> {
-    return this.firebase.subscribeCollectionChanges<Worker>(this.collectionName, constraints);
+    return this.firebase.subscribeCollectionChanges<Worker>(this.collectionName, constraints).pipe(retry(this.retryConfig));
   }
 }

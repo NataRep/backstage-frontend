@@ -1,7 +1,9 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QueryConstraint } from 'firebase/firestore';
+import { Observable, RetryConfig, Subject } from 'rxjs';
 import { AccessLevel } from '../../models/enums/auth.enums';
 import { Worker } from '../../models/interfaces/employee.models';
+import { APP_RETRY_CONFIG } from '../../models/retry-config.model';
 import { FirebaseService, WithId } from './firebase-base.service';
 import { WorkerDataService } from './firebase-workers.service';
 
@@ -9,6 +11,8 @@ describe('WorkerDataService', () => {
 
   let service: WorkerDataService;
   let firebaseSpy: jasmine.SpyObj<FirebaseService>;
+  let retryConfig: RetryConfig;
+  const delayTime = 10;
 
   beforeEach(() => {
     const spy = jasmine.createSpyObj('FirebaseService', [
@@ -26,6 +30,7 @@ describe('WorkerDataService', () => {
 
     service = TestBed.inject(WorkerDataService);
     firebaseSpy = TestBed.inject(FirebaseService) as jasmine.SpyObj<FirebaseService>;
+    retryConfig = TestBed.inject(APP_RETRY_CONFIG);
   });
 
   describe('create', () => {
@@ -228,4 +233,66 @@ describe('WorkerDataService', () => {
     });
 
   });
+
+  describe('Observable', () => {
+    it('should subscribe on stream active worker', (done) => {
+      const workersSubject = new Subject<WithId<Worker>[]>();
+
+      firebaseSpy.subscribeCollection.and.returnValue(workersSubject.asObservable());
+
+      const mockData1 = [{ id: 'w1', personId: 'p1', isActive: true }] as WithId<Worker>[];
+      const mockData2 = [{ id: 'w1', personId: 'p1', isActive: false }] as WithId<Worker>[];
+
+      const results: WithId<Worker>[][] = [];
+
+      service.subscribeAllActiveEmployees().subscribe(result => {
+        results.push(result);
+        if (results.length === 2) {
+          expect(results[0]).toEqual(mockData1);
+          expect(results[1]).toEqual(mockData2);
+          done();
+        }
+      });
+
+      workersSubject.next(mockData1);
+      workersSubject.next(mockData2);
+    })
+  });
+
+  it('should retry once and then propagate error to component', fakeAsync(() => {
+    const subjects: Subject<WithId<Worker>[]>[] = [];
+
+    type SubscribeCollectionFn = <T>(
+      name: string,
+      constraints?: QueryConstraint[]
+    ) => Observable<WithId<T>[]>;
+
+    (firebaseSpy.subscribeCollection as jasmine.Spy<SubscribeCollectionFn>).and.returnValue(
+      new Observable<WithId<Worker>[]>((subscriber) => {
+        const subject = new Subject<WithId<Worker>[]>();
+        subjects.push(subject);
+        const subscription = subject.subscribe(subscriber);
+        return () => subscription.unsubscribe();
+      })
+    );
+
+    service.subscribeAllActiveEmployees().subscribe({
+      next: () => fail('Мы ожидали ошибку, а не данные'),
+      error: (finalError) => {
+        expect(finalError).toBe('Final Firebase Error');
+        expect(subjects.length).toBe(2);
+      }
+    });
+
+    subjects[0].error('First Attempt Failed');
+
+    tick((retryConfig.delay as number) + delayTime);
+
+    if (subjects[retryConfig.count!]) {
+      subjects[retryConfig.count!].error('Final Firebase Error');
+    } else {
+      fail('Последний Subject не был создан');
+    }
+  }));
+
 });
