@@ -1,8 +1,9 @@
 <div class="tabs-container">
   @for (tab of tabs; track tab.link) {
-  <a [routerLink]="tab.link" routerLinkActive="active" class="tab-item" [class.tab-item--active]="isActive(tab.link)">
+  <a [routerLink]="useQueryParams ? [] : tab.link" [queryParams]="useQueryParams ? getQueryParams(tab.link) : null"
+    queryParamsHandling="merge" routerLinkActive="active" class="tab-item" [class.tab-item--active]="isActive(tab)">
     <app-icon [name]="tab.icon"></app-icon>
-    {{ tab.label }}
+    <span class="tab-label">{{ tab.label | upperFirstLetter}}</span>
   </a>
   }
 </div>

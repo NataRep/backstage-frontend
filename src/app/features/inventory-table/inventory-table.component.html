@@ -1,0 +1,71 @@
+<app-data-table [searchQuery]="searchQuery()" (searchChange)="onSearch($event)" [isToolsDisabled]="isLoading()">
+  <div filters class="select-wrapper">
+    <div class="label">Фильтр:</div>
+    <select name="type" [value]="selectedType()"
+      (change)="selectedType.set($any($event.target).value); currentPage.set(1)">
+      <option value="all">Все</option>
+      @for (type of inventoryTypes | keyvalue; track type.key) {
+      <option [value]="type.key" [selected]="selectedType() === type.key">
+        {{ type.value.plural | upperFirstLetter}} </option>
+      }
+    </select>
+  </div>
+  <ng-container header>
+    <tr>
+      <th class="sticky-coll sticky-coll--left">Название</th>
+      <th></th>
+      <th>Кол-во</th>
+      <th>Состояние</th>
+      <th>Комментарий</th>
+      <th></th>
+    </tr>
+  </ng-container>
+  <ng-container rows>
+    @for (item of paginatedData(); track item.id) {
+    <tr class="table__row">
+      <td class="sticky-coll sticky-coll--left">
+        <strong>{{ item.name | upperFirstLetter}}</strong>
+      </td>
+      <td>
+        <span class="badge-type" [class.badge-type--consumable]="item.type === 'consumable'"
+          [class.badge-type--prop]="item.type === 'prop'" [class.badge-type--equipment]="item.type === 'equipment'"
+          [class.badge-type--costume]="item.type === 'costume'">
+          {{ inventoryTypes[item.type].singular }}
+        </span>
+      </td>
+      <td>
+        <span class="badge-quantity">
+          {{ item.stockQuantity > 0 ? item.stockQuantity : 'Отсутствует' }}
+        </span>
+      </td>
+      <td>
+        <span class="badge-status" [class.badge-status--warning]="(item.conditionStatus === 2)"
+          [class.badge-status--attention]="(item.conditionStatus === 3)">
+        </span>
+      </td>
+      <td>{{ item.comment }}</td>
+      <td class="actions">
+        <!-->
+          <button (click)="openEdit(item)" [disabled]="!canEdit()">
+            <app-icon name="edit"></app-icon>
+          </button>
+          <button (click)="openDelete(item)" class="danger" [disabled]="!canEdit()">
+            <app-icon name="delete"></app-icon>
+          </button>
+        -->
+      </td>
+    </tr>
+    } @empty {
+    <tr>
+      <td colspan="5">Реквизит не найден</td>
+    </tr>
+    }
+  </ng-container>
+</app-data-table>
+
+@if (isEditModalOpen()) {
+<app-modal-container title="Редактировать реквизит" (close)="isEditModalOpen.set(false)">
+  <!--<app-inventory-form #inventoryForm [initialData]="selectedItem()" (submit)="updateItem($event)">
+  </app-inventory-form>-->
+</app-modal-container>
+}

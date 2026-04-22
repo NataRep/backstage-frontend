@@ -22,8 +22,8 @@ import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employ
 import { Person, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
+import { ROLE_RU } from '../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
-import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
@@ -34,7 +34,6 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
     IconComponent,
     UppercaseFirstLetter,
     TrimOnBlurDirective,
-    RoleTranslatePipe,
     UppercaseFirstLetter],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
@@ -47,6 +46,8 @@ export class EmployeeFormComponent implements OnChanges {
   @Input() employee: EmployeeProfile | null = null;
   @Output() save = new EventEmitter<{ person: Person, worker: WorkerBase }>();
   @Output() cancelForm = new EventEmitter<void>();
+
+  readonly rolesTranslate = ROLE_RU;
 
   private store = inject(Store);
   currentUser = this.store.selectSignal(selectAuthUser);

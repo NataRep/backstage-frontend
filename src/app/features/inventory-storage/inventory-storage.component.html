@@ -1,0 +1,12 @@
+<div class="content-container">
+  <app-tabs [tabs]="applicationTabs" [useQueryParams]="true" queryParamName="category"></app-tabs>
+  <div class="content-container__content">
+    @if (isLoading()) {
+    <div class="loader">Загрузка склада...</div>
+    }
+    @if(canEdit()){
+    <button class="button button--yellow button--add">Add new</button>
+    }
+    <app-inventory-table [category]="category()"></app-inventory-table>
+  </div>
+</div>

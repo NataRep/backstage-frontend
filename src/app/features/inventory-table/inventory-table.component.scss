@@ -1,0 +1,67 @@
+.table__row {
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-orange-text);
+    }
+  }
+}
+
+.table__row td:nth-child(2),
+th:nth-child(2) {
+  @media (max-width:768px) {
+    display: none;
+  }
+}
+
+.table__row td:nth-child(3),
+.table__row td:nth-child(4),
+th:nth-child(3),
+th:nth-child(4) {
+  text-align: center;
+}
+
+
+
+.badge-status {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 100%;
+  background-color: var(--color-green);
+
+  &--warning {
+    background-color: var(--color-orange);
+  }
+
+  &--attention {
+    background-color: var(--color-red);
+  }
+}
+
+.badge-type {
+  padding: 0.125rem 0.25rem;
+  border-radius: 3px;
+  background-color: var(--color-green);
+  width: max-content;
+  display: inline-block;
+  color: var(--color-grey);
+  margin: 0.125rem 0.125rem;
+  font-size: 0.75rem;
+
+  &--consumable {
+    background-color: var(--color-accent-2);
+  }
+
+  &--prop {
+    background-color: var(--color-accent-5);
+  }
+
+  &--equipment {
+    background-color: var(--color-accent-3);
+  }
+
+  &--costume {
+    background-color: var(--color-accent-1);
+  }
+}

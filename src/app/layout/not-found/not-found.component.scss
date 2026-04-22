@@ -1,0 +1,30 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  overflow: auto;
+  background-color: var(--color-black);
+  color: var(--color-grey-text);
+  background-image: url(/assets/main-layout/backstage-bg.png);
+  background-repeat: no-repeat;
+  background-position: right bottom 2rem;
+  background-size: auto;
+}
+
+h1 {
+  display: flex;
+  margin: 0;
+  font-family: "Road Rage", sans-serif;
+  font-size: 2.875rem;
+  font-weight: 500;
+  line-height: 2rem;
+  color: var(--color-green);
+}
+
+a {
+  display: flex;
+  align-items: center;
+  color: var(--color-green)
+}

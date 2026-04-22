@@ -4,13 +4,13 @@
   [pages]="pages()" (searchChange)="onSearch($event)" (pageChange)="currentPage.set($event)">
 
   <div filters class="select-wrapper">
-    <div class="label">Filter:</div>
+    <div class="label">Фильтр:</div>
     <select name="role" [value]="selectedRole()"
       (change)="selectedRole.set($any($event.target).value); currentPage.set(1)">
-      <option value="all">Все роли</option>
+      <option value="all">Все</option>
       @for (role of roles; track role) {
       <option [value]="role" [selected]="selectedRole() === role">
-        {{ role | roleTranslate }}
+        {{ rolesTranslate[role].plural| upperFirstLetter}}
       </option>
       }
     </select>
@@ -39,7 +39,7 @@
       <td class="cell--role">
         @for (role of emp.worker?.roles; track role;) {
         <div class="cell__role" [class]="'cell__role--' + role">
-          {{ role | roleTranslate }}
+          {{ rolesTranslate[role].singular }}
         </div>
         }
       </td>

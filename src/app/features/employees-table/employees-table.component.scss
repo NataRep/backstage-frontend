@@ -1,5 +1,3 @@
-$roles: 'owner', 'manager', 'artist', 'fireworker', 'staff', 'driver';
-
 :host ::ng-deep {
   @container tableContainer (max-width: 848px) {
     .cell--link {
@@ -47,6 +45,8 @@ td.cell--name {
   display: block;
 }
 
+
+
 .cell__role {
   padding: 0.125rem 0.25rem;
   border-radius: 3px;
@@ -57,10 +57,29 @@ td.cell--name {
   margin: 0.125rem 0.125rem;
   font-size: 0.75rem;
 
-  @each $role in $roles {
-    &--#{$role} {
-      background-color: var(--color-role-#{$role});
-    }
+
+  &--owner {
+    background-color: var(--color-accent-1);
+  }
+
+  &--manager {
+    background-color: var(--color-accent-2);
+  }
+
+  &--artist {
+    background-color: var(--color-accent-3);
+  }
+
+  &--fireworker {
+    background-color: var(--color-accent-4);
+  }
+
+  &--staff {
+    background-color: var(--color-accent-5);
+  }
+
+  &--driver {
+    background-color: var(--color-accent-6);
   }
 }
 

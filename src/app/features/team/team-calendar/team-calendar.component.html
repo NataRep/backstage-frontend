@@ -10,7 +10,7 @@
       <option value="all">Все роли</option>
       @for (role of roles; track role) {
       <option [value]="role" [selected]="selectedRole() === role">
-        {{ role | roleTranslate }}
+        {{ rolesTranslate[role].plural }}
       </option>
       }
     </select>

@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { EmployeeProfile } from '../../core/models/interfaces/employee.models';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
+import { ROLE_RU } from '../../shared/constants/texts/common.texts';
 import { SocialLinkPipe } from '../../shared/pipes/social-link.pipe';
-import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
@@ -14,7 +14,6 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
     SkeletonComponent,
     IconComponent,
     SocialLinkPipe,
-    RoleTranslatePipe,
     UppercaseFirstLetter],
   templateUrl: './employee-info.component.html',
   styleUrl: './employee-info.component.scss',
@@ -23,6 +22,7 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
 export class EmployeeInfoComponent {
   @Input({ required: true }) employee: EmployeeProfile | null = null;
   @Input() showLinks = true;
+  readonly rolesTranslate = ROLE_RU;
 
   get hasEmployee(): boolean {
     return !!this.employee;

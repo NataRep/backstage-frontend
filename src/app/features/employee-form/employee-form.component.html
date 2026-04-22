@@ -59,7 +59,7 @@
           <option [value]="null" disabled>Выберете...</option>
           }
           @for (role of getAvailableRolesForControl(i); track role) {
-          <option [value]="role">{{ role | roleTranslate | upperFirstLetter }}</option>
+          <option [value]="role">{{ rolesTranslate[role].singular| upperFirstLetter }}</option>
           }
         </select>
         <button class="button button--icon remove" (click)="removeRole(i)" title="Remove role">

@@ -32,7 +32,7 @@ import { ResetPasswordComponent } from '../reset-password/reset-password.compone
 export class UserProfileComponent {
   private store = inject(Store);
   private router = inject(Router);
-  private route = inject(ActivatedRoute)
+  private route = inject(ActivatedRoute);
   private queryParamMap = toSignal(this.route.queryParamMap);
   currentUser = this.store.selectSignal(selectAuthUser);
   loading = this.store.selectSignal(selectEmployeesLoading);
