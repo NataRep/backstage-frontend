@@ -9,11 +9,9 @@ import {
   Output
 } from '@angular/core';
 import {
-  FormArray,
-  FormControl,
-  FormGroup,
+  NonNullableFormBuilder,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AccessLevel } from '../../core/models/enums/auth.enums';
@@ -47,32 +45,37 @@ export class EmployeeFormComponent implements OnChanges {
   @Output() save = new EventEmitter<{ person: Person, worker: WorkerBase }>();
   @Output() cancelForm = new EventEmitter<void>();
 
-  readonly rolesTranslate = ROLE_RU;
-
   private store = inject(Store);
-  currentUser = this.store.selectSignal(selectAuthUser);
+  private fb = inject(NonNullableFormBuilder);
 
-  isAdmin = false;
+  readonly currentUser = this.store.selectSignal(selectAuthUser);
+  readonly rolesTranslate = ROLE_RU;
   readonly roles: Role[] = Object.values(Role);
+  isAdmin = false;
 
-  form = new FormGroup({
-    id: new FormControl('', [Validators.minLength(16), Validators.pattern(/^\S+$/)]),
-    lastName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
-    firstName: new FormControl('', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]),
-    roles: new FormArray<FormControl<Role>>([], { validators: [Validators.required] }),
-    isAdmin: new FormControl<boolean>(false, { nonNullable: true }),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phone: new FormControl('', [Validators.required, Validators.pattern(/^\+?[78]\d{10}$/)]),
-    telegram: new FormControl('', [Validators.pattern(/^\S+$/)]),
-    vk: new FormControl('', [Validators.pattern(/^\S+$/)]),
-    whatsapp: new FormControl('', [Validators.pattern(/^\S+$/)])
+  form = this.fb.group({
+    id: ['', [Validators.minLength(16), Validators.pattern(/^\S+$/)]],
+    lastName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]],
+    firstName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]],
+    roles: this.fb.array<Role | null>([], [Validators.required]),
+    isAdmin: [false],
+    email: ['', [Validators.required, Validators.email]],
+    phone: ['', [Validators.required, Validators.pattern(/^\+?[78]\d{10}$/)]],
+    telegram: ['', [Validators.pattern(/^\S+$/)]],
+    vk: ['', [Validators.pattern(/^\S+$/)]],
+    whatsapp: ['', [Validators.pattern(/^\S+$/)]]
   });
+
+  // Геттер для удобного доступа к массиву ролей
+  get rolesArray() {
+    return this.form.controls.roles;
+  }
 
   ngOnChanges() {
     if (this.employee) {
       this.setFormByEmployee();
     } else {
-      console.log(generateRandomId());
+      this.form.controls.id.setValue(generateRandomId());
     }
   }
 
@@ -136,7 +139,8 @@ export class EmployeeFormComponent implements OnChanges {
 
   onCancel() {
     this.cancelForm.emit();
-    this.resetForm();
+    this.rolesArray.clear();
+    this.form.reset();
   }
 
   resetForm() {
@@ -156,52 +160,43 @@ export class EmployeeFormComponent implements OnChanges {
   }
 
   setFormByEmployee() {
-    const employee = this.employee;
-    const person = employee?.person;
+    const person = this.employee?.person;
+    if (!this.employee || !person) return;
 
-    if (!employee || !person) return;
-
-    const nameParts = person.fullName.trim().split(/\s+/);
-    const lastName = nameParts[0] || '';
-    const firstName = nameParts[1] || '';
-
-    this.isAdmin = employee.worker?.accessLevel === AccessLevel.Admin;
+    const [lastName = '', firstName = ''] = person.fullName.trim().split(/\s+/);
+    this.isAdmin = this.employee.worker?.accessLevel === AccessLevel.Admin;
 
     const findSocial = (type: SocialType) =>
       person.socialLinks?.find(link => link.type === type)?.link ?? '';
 
-    this.form.patchValue(
-      {
-        id: person.personId,
-        firstName,
-        lastName,
-        isAdmin: this.isAdmin,
-        email: person.email ?? '',
-        phone: person.phone ?? '',
-        telegram: findSocial(SocialType.TELEGRAM),
-        vk: findSocial(SocialType.VK),
-        whatsapp: findSocial(SocialType.WHATSAPP),
-      },
-      { emitEvent: true },
-    );
+    this.form.patchValue({
+      id: person.personId,
+      firstName,
+      lastName,
+      isAdmin: this.isAdmin,
+      email: person.email ?? '',
+      phone: person.phone ?? '',
+      telegram: findSocial(SocialType.TELEGRAM),
+      vk: findSocial(SocialType.VK),
+      whatsapp: findSocial(SocialType.WHATSAPP),
+    });
 
     this.setRolesByEmployee();
   }
 
-  setRolesByEmployee() {
-    if (!this.employee) return;
-    this.rolesArray.clear();
 
-    if (this.employee.worker) {
-      for (const role of this.employee.worker.roles) {
-        this.rolesArray.push(new FormControl(role));
-      }
-    }
+  setRolesByEmployee() {
+    this.rolesArray.clear();
+    const roles = this.employee?.worker?.roles || [];
+
+    roles.forEach(role => {
+      this.rolesArray.push(this.fb.control(role, [Validators.required]));
+    });
   }
 
   addRole() {
     this.rolesArray.push(
-      new FormControl<Role | null>(null, Validators.required),
+      this.fb.control<Role | null>(null, [Validators.required])
     );
   }
 
@@ -257,10 +252,6 @@ export class EmployeeFormComponent implements OnChanges {
     }
 
     return availableRoles;
-  }
-
-  get rolesArray() {
-    return this.form.get('roles') as FormArray<FormControl<Role | null>>;
   }
 
   get isCheckedAdmin() {

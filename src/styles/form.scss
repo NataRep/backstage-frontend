@@ -11,6 +11,7 @@ form {
 input {
   display: block;
   width: 100%;
+  height: 100%;
   box-sizing: border-box;
   background: transparent;
   color: var(--color-grey-extra-light);
@@ -95,6 +96,7 @@ input:-webkit-autofill {
   cursor: not-allowed;
 }
 
+
 .form__row {
   position: relative;
   display: flex;
@@ -104,6 +106,10 @@ input:-webkit-autofill {
   margin-bottom: 1.75rem;
   color: var(--color-grey-extra-light);
   border-bottom: solid 1px rgba(120, 120, 120, 0.2);
+
+  &:has(+ .row--buttons) {
+    border-bottom: none;
+  }
 
   &.invalid {
     border-bottom: solid 1px rgba(186, 13, 24, 0.42);
@@ -137,8 +143,6 @@ select {
   }
 }
 
-
-
 select,
 ::picker(select) {
   appearance: base-select;
@@ -165,4 +169,18 @@ option {
 
 option:checked {
   background-color: #e3f2fd;
+}
+
+textarea {
+  width: 100%;
+  border: none;
+  background-color: var(--color-grey-medium);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: var(--color-grey-extra-light);
+}
+
+textarea:focus-visible {
+  border: 1px solid rgba(var(--color-blue-rgb), 0.5);
+  outline: none;
 }

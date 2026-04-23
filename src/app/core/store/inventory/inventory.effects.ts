@@ -2,22 +2,22 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, switchMap, takeUntil, tap } from 'rxjs';
 import { InventoryService } from '../../services/firebase/firebase-inventory.service';
+import { ToastService } from '../../services/toasts.service';
 import * as InventoryActions from './inventory.actions';
 
 @Injectable()
 export class InventoryEffects {
   private actions$ = inject(Actions);
   private inventoryService = inject(InventoryService);
+  private toastService = inject(ToastService);
 
   // --- 1. Realtime Subscription (Long-running) ---
   // Этот эффект работает постоянно, пока не придет сигнал отписки
   subscribeInventory$ = createEffect(() =>
     this.actions$.pipe(
       ofType(InventoryActions.subscribeAllInventoryAction),
-      tap(() => console.log('Effect triggered')),
       switchMap(() =>
         this.inventoryService.subscribeAll().pipe(
-          // Используем getAllInventorySuccessAction, так как редьюсер ожидает его для обновления списка
           map((items) => InventoryActions.getAllInventorySuccessAction({ items: items })),
           takeUntil(this.actions$.pipe(ofType(InventoryActions.unsubscribeAllInventoryAction))),
           catchError((err: Error) =>
@@ -34,7 +34,6 @@ export class InventoryEffects {
       ofType(InventoryActions.createInventoryAction),
       mergeMap(({ data }) =>
         this.inventoryService.create(data).pipe(
-          // Firebase возвращает ID, дополняем объект и отправляем в стор
           map((id) => InventoryActions.createInventorySuccessAction({ data: { ...data, id } })),
           catchError((err: Error) =>
             of(InventoryActions.createInventoryFailureAction({ error: err.message }))
@@ -93,6 +92,27 @@ export class InventoryEffects {
         )
       )
     )
+  );
+
+  showSuccessToast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(InventoryActions.createInventorySuccessAction,
+        InventoryActions.updateInventorySuccessAction
+      ),
+      tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
+    ),
+    { dispatch: false }
+  );
+
+  showErrorToast$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(InventoryActions.updateInventoryFailureAction,
+        InventoryActions.deleteInventoryFailureAction,
+        InventoryActions.createInventoryFailureAction
+      ),
+      tap(() => this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center'))
+    ),
+    { dispatch: false }
   );
 
 

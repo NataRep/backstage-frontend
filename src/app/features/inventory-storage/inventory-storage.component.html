@@ -5,8 +5,16 @@
     <div class="loader">Загрузка склада...</div>
     }
     @if(canEdit()){
-    <button class="button button--yellow button--add">Add new</button>
+    <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
     }
     <app-inventory-table [category]="category()"></app-inventory-table>
   </div>
 </div>
+
+<app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default">
+  <div class="modal__header">Edit inventory</div>
+  <div class="modal__body">
+    <app-inventory-form #inventoryForm (cancelForm)="closeCreateModal()"
+      (save)="createItem($event)"></app-inventory-form>
+  </div>
+</app-modal-container>

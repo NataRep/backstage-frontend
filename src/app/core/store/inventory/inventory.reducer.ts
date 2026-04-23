@@ -31,11 +31,18 @@ export const InventoryReducer = createReducer(
   ),
 
   // --- Success Operations ---
-  on(createInventorySuccessAction, (state, { data }) => ({
-    ...state,
-    inventory: [...state.inventory, data],
-    loading: false,
-  })),
+  on(createInventorySuccessAction, (state, { data }) => {
+    // Проверяем, есть ли уже такой ID в стейте
+    const exists = state.inventory.some(item => item.id === data.id);
+
+    return {
+      ...state,
+      inventory: exists
+        ? state.inventory.map(item => item.id === data.id ? data : item) // Обновляем, если нашли
+        : [...state.inventory, data], // Добавляем новый, если не нашли
+      loading: false,
+    };
+  }),
 
   on(updateInventorySuccessAction, (state, { data }) => ({
     ...state,

@@ -1,15 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { InventoryCategory, InventoryItem, InventoryType } from '../../core/models/interfaces/inventory.models';
-import { subscribeAllInventoryAction, unsubscribeAllInventoryAction } from '../../core/store/inventory/inventory.actions';
+import { selectCanEdit } from '../../core/store/auth/auth.selectors';
+import { deleteInventoryAction, deleteInventorySuccessAction, subscribeAllInventoryAction, unsubscribeAllInventoryAction, updateInventoryAction, updateInventorySuccessAction } from '../../core/store/inventory/inventory.actions';
 import { selectAllInventory, selectInventoryByCategory, selectInventoryLoading } from '../../core/store/inventory/inventory.selector';
 import { BaseTableDirective } from '../../shared/components/data-table/base-table.directive';
 import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
+import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { INVENTORY_TYPES_RU } from '../../shared/constants/texts/common.texts';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
+import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 
 
 @Component({
@@ -19,8 +24,7 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
     IconComponent,
     ModalContainerComponent,
     UppercaseFirstLetter,
-    //InventoryFormComponent, // Предположим, создан компонент формы
-    //InventoryInfoComponent, // Компонент для детального просмотра
+    InventoryFormComponent,
     DataTableComponent,
     CommonModule
   ],
@@ -34,11 +38,19 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
     this._category.set(value);
     this.currentPage.set(1); // Сбрасываем на 1 страницу при переключении табов
   }
-  private store = inject(Store);
+  private readonly store = inject(Store);
+  private readonly actions = inject(Actions);
+  private readonly destroyRef = inject(DestroyRef);
   private _category = signal<InventoryCategory>('firework');
+
   isEditModalOpen = signal<boolean>(false);
+  isConfirmDeleteModalOpen = signal<boolean>(false);
+
+  selectedItem = signal<InventoryItem | null>(null);
+
   selectedType = signal<InventoryType | 'all'>('all');
   inventoryTypes = INVENTORY_TYPES_RU;
+
 
   // Реализация абстрактных методов для BaseTableDirective
   protected override sourceData = () => this.filteredInventory();
@@ -52,6 +64,7 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
 
   readonly allInventory = this.store.selectSignal(selectAllInventory);
   readonly isLoading = this.store.selectSignal(selectInventoryLoading);
+  readonly canEdit = this.store.selectSignal(selectCanEdit);
 
   readonly filteredInventory = computed(() => {
     const list = this.allInventory();
@@ -81,45 +94,55 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
     super.ngOnInit();
     this.store.dispatch(subscribeAllInventoryAction());
 
-    console.log("this.allInventory()", this.allInventory())
-    //this.initModalsSubscriptions();
+    this.initModalsSubscriptions();
   }
 
   ngOnDestroy() {
     this.store.dispatch(unsubscribeAllInventoryAction());
   }
 
-  /*
+  handleDeleteAction(actionType: ModalAction) {
+    if (actionType === 'confirm') {
+      this.deleteItem();
+    }
+  }
+
   // 8. Действия со Store
   updateItem(data: InventoryItem) {
     const id = this.selectedItem()?.id;
     if (!id) return;
-  
+
     this.store.dispatch(updateInventoryAction({
       data: { ...data, id }
     }));
   }
-  
+
   deleteItem() {
     const id = this.selectedItem()?.id;
     if (id) {
       this.store.dispatch(deleteInventoryAction({ id }));
     }
   }
-  
+
   // 9. Управление модалками
-  openEdit(item: InventoryItem) {
+  openEditModal(item: InventoryItem) {
     this.selectedItem.set(item);
     this.isEditModalOpen.set(true);
   }
-  
-  openDelete(item: InventoryItem) {
+
+  closeEditModal() {
+    this.selectedItem.set(null);
+    this.isEditModalOpen.set(false);
+  }
+
+  openConfirmDeleteModal(item: InventoryItem) {
     this.selectedItem.set(item);
     this.isConfirmDeleteModalOpen.set(true);
   }
-  
+
   // 10. Подписки на успех (закрытие окон)
   private initModalsSubscriptions() {
+
     this.actions.pipe(
       ofType(updateInventorySuccessAction),
       takeUntilDestroyed(this.destroyRef)
@@ -127,7 +150,7 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
       this.isEditModalOpen.set(false);
       this.selectedItem.set(null);
     });
-  
+
     this.actions.pipe(
       ofType(deleteInventorySuccessAction),
       takeUntilDestroyed(this.destroyRef)
@@ -136,5 +159,5 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
       this.selectedItem.set(null);
     });
   }
-    */
+
 }

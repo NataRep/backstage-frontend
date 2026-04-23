@@ -1,0 +1,107 @@
+.label {
+  margin-right: 1rem;
+}
+
+select {
+  margin-bottom: 0.25rem;
+}
+
+input.stockQuantity {
+  width: 60px;
+}
+
+#comment {
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* =========================================
+   RADIO STATUS BUTTONS
+   ========================================= */
+
+.radio-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.25rem;
+}
+
+.radio-item {
+  position: relative;
+}
+
+.radio-item input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-item label {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--color-table-border-rgb), 0.9);
+  background-color: var(--color-grey-medium);
+  color: var(--color-grey-extra-light);
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.875rem;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+@media (hover: hover) {
+  .radio-item label:hover {
+    border-color: rgba(var(--color-grey-extra-light-rgb), 0.6);
+    background-color: var(--color-grey);
+  }
+}
+
+.radio-item input:focus+label {
+  outline: 1px solid rgba(var(--color-blue-rgb), 0.5);
+  outline-offset: 1px;
+}
+
+
+.radio-item input:active+label {
+  transform: translateY(1px);
+}
+
+/* =========================================
+   STATUS COLORS (по id status-1/2/3)
+   ========================================= */
+
+.radio-item input[id$="1"]:checked+label {
+  background-color: var(--color-green);
+  border-color: var(--color-green);
+  color: var(--color-grey-dark);
+  box-shadow:
+    0 0 0 1px rgba(var(--color-green-rgb), 0.35);
+}
+
+.radio-item input[id$="2"]:checked+label {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+  color: var(--color-grey-dark);
+  box-shadow:
+    0 0 0 1px rgba(var(--color-orange-rgb), 0.35);
+}
+
+.radio-item input[id$="3"]:checked+label {
+  background-color: var(--color-red);
+  border-color: var(--color-red);
+  color: var(--color-grey-dark);
+
+  box-shadow:
+    0 0 0 1px rgba(var(--color-red-rgb), 0.35);
+}
+
+.radio-item input:disabled+label {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
