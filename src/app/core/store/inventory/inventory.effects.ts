@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, switchMap, takeUntil, tap } from 'rxjs';
+import { catchError, map, mergeMap, of, switchMap, takeUntil } from 'rxjs';
 import { InventoryService } from '../../services/firebase/firebase-inventory.service';
 import { ToastService } from '../../services/toasts.service';
 import * as InventoryActions from './inventory.actions';
@@ -93,27 +93,4 @@ export class InventoryEffects {
       )
     )
   );
-
-  showSuccessToast$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(InventoryActions.createInventorySuccessAction,
-        InventoryActions.updateInventorySuccessAction
-      ),
-      tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
-    ),
-    { dispatch: false }
-  );
-
-  showErrorToast$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(InventoryActions.updateInventoryFailureAction,
-        InventoryActions.deleteInventoryFailureAction,
-        InventoryActions.createInventoryFailureAction
-      ),
-      tap(() => this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center'))
-    ),
-    { dispatch: false }
-  );
-
-
 }
