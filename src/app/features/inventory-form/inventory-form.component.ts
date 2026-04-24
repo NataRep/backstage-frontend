@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { INVENTORY_TYPES, InventoryCategory, InventoryConditionStatus, InventoryItem, InventoryType } from '../../core/models/interfaces/inventory.models';
 import { NumberInputComponent } from '../../shared/components/number-input/number-input.component';
 import { INVENTORY_CATEGORY_RU, INVENTORY_TYPES_RU } from '../../shared/constants/texts/common.texts';
@@ -27,6 +29,13 @@ export class InventoryFormComponent implements OnChanges {
   @Output() cancelForm = new EventEmitter<void>();
 
   private fb = inject(NonNullableFormBuilder);
+  private route = inject(ActivatedRoute);
+
+  private queryParamsSignal = toSignal(this.route.queryParamMap);
+  category = computed(() => {
+    const value = this.queryParamsSignal()?.get('category');
+    return (value as InventoryCategory) || 'firework';
+  });
 
   readonly typesTranslate = INVENTORY_TYPES_RU;
   readonly types = INVENTORY_TYPES;
@@ -61,24 +70,35 @@ export class InventoryFormComponent implements OnChanges {
     ]),
   });
 
+  constructor() {
+    effect(() => {
+      const currentCategory = this.category();
+      if (!this.inventoryItem) {
+        this.form.patchValue({ category: currentCategory });
+      }
+    });
+  }
+
   ngOnChanges() {
-    if (this.inventoryItem) {
-      this.setFormByItem();
-    }
+    this.setFormByItem();
   }
 
   setFormByItem() {
-    if (!this.inventoryItem) return;
+    if (!this.inventoryItem) {
+      return;
+    }
+
+    const { category, type, name, stockQuantity, conditionStatus, comment } = this.inventoryItem;
 
     this.form.patchValue({
-      category: this.inventoryItem.category,
-      type: this.inventoryItem.type,
-      name: this.inventoryItem.name,
-      stockQuantity: this.inventoryItem.stockQuantity,
-      conditionStatus: this.inventoryItem.conditionStatus,
-      comment: this.inventoryItem.comment,
+      category,
+      type,
+      name,
+      stockQuantity,
+      conditionStatus,
+      comment
     });
-  };
+  }
 
   resetForm() {
     this.form.reset({
@@ -109,8 +129,6 @@ export class InventoryFormComponent implements OnChanges {
       comment: rawValues.comment || '',
       updatedAt: new Date(),
     };
-
-    console.log("inventoryData)", inventoryData)
 
     this.save.emit(inventoryData);
   }

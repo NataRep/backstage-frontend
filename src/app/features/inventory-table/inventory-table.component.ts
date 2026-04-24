@@ -54,7 +54,7 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
 
   // Реализация абстрактных методов для BaseTableDirective
   protected override sourceData = () => this.filteredInventory();
-  override pageSize = () => 15;
+  override pageSize = () => 10;
   protected override isTableLocked = () => this.isLoading();
 
   // Добавляем категорию в URL через ExtraParams

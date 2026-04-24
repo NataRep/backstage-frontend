@@ -1,6 +1,7 @@
 @let editMode = canEdit();
 
-<app-data-table [searchQuery]="searchQuery()" (searchChange)="onSearch($event)" [isToolsDisabled]="isLoading()">
+<app-data-table [searchQuery]="searchQuery()" [currentPage]="currentPage()" [totalPages]="totalPages()"
+  [pages]="pages()" (searchChange)="onSearch($event)" (pageChange)="currentPage.set($event)">
   <div filters class="select-wrapper">
     <div class="label">Фильтр:</div>
     <select name="type" [value]="selectedType()"
