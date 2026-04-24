@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { pendingChangesGuard } from './core/guards/pending-changes.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
-import { InventoryStorageComponent } from './features/inventory-storage/inventory-storage.component';
+import { InventoryStorageComponent } from './features/inventory/inventory-storage/inventory-storage.component';
 import { LoginComponent } from './features/login/login.component';
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
 import { TeamCalendarComponent } from './features/team/team-calendar/team-calendar.component';

@@ -8,8 +8,8 @@ import { Person } from '../../../core/models/interfaces/person.model';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { createEmployeeAction, createEmployeeSuccessAction } from '../../../core/store/employees/employees.actions';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
-import { EmployeeFormComponent } from '../../employee-form/employee-form.component';
-import { EmployeesTableComponent } from '../../employees-table/employees-table.component';
+import { EmployeeFormComponent } from '../../employee/employee-form/employee-form.component';
+import { EmployeesTableComponent } from '../../employee/employees-table/employees-table.component';
 
 @Component({
   selector: 'app-team',

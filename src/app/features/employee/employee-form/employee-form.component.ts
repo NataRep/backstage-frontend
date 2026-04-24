@@ -14,15 +14,15 @@ import {
   Validators
 } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { AccessLevel } from '../../core/models/enums/auth.enums';
-import { Role } from '../../core/models/enums/employee.enums';
-import { EmployeeProfile, WorkerBase } from '../../core/models/interfaces/employee.models';
-import { Person, SocialLink, SocialType } from '../../core/models/interfaces/person.model';
-import { selectAuthUser } from '../../core/store/auth/auth.selectors';
-import { IconComponent } from '../../shared/components/icons/icons.component';
-import { ROLE_RU } from '../../shared/constants/texts/common.texts';
-import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
-import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
+import { AccessLevel } from '../../../core/models/enums/auth.enums';
+import { Role } from '../../../core/models/enums/employee.enums';
+import { EmployeeProfile, WorkerBase } from '../../../core/models/interfaces/employee.models';
+import { Person, SocialLink, SocialType } from '../../../core/models/interfaces/person.model';
+import { selectAuthUser } from '../../../core/store/auth/auth.selectors';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
+import { ROLE_RU } from '../../../shared/constants/texts/common.texts';
+import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
+import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-employee-form',

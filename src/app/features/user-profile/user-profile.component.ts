@@ -10,8 +10,8 @@ import { updateEmployeeAction } from '../../core/store/employees/employees.actio
 import { selectEmployeesError, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
-import { EmployeeFormComponent } from '../employee-form/employee-form.component';
-import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
+import { EmployeeFormComponent } from '../employee/employee-form/employee-form.component';
+import { EmployeeInfoComponent } from '../employee/employee-info/employee-info.component';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 
 @Component({

@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal, ViewChild
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { INVENTORY_CATEGORY, InventoryCategory, InventoryItem } from '../../core/models/interfaces/inventory.models';
-import { selectCanEdit } from '../../core/store/auth/auth.selectors';
-import { createInventoryAction } from '../../core/store/inventory/inventory.actions';
-import { selectInventoryLoading } from '../../core/store/inventory/inventory.selector';
-import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
-import { TabItem, TabsComponent } from '../../shared/components/tabs/tabs.component';
-import { INVENTORY_CATEGORY_RU } from '../../shared/constants/texts/common.texts';
+import { INVENTORY_CATEGORY, InventoryCategory, InventoryItem } from '../../../core/models/interfaces/inventory.models';
+import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
+import { createInventoryAction } from '../../../core/store/inventory/inventory.actions';
+import { selectInventoryLoading } from '../../../core/store/inventory/inventory.selector';
+import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
+import { TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
+import { INVENTORY_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
 import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
 

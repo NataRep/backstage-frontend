@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { EmployeeProfile } from '../../core/models/interfaces/employee.models';
-import { IconComponent } from '../../shared/components/icons/icons.component';
-import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
-import { ROLE_RU } from '../../shared/constants/texts/common.texts';
-import { SocialLinkPipe } from '../../shared/pipes/social-link.pipe';
-import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
+import { EmployeeProfile } from '../../../core/models/interfaces/employee.models';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
+import { ROLE_RU } from '../../../shared/constants/texts/common.texts';
+import { SocialLinkPipe } from '../../../shared/pipes/social-link.pipe';
+import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-employee-info',

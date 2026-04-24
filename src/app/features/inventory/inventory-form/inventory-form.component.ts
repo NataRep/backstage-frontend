@@ -3,11 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, effect, EventEmitter, inj
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { INVENTORY_TYPES, InventoryCategory, InventoryConditionStatus, InventoryItem, InventoryType } from '../../core/models/interfaces/inventory.models';
-import { NumberInputComponent } from '../../shared/components/number-input/number-input.component';
-import { INVENTORY_CATEGORY_RU, INVENTORY_TYPES_RU } from '../../shared/constants/texts/common.texts';
-import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
-import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
+import { INVENTORY_TYPES, InventoryCategory, InventoryConditionStatus, InventoryItem, InventoryType } from '../../../core/models/interfaces/inventory.models';
+import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
+import { INVENTORY_CATEGORY_RU, INVENTORY_TYPES_RU } from '../../../shared/constants/texts/common.texts';
+import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
+import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-inventory-form',
@@ -102,7 +102,7 @@ export class InventoryFormComponent implements OnChanges {
 
   resetForm() {
     this.form.reset({
-      category: null,
+      category: this.category(),
       type: null,
       name: "",
       stockQuantity: null,

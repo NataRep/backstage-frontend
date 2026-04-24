@@ -3,17 +3,17 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Input
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { InventoryCategory, InventoryItem, InventoryType } from '../../core/models/interfaces/inventory.models';
-import { selectCanEdit } from '../../core/store/auth/auth.selectors';
-import { deleteInventoryAction, deleteInventorySuccessAction, subscribeAllInventoryAction, unsubscribeAllInventoryAction, updateInventoryAction, updateInventorySuccessAction } from '../../core/store/inventory/inventory.actions';
-import { selectAllInventory, selectInventoryByCategory, selectInventoryLoading } from '../../core/store/inventory/inventory.selector';
-import { BaseTableDirective } from '../../shared/components/data-table/base-table.directive';
-import { DataTableComponent } from '../../shared/components/data-table/data-table.component';
-import { IconComponent } from '../../shared/components/icons/icons.component';
-import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
-import { ModalAction } from '../../shared/components/modal-container/modal.model';
-import { INVENTORY_TYPES_RU } from '../../shared/constants/texts/common.texts';
-import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
+import { InventoryCategory, InventoryItem, InventoryType } from '../../../core/models/interfaces/inventory.models';
+import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
+import { deleteInventoryAction, deleteInventorySuccessAction, subscribeAllInventoryAction, unsubscribeAllInventoryAction, updateInventoryAction, updateInventorySuccessAction } from '../../../core/store/inventory/inventory.actions';
+import { selectAllInventory, selectInventoryByCategory, selectInventoryLoading } from '../../../core/store/inventory/inventory.selector';
+import { BaseTableDirective } from '../../../shared/components/data-table/base-table.directive';
+import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
+import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
+import { ModalAction } from '../../../shared/components/modal-container/modal.model';
+import { INVENTORY_TYPES_RU } from '../../../shared/constants/texts/common.texts';
+import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 
 
