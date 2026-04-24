@@ -15,7 +15,7 @@ import { ModalContainerComponent } from '../../shared/components/modal-container
 import { ModalAction } from '../../shared/components/modal-container/modal.model';
 import { ROLE_RU } from '../../shared/constants/texts/common.texts';
 import { GetSocialLinkPipe } from '../../shared/pipes/get-social-link.pipe';
-import { RoleTranslatePipe } from '../../shared/pipes/translateRole';
+import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 
@@ -31,8 +31,8 @@ export type EmployeesViewMode =
     EmployeeFormComponent,
     EmployeeInfoComponent,
     DataTableComponent,
-    RoleTranslatePipe,
-    GetSocialLinkPipe],
+    GetSocialLinkPipe,
+    UppercaseFirstLetter],
   templateUrl: './employees-table.component.html',
   styleUrl: './employees-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

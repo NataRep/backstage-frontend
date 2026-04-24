@@ -59,6 +59,7 @@ export class TeamListComponent implements OnInit {
   }
 
   closeCreateModal() {
+    console.log("!!!!!!!!!!!!!!!!!!!!")
     this.isCreateNewModalOpen.set(false);
   }
 

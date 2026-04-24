@@ -1,0 +1,62 @@
+.number-control {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  width: fit-content;
+  overflow: hidden;
+
+  &:focus-within {
+    border: 1px solid rgba(var(--color-blue-rgb), 0.5);
+    outline: none;
+  }
+
+  &__input {
+    width: 60px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    text-align: center;
+    font-size: 1rem;
+    padding: 0;
+    outline: none;
+
+    // Скрываем стандартные стрелки браузера
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+  }
+
+  &__btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    line-height: 1;
+    font-weight: 200;
+    font-size: 1.25rem;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      color: var(--color-yellow);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    &:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}

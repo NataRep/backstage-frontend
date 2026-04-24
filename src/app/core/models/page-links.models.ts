@@ -40,11 +40,11 @@ export const PAGE_LINKS_LIST: MainLayoutLink[] = [
     link: "shows",
     isMainNav: true,
     isUserNav: false,
-    icon: "firework"
+    icon: "firework-rocket"
   },
   {
-    title: "Tools storage",
-    link: "Tools & Resources",
+    title: "Inventory storage",
+    link: "inventory",
     isMainNav: true,
     isUserNav: false,
     icon: "storage"

@@ -1,0 +1,8 @@
+<div class="number-control" [class.disabled]="isDisabled">
+  <button type="button" class="number-control__btn" (click)="decrement()" [disabled]="value <= min">&minus;</button>
+
+  <input type="number" [value]="value" [min]="min" [max]="max" (input)="onInputChange($event)"
+    class="number-control__input" />
+
+  <button type="button" class="number-control__btn" (click)="increment()" [disabled]="value >= max">+</button>
+</div>

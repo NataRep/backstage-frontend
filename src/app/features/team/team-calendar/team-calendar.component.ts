@@ -13,14 +13,12 @@ import { DataTableComponent } from '../../../shared/components/data-table/data-t
 import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { ROLE_RU } from '../../../shared/constants/texts/common.texts';
 import { DayOfWeekPipe } from '../../../shared/pipes/day-of-week.pipe';
-import { RoleTranslatePipe } from '../../../shared/pipes/translateRole';
 
 @Component({
   selector: 'app-team-calendar',
   standalone: true,
   imports: [IconComponent,
     DataTableComponent,
-    RoleTranslatePipe,
     CalendarPikerComponent,
     DayOfWeekPipe],
   templateUrl: './team-calendar.component.html',

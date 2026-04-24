@@ -4,7 +4,7 @@
     <span class="name">{{ fullName }}</span>
     <span class="role">
       @for (role of employee?.worker?.roles; track role; let last = $last) {
-      {{ role | roleTranslate | upperFirstLetter }}{{ last ? '' : ', ' }}
+      {{ rolesTranslate[role].singular| upperFirstLetter }}{{ last ? '' : ', ' }}
       }
     </span>
   </h2>

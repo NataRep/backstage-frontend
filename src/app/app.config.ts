@@ -14,6 +14,9 @@ import { AuthEffects } from './core/store/auth/auth.effects';
 import { authReducer } from './core/store/auth/auth.reducer';
 import { EmployeesEffects } from './core/store/employees/employees.effects';
 import { employeeReducer } from './core/store/employees/employees.reducer';
+import { InventoryEffects } from './core/store/inventory/inventory.effects';
+import { InventoryReducer } from './core/store/inventory/inventory.reducer';
+import { NotificationEffects } from './core/store/notification.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,9 +24,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideStore({
       auth: authReducer,
-      employees: employeeReducer
+      employees: employeeReducer,
+      inventory: InventoryReducer,
     }),
-    provideEffects([AuthEffects, EmployeesEffects]),
+    provideEffects([AuthEffects, EmployeesEffects, InventoryEffects, NotificationEffects]),
     provideHttpClient(
       withInterceptors([apiInterceptor])
     ),

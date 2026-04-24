@@ -1,0 +1,113 @@
+<form [formGroup]="form" class="form">
+  <div class="form__row" [class.invalid]="form.controls.category.invalid && form.controls.category.touched">
+    <label for="category" class="label">Категория:</label>
+    <select id="category" formControlName="category" class="float-select">
+      <option [ngValue]="null" disabled>Выберите категорию...</option>
+      @for (cat of categoryTranslate | keyvalue; track cat.key) {
+      <option [value]="cat.key">{{ cat.value | upperFirstLetter }}</option>
+      }
+    </select>
+
+    @if (form.controls.category.invalid && form.controls.category.touched) {
+    <div class="error-message">
+      @if (form.controls.category.errors?.['required']) {
+      <span>Поле обязательно</span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form__row" [class.invalid]="form.controls.type.invalid && form.controls.type.touched">
+    <label for="type" class="label">Тип:</label>
+    <select id="type" formControlName="type" class="float-select">
+      <option [ngValue]="null" disabled>
+        Выберите тип...
+      </option>
+      @for (type of types; track type) {
+      <option [value]="type">{{ typesTranslate[type].singular }}</option>
+      }
+    </select>
+
+    @if (form.controls.type.invalid && form.controls.type.touched) {
+    <div class="error-message">
+      @if (form.controls.type.errors?.['required']) {
+      <span>Поле обязательно</span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form__row" [class.invalid]="form.controls.name.invalid && form.controls.name.touched">
+    <label for="name" class="label">Название:</label>
+    <input id="name" type="text" formControlName="name" placeholder="" appTrimOnBlur />
+
+    @if (form.controls.name.invalid && form.controls.name.touched) {
+    <div class="error-message">
+      @if (form.controls.name.errors?.['required']) {
+      <span>Поле обязательно</span>
+      } @else if (form.controls.name.errors?.['maxlength']) {
+      <span>Максимум 20 символов</span>
+      } @else if (form.controls.name.errors?.['pattern']) {
+      <span>Только буквы и спецсимволы (RU/EN)</span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="form__row" [class.invalid]="form.controls.stockQuantity.invalid && form.controls.stockQuantity.touched">
+    <label for="stockQuantity" class="label">Количество:</label>
+    <!-- <input id="stockQuantity" type="number" formControlName="stockQuantity" class="stockQuantity" /> -->
+    <app-number-input formControlName="stockQuantity" [min]="0" [max]="9999">
+    </app-number-input>
+
+
+    @if (form.controls.stockQuantity.invalid && form.controls.stockQuantity.touched) {
+    <div class="error-message">
+      @if (form.controls.stockQuantity.errors?.['required']) {
+      <span>Поле обязательно</span>
+      } @else if (form.controls.stockQuantity.errors?.['min']) {
+      <span>Минимум 1 единица</span>
+      } @else if (form.controls.stockQuantity.errors?.['pattern']) {
+      <span>Только целые числа</span>
+      } @else if (form.controls.stockQuantity.errors?.['max']) {
+      <span>Слишком много</span>}
+    </div>
+    }
+  </div>
+
+  <div class="form__row">
+    <div class="label">Состояние:</div>
+    <div class="radio-group">
+      @for (opt of statusOptions; track opt.value) {
+      <div class="radio-item">
+        <input type="radio" [id]="'status-' + opt.value" [value]="opt.value" formControlName="conditionStatus" />
+        <label [for]="'status-' + opt.value">{{ opt.label }}</label>
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="form__row" [class.invalid]="form.controls.comment.invalid && form.controls.comment.touched">
+    <label for="comment" class="label">Комментарий:</label>
+    <textarea id="comment" formControlName="comment" rows="3" appTrimOnBlur></textarea>
+
+    @if (form.controls.comment.invalid && form.controls.comment.touched) {
+    <div class="error-message">
+      @if (form.controls.comment.errors?.['maxlength']) {
+      <span>Максимум 500 символов</span>
+      } @else if (form.controls.comment.errors?.['pattern']) {
+      <span>Неверный формат текста</span>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="row row--buttons">
+    <button class="button button--yellow" type="submit" (click)="onSave()" [disabled]="form.invalid">
+      Save
+    </button>
+    <button class="button button--border-yellow" type="button" (click)="cancelForm.emit()">
+      Cancel
+    </button>
+  </div>
+</form>

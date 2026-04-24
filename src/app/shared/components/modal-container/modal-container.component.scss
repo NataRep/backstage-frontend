@@ -85,11 +85,11 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  font-size: 2rem;
-  font-weight: 300;
+  width: 2rem;
+  height: 2rem;
+  background: none;
+  border: none;
   color: #50535a;
-  transform: rotate(45deg);
-
   cursor: pointer;
 
   @media (hover: hover) and (pointer: fine) {
@@ -111,4 +111,8 @@
       margin-right: 0;
     }
   }
+}
+
+app-icon {
+  --icon-size: 1.25rem;
 }
