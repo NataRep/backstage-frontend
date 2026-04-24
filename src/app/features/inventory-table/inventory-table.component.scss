@@ -7,6 +7,10 @@
   }
 }
 
+.table__row td {
+  max-width: 300px;
+}
+
 .table__row td:nth-child(2),
 th:nth-child(2) {
   @media (max-width:768px) {
@@ -20,8 +24,6 @@ th:nth-child(3),
 th:nth-child(4) {
   text-align: center;
 }
-
-
 
 .badge-status {
   display: inline-block;
