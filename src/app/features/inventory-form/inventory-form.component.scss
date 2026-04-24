@@ -56,14 +56,12 @@ input.stockQuantity {
 
 @media (hover: hover) {
   .radio-item label:hover {
-    border-color: rgba(var(--color-grey-extra-light-rgb), 0.6);
     background-color: var(--color-grey);
   }
 }
 
 .radio-item input:focus+label {
-  outline: 1px solid rgba(var(--color-blue-rgb), 0.5);
-  outline-offset: 1px;
+  outline: none;
 }
 
 

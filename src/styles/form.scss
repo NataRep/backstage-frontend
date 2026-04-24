@@ -132,11 +132,17 @@ select {
   min-width: max-content;
   width: 6rem;
   padding: 0.25rem 0.5rem;
-  border: 1px solid var(--color-grey-text-dark);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.5rem;
   font-size: 0.875rem;
   color: var(--color-grey-extra-light);
   cursor: pointer;
+
+  &:focus-within {
+    border: 1px solid rgba(var(--color-blue-rgb), 0.5);
+    outline: none;
+  }
 
   &.float-select {
     width: max-content;
@@ -154,6 +160,7 @@ select::picker-icon {
 
 select:open::picker-icon {
   opacity: 1;
+  color: var(--color-blue);
 }
 
 ::picker(select) {

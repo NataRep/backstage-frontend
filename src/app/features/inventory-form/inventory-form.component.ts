@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
 import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { INVENTORY_TYPES, InventoryCategory, InventoryConditionStatus, InventoryItem, InventoryType } from '../../core/models/interfaces/inventory.models';
-import { IconComponent } from '../../shared/components/icons/icons.component';
+import { NumberInputComponent } from '../../shared/components/number-input/number-input.component';
 import { INVENTORY_CATEGORY_RU, INVENTORY_TYPES_RU } from '../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.pipe';
@@ -12,10 +12,10 @@ import { UppercaseFirstLetter } from '../../shared/pipes/uppercase-first-letter.
   standalone: true,
   imports: [CommonModule,
     ReactiveFormsModule,
-    IconComponent,
     UppercaseFirstLetter,
     TrimOnBlurDirective,
-    UppercaseFirstLetter],
+    UppercaseFirstLetter,
+    NumberInputComponent],
   templateUrl: './inventory-form.component.html',
   styleUrl: './inventory-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +50,7 @@ export class InventoryFormComponent implements OnChanges {
     }),
     stockQuantity: new FormControl<number | null>(null, [
       Validators.required,
-      Validators.min(1),
+      Validators.min(0),
       Validators.max(100000),
       Validators.pattern(/^\d+$/)
     ]),

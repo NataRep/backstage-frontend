@@ -2,8 +2,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.125rem;
   background: var(--color-yellow);
+  border: 1px solid transparent;
   border-radius: 0.25rem;
   font-weight: 600;
   font-size: 0.875rem;
@@ -48,14 +49,23 @@
 
   &--yellow {
     background: var(--color-yellow);
+    border: 1px solid transparent;
   }
 
   &--green {
     background: var(--color-green);
+    border: 1px solid var(--color-green);
   }
 
   &--red {
     background: var(--color-red);
+    border: 1px solid var(--color-red);
+  }
+
+  &--border-yellow {
+    border: 1px solid var(--color-yellow);
+    background: none;
+    color: var(--color-yellow);
   }
 
   &--disabled,

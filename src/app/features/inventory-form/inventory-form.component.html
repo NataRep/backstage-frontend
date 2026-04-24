@@ -56,7 +56,9 @@
 
   <div class="form__row" [class.invalid]="form.controls.stockQuantity.invalid && form.controls.stockQuantity.touched">
     <label for="stockQuantity" class="label">Количество:</label>
-    <input id="stockQuantity" type="number" formControlName="stockQuantity" class="stockQuantity" />
+    <!-- <input id="stockQuantity" type="number" formControlName="stockQuantity" class="stockQuantity" /> -->
+    <app-number-input formControlName="stockQuantity" [min]="0" [max]="9999">
+    </app-number-input>
 
 
     @if (form.controls.stockQuantity.invalid && form.controls.stockQuantity.touched) {
@@ -104,7 +106,7 @@
     <button class="button button--yellow" type="submit" (click)="onSave()" [disabled]="form.invalid">
       Save
     </button>
-    <button class="button button--yellow" type="button" (click)="cancelForm.emit()">
+    <button class="button button--border-yellow" type="button" (click)="cancelForm.emit()">
       Cancel
     </button>
   </div>
