@@ -8,18 +8,9 @@ import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { createInventoryAction } from '../../../core/store/inventory/inventory.actions';
 import { selectInventoryLoading } from '../../../core/store/inventory/inventory.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
-import { TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
-import { INVENTORY_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
+import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
-
-export const getInventoryTabs = (): TabItem[] => {
-  return INVENTORY_CATEGORY.map(key => ({
-    label: INVENTORY_CATEGORY_RU[key],
-    link: key,
-    icon: key
-  }));
-};
 
 @Component({
   selector: 'app-inventory-storage',
@@ -51,7 +42,7 @@ export class InventoryStorageComponent {
     return (value as InventoryCategory) || 'firework';
   });
 
-  applicationTabs: TabItem[] = getInventoryTabs();
+  applicationTabs: TabItem[] = getCategoryTabs(INVENTORY_CATEGORY)
 
   openCreateModal() {
     this.isCreateNewModalOpen.set(true);

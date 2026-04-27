@@ -22,9 +22,6 @@ export const getAllInventorySuccessAction = createAction('[Inventory] Get All Su
 export const getAllInventoryFailureAction = createAction('[Inventory] Get All Failure', props<{ error: string }>());
 
 // --- Subscriptions (Realtime) ---
-// Запуск прослушивания Firebase
 export const subscribeAllInventoryAction = createAction('[Inventory] Subscribe All');
-// Остановка прослушивания (вызывать при OnDestroy компонента)
 export const unsubscribeAllInventoryAction = createAction('[Inventory] Unsubscribe All');
-// Экшен, который будет диспатчить эффект при каждом обновлении в Firebase
 export const inventoryStreamUpdatedAction = createAction('[Inventory] Stream Updated', props<{ items: InventoryItem[] }>());

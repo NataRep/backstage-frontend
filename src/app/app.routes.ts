@@ -5,6 +5,9 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { InventoryStorageComponent } from './features/inventory/inventory-storage/inventory-storage.component';
 import { LoginComponent } from './features/login/login.component';
 import { ResetPasswordComponent } from './features/reset-password/reset-password.component';
+import { ShowDetailComponent } from './features/shows/show-detail/show-detail.component';
+import { ShowListComponent } from './features/shows/show-list/show-list.component';
+import { ShowsComponent } from './features/shows/shows.component';
 import { TeamCalendarComponent } from './features/team/team-calendar/team-calendar.component';
 import { TeamListComponent } from './features/team/team-list/team-list.component';
 import { TeamComponent } from './features/team/team.component';
@@ -47,6 +50,17 @@ export const routes: Routes = [
         ]
       },
       { path: 'inventory', component: InventoryStorageComponent },
+      {
+        path: 'shows', component: ShowsComponent,
+        children: [
+          { path: 'list', component: ShowListComponent },
+          {
+            path: ':id',
+            component: ShowDetailComponent
+          },
+          { path: '', redirectTo: 'list', pathMatch: 'full' }
+        ]
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ]
   },

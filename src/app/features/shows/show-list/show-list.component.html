@@ -1,0 +1,11 @@
+<div class="content-container">
+  <app-tabs [tabs]="tabs" [useQueryParams]="true"></app-tabs>
+  <div class="content-container__content">
+    <ul>
+      @for (show of shows(); track show.id) {
+      <li>{{ show.title}}</li>
+
+      }@empty {Не найдено}
+    </ul>
+  </div>
+</div>

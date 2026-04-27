@@ -5,7 +5,7 @@ import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } 
 import { ActivatedRoute } from '@angular/router';
 import { INVENTORY_TYPES, InventoryCategory, InventoryConditionStatus, InventoryItem, InventoryType } from '../../../core/models/interfaces/inventory.models';
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
-import { INVENTORY_CATEGORY_RU, INVENTORY_TYPES_RU } from '../../../shared/constants/texts/common.texts';
+import { INVENTORY_TYPES_RU, UNIVERSAL_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 
@@ -39,7 +39,7 @@ export class InventoryFormComponent implements OnChanges {
 
   readonly typesTranslate = INVENTORY_TYPES_RU;
   readonly types = INVENTORY_TYPES;
-  readonly categoryTranslate = INVENTORY_CATEGORY_RU;
+  readonly categoryTranslate = UNIVERSAL_CATEGORY_RU;
   readonly statusOptions = [
     { value: 1, label: 'Хорошее' },
     { value: 2, label: 'Среднее' },

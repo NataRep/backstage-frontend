@@ -1,9 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { QueryConstraint, where } from "firebase/firestore";
 import { Observable, retry, RetryConfig } from "rxjs";
-import { Worker } from "../../models/interfaces/employee.models";
-import { APP_RETRY_CONFIG } from "../../models/retry-config.model";
-import { FirebaseService, WithId } from "./firebase-base.service";
+import { Worker } from "../models/interfaces/employee.models";
+import { APP_RETRY_CONFIG } from "../models/retry-config.model";
+import { FirebaseService, WithId } from "./firebase/firebase-base.service";
 
 
 @Injectable({ providedIn: 'root' })

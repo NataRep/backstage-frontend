@@ -3,8 +3,8 @@ import { catchError, combineLatest, exhaustMap, forkJoin, from, map, Observable,
 import { EmployeeProfile, Worker, WorkerBase } from "../models/interfaces/employee.models";
 import { Person, PersonBase } from "../models/interfaces/person.model";
 import { WithId } from "./firebase/firebase-base.service";
-import { WorkerDataService } from "./firebase/firebase-workers.service";
 import { PersonDataService } from "./persons.service";
+import { WorkerDataService } from "./workers.service";
 
 // EmployeeFacade - Агрегирует данные из двух источников: внешний хост (Persons) и Firestore (Workers).
 // ВАЖНО: Текущая реализация использует клиентскую оркестрацию данных (связывание двух баз на стороне фронтенда), 

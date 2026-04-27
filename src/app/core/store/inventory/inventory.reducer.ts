@@ -14,7 +14,7 @@ const initialState: InventoryState = {
   error: null
 };
 
-export const InventoryReducer = createReducer(
+export const inventoryReducer = createReducer(
   initialState,
 
   // --- Start Loading ---

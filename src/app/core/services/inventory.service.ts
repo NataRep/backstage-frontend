@@ -1,9 +1,9 @@
 import { inject, Injectable } from "@angular/core";
 import { QueryConstraint } from "firebase/firestore";
 import { from, Observable, retry, RetryConfig } from "rxjs";
-import { InventoryItem } from "../../models/interfaces/inventory.models";
-import { APP_RETRY_CONFIG } from "../../models/retry-config.model";
-import { FirebaseService } from "./firebase-base.service";
+import { InventoryItem } from "../models/interfaces/inventory.models";
+import { APP_RETRY_CONFIG } from "../models/retry-config.model";
+import { FirebaseService } from "./firebase/firebase-base.service";
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
@@ -22,7 +22,7 @@ export class InventoryService {
   }
 
   getAll(): Observable<InventoryItem[]> {
-    return from(from(this.firebase.getAll<InventoryItem>(this.collectionName)));
+    return from(this.firebase.getAll<InventoryItem>(this.collectionName));
   }
 
   query(constraints: QueryConstraint[]): Observable<InventoryItem[]> {

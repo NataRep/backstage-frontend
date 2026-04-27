@@ -4,6 +4,7 @@ import { tap } from 'rxjs';
 import { ToastService } from '../services/toasts.service';
 import * as EmployeeActions from './employees/employees.actions';
 import * as InventoryActions from './inventory/inventory.actions';
+import * as ShowsActions from './shows/shows.actions';
 
 @Injectable()
 export class NotificationEffects {
@@ -17,7 +18,10 @@ export class NotificationEffects {
         EmployeeActions.createEmployeeSuccessAction,
         EmployeeActions.updateWorkerEmployeeSuccessAction,
         InventoryActions.createInventorySuccessAction,
-        InventoryActions.updateInventorySuccessAction
+        InventoryActions.updateInventorySuccessAction,
+        ShowsActions.createShowSuccessAction,
+        ShowsActions.updateShowSuccessAction,
+        ShowsActions.deleteShowSuccessAction
       ),
       tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
     ),
@@ -34,7 +38,10 @@ export class NotificationEffects {
         EmployeeActions.updateWorkerEmployeeFailureAction,
         InventoryActions.updateInventoryFailureAction,
         InventoryActions.deleteInventoryFailureAction,
-        InventoryActions.createInventoryFailureAction
+        InventoryActions.createInventoryFailureAction,
+        ShowsActions.createShowFailureAction,
+        ShowsActions.updateShowFailureAction,
+        ShowsActions.deleteShowFailureAction,
       ),
       tap(() => this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center'))
     ),

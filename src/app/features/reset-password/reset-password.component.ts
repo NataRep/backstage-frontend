@@ -11,13 +11,12 @@ import { ToastService } from '../../core/services/toasts.service';
 import { logoutAction } from '../../core/store/auth/auth.actions';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { IconComponent } from '../../shared/components/icons/icons.component';
-import { ToastComponent } from '../../shared/components/toast/toast.component';
 import { passwordsMatchGroupValidator, passwordsMatchValidator, passwordValidator } from './reset-password.validators';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, ToastComponent],
+  imports: [CommonModule, ReactiveFormsModule, IconComponent],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

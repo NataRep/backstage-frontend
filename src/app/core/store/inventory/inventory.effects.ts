@@ -1,15 +1,13 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, mergeMap, of, switchMap, takeUntil } from 'rxjs';
-import { InventoryService } from '../../services/firebase/firebase-inventory.service';
-import { ToastService } from '../../services/toasts.service';
+import { InventoryService } from '../../services/inventory.service';
 import * as InventoryActions from './inventory.actions';
 
 @Injectable()
 export class InventoryEffects {
   private actions$ = inject(Actions);
   private inventoryService = inject(InventoryService);
-  private toastService = inject(ToastService);
 
   // --- 1. Realtime Subscription (Long-running) ---
   // Этот эффект работает постоянно, пока не придет сигнал отписки

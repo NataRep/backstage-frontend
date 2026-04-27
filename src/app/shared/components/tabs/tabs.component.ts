@@ -2,6 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { InventoryCategory } from '../../../core/models/interfaces/inventory.models';
+import { ShowType } from '../../../core/models/interfaces/show.model';
+import { UNIVERSAL_CATEGORY_RU } from '../../constants/texts/common.texts';
 import { UppercaseFirstLetter } from '../../pipes/uppercase-first-letter.pipe';
 import { IconComponent } from '../icons/icons.component';
 
@@ -50,3 +53,11 @@ export class TabsComponent {
     return { [this.queryParamName]: tabLink };
   }
 }
+
+export const getCategoryTabs = (array: readonly (ShowType | InventoryCategory)[]): TabItem[] => {
+  return [...array].map(key => ({
+    label: UNIVERSAL_CATEGORY_RU[key as keyof typeof UNIVERSAL_CATEGORY_RU],
+    link: key,
+    icon: key
+  }));
+};

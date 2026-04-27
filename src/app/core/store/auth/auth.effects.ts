@@ -3,8 +3,8 @@ import { Router } from "@angular/router";
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { catchError, exhaustMap, forkJoin, from, map, of, retry, switchMap, tap } from "rxjs";
 import { AuthService } from "../../services/auth.service";
-import { WorkerDataService } from "../../services/firebase/firebase-workers.service";
 import { PersonDataService } from "../../services/persons.service";
+import { WorkerDataService } from "../../services/workers.service";
 import {
   loginAction,
   loginContextFailureAction,

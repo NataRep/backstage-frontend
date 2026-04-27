@@ -15,8 +15,10 @@ import { authReducer } from './core/store/auth/auth.reducer';
 import { EmployeesEffects } from './core/store/employees/employees.effects';
 import { employeeReducer } from './core/store/employees/employees.reducer';
 import { InventoryEffects } from './core/store/inventory/inventory.effects';
-import { InventoryReducer } from './core/store/inventory/inventory.reducer';
+import { inventoryReducer } from './core/store/inventory/inventory.reducer';
 import { NotificationEffects } from './core/store/notification.effects';
+import { ShowEffects } from './core/store/shows/shows.effects';
+import { showReducer } from './core/store/shows/shows.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,9 +27,15 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       auth: authReducer,
       employees: employeeReducer,
-      inventory: InventoryReducer,
+      inventory: inventoryReducer,
+      shows: showReducer
     }),
-    provideEffects([AuthEffects, EmployeesEffects, InventoryEffects, NotificationEffects]),
+    provideEffects([
+      AuthEffects,
+      EmployeesEffects,
+      InventoryEffects,
+      NotificationEffects,
+      ShowEffects]),
     provideHttpClient(
       withInterceptors([apiInterceptor])
     ),

@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { SHOW_TYPES } from "./show.model";
 
 export type Inventory = InventoryItem[];
 
@@ -22,9 +23,7 @@ export const INVENTORY_TYPES = [
 export type InventoryType = typeof INVENTORY_TYPES[number];
 
 export const INVENTORY_CATEGORY = [
-  'firework',
-  'fireshow',
-  'ledshow',
+  ...SHOW_TYPES,
   'stage',
   'other'
 ] as const;

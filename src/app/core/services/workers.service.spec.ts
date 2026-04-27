@@ -1,11 +1,11 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { QueryConstraint } from 'firebase/firestore';
 import { Observable, RetryConfig, Subject } from 'rxjs';
-import { AccessLevel } from '../../models/enums/auth.enums';
-import { Worker } from '../../models/interfaces/employee.models';
-import { APP_RETRY_CONFIG } from '../../models/retry-config.model';
-import { FirebaseService, WithId } from './firebase-base.service';
-import { WorkerDataService } from './firebase-workers.service';
+import { AccessLevel } from '../models/enums/auth.enums';
+import { Worker } from '../models/interfaces/employee.models';
+import { APP_RETRY_CONFIG } from '../models/retry-config.model';
+import { FirebaseService, WithId } from './firebase/firebase-base.service';
+import { WorkerDataService } from './workers.service';
 
 describe('WorkerDataService', () => {
 

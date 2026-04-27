@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export interface Order {
+export interface OrderType {
   id: string;
   title: string;
   date: Timestamp;
