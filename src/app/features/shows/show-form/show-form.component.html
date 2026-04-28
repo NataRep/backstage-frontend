@@ -1,0 +1,157 @@
+<form [formGroup]="form" class="form" (ngSubmit)="submit()">
+  <div class="form__row" [class.invalid]="form.controls.type.invalid && form.controls.type.touched">
+    <label for="type" class="label">Тип шоу:</label>
+    <select id="type" formControlName="type" class="float-select">
+      <option [ngValue]="null" disabled>Выберите тип...</option>
+      @for (cat of categoryTranslate | keyvalue; track cat.key) {
+      <option [value]="cat.key">{{ cat.value | upperFirstLetter }}</option>
+      }
+    </select>
+
+    @if (form.controls.type.invalid && form.controls.type.touched) {
+    <div class="error-message">
+      <span>Поле обязательно</span>
+    </div>
+    }
+  </div>
+
+  <div class="form__row" [class.invalid]="form.controls.title.invalid && form.controls.title.touched">
+    <label for="title" class="label">Название программы:</label>
+    <input id="title" type="text" formControlName="title" placeholder="Введите название..." appTrimOnBlur />
+
+    @if (form.controls.title.invalid && form.controls.title.touched) {
+    <div class="error-message">
+      @if (form.controls.title.errors?.['required']) { <span>Поле обязательно</span> }
+    </div>
+    }
+  </div>
+
+  <div class="form__row">
+    <label for="description" class="label">Описание:</label>
+    <textarea id="description" formControlName="description" rows="3" appTrimOnBlur></textarea>
+  </div>
+
+  <div class="form__row">
+    <label for="image" class="label">Обложка (фото):</label>
+    <div class="file-upload-wrapper">
+      <input id="image" type="file" #imageInput accept="image/*" (change)="onFileSelected($event, 'image')" hidden />
+      <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
+        {{ selectedImage ? 'Изменить фото' : 'Выбрать фото' }}
+      </button>
+      @if (form.controls.viewImg.value) {
+      <span class="file-name">{{ form.controls.viewImg.value.name }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="form-section" formGroupName="requiredRoles">
+    <h3 class="label label--section">Необходимая команда:</h3>
+
+    <div class="form__grid">
+      <div class="form__row">
+        <label for="" class="label">Артисты (чел):</label>
+        <app-number-input formControlName="artists" [min]="0"></app-number-input>
+      </div>
+
+      <div class="form__row">
+        <label for="" class="label">Техники (чел):</label>
+        <app-number-input formControlName="tech" [min]="0"></app-number-input>
+      </div>
+
+      <div class="form__row">
+        <label for="" class="label">Пиротехники (чел):</label>
+        <app-number-input formControlName="fireworker" [min]="0"></app-number-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="inventory-manager" formGroupName="requiredInventory">
+    @for (cat of inventoryCategories; track cat) {
+    <div class="inventory-section">
+      <h3 class="label label--section">
+        {{ inventoryLabels[cat].plural | upperFirstLetter }}:
+      </h3>
+
+      <div class="search-wrapper">
+        <input type="text" [formControl]="searchControls[cat]"
+          [placeholder]="'Найти ' + inventoryLabels[cat].singular + '...'" class="search-input" />
+
+        @let searchResults = getFilteredItems(cat);
+        @if (searchResults.length > 0) {
+        <ul class="search-results">
+          @for (item of searchResults; track item.id) {
+          <li tabindex="0" (click)="addInventoryItem(item.id!); searchControls[cat].setValue('')"
+            (keydown.enter)="addInventoryItem(item.id!); searchControls[cat].setValue('')"
+            (keydown.space)="$event.preventDefault(); addInventoryItem(item.id!); searchControls[cat].setValue('')">
+            {{ item.name }}
+          </li>
+          }
+        </ul>
+        }
+      </div>
+
+      <div [formArrayName]="cat" class="selected-list">
+        @let currentArray = form.controls.requiredInventory.controls[cat];
+
+        @for (ctrl of currentArray.controls; track ctrl.controls.id.value; let i = $index) {
+        @let info = getItemInfo(ctrl.controls.id.value);
+
+        <div class="selected-row" [formGroupName]="i">
+          <span class="name">{{ info?.name }}</span>
+
+          <div class="actions">
+            <app-number-input formControlName="count" [min]="1"></app-number-input>
+            <button type="button" class="btn-del" (click)="removeInventoryItem(i, cat)">
+              ×
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="form__grid">
+    <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
+      <label for="duration" class="label">Длительность (мин):</label>
+      <app-number-input formControlName="duration" [min]="1"></app-number-input>
+
+      @if (form.controls.duration.invalid && form.controls.duration.touched) {
+      <div class="error-message"><span>Минимум 1 мин.</span></div>
+      }
+    </div>
+
+    <div class="form__row" [class.invalid]="form.controls.price.invalid && form.controls.price.touched">
+      <label for="price" class="label">Цена (₽):</label>
+      <app-number-input formControlName="price" [min]="0"></app-number-input>
+    </div>
+  </div>
+
+  <div class="form__row">
+    <label for="music" class="label">Музыкальный трек:</label>
+    <div class="file-upload-wrapper">
+      <input id="music" type="file" #musicInput accept="audio/*" (change)="onFileSelected($event, 'music')" hidden />
+      <button type="button" class="button button--border-yellow button--small" (click)="musicInput.click()">
+        {{ selectedMusic ? 'Изменить трек' : 'Выбрать трек' }}
+      </button>
+      @if (form.controls.music.value) {
+      <span class="file-name">{{ form.controls.music.value.name }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="form__row">
+    <label for="comment" class="label">Внутренний комментарий:</label>
+    <textarea id="comment" formControlName="comment" rows="2" appTrimOnBlur></textarea>
+  </div>
+
+  <div class="row row--buttons">
+    <button class="button button--yellow" type="submit" [disabled]="form.invalid">
+      Сохранить программу
+    </button>
+    <button class="button button--border-yellow" type="button" (click)="cancelForm.emit()">
+      Отмена
+    </button>
+  </div>
+</form>

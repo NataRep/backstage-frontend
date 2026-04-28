@@ -17,7 +17,7 @@
   </div>
   }
   <div class="form__row" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
-    <label for="lastame" class="label">Surname:</label>
+    <label for="lastame" class="label">Фамилия:</label>
     <input id="lastname" type="text" formControlName="lastName" placeholder="" appTrimOnBlur />
 
     @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
@@ -33,7 +33,7 @@
     }
   </div>
   <div class="form__row" [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched">
-    <label for="firstname" class="label">Name:</label>
+    <label for="firstname" class="label">Имя:</label>
     <input id="firstname" type="text" formControlName="firstName" appTrimOnBlur />
 
     @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
@@ -50,7 +50,7 @@
   </div>
   @if (canEditRole()) {
   <div class="form__row" [class.invalid]="rolesArray.hasError('required') && rolesArray.touched">
-    <div class="label">Roles:</div>
+    <div class="label">Роль в команде:</div>
     <div class="roles-list" formArrayName="roles">
       @for (control of rolesArray.controls; let i = $index; track control) {
       <div class="role-item">
@@ -145,7 +145,7 @@
     <div class="checkbox chekbox--with-label">
       <input id="admin" type="checkbox" formControlName="isAdmin" placeholder="" />
       <span class="checkbox__box"></span>
-      <label for="admin" class="label">{{ isCheckedAdmin ? 'Is admin in Backstage' : 'Appoint as admin in Backstage'
+      <label for="admin" class="label">{{ isCheckedAdmin ? 'Админ Backstage' : 'Сделать админом Backstage'
         }}</label>
     </div>
   </div>

@@ -3,7 +3,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from "@angular/router";
 import { Store } from '@ngrx/store';
 import { showType } from '../../core/models/interfaces/show.model';
-import { selectCanEdit } from '../../core/store/auth/auth.selectors';
 import { selectShowLoading } from '../../core/store/shows/shows.selector';
 
 @Component({
@@ -22,7 +21,6 @@ export class ShowsComponent {
   private queryParamsSignal = toSignal(this.route.queryParamMap);
 
   public readonly isLoading = this.store.selectSignal(selectShowLoading);
-  public readonly canEdit = this.store.selectSignal(selectCanEdit);
 
   category = computed(() => {
     const value = this.queryParamsSignal()?.get('category');

@@ -3,25 +3,31 @@
 export interface BaseShow {
   id?: string;
   isActive: boolean;
-  type: showType;
+  type: ShowType;
   title: string;
   description: string;
   viewImg: MediaMetadata;
   comment: string;
 }
 
-/** Расширенная модель для программ (Fire/Led Show) */
+/** Расширенная модель */
 export interface FullShowItem extends BaseShow {
   duration: number;
   price: number;
   requiredRoles: ShowRoles;
-  requiredInventory: ShowInventory;
+  requiredInventory: Record<string, number>; // ID предмета -> количество
   music: MediaMetadata;
 }
 
 export type ShowItem = FullShowItem | BaseShow;
 
-export type showType = 'firework' | 'fireshow' | 'ledshow' | 'welcome' | 'other';
+export interface ShowRoles {
+  artists: number;
+  tech: number;
+  fireworker: number;
+}
+
+export type showType = 'firework' | 'fireshow' | 'ledshow' | 'welcome';
 
 export const SHOW_TYPES = [
   'firework',
@@ -45,6 +51,7 @@ export interface MediaMetadata {
 export interface ShowRoles {
   artist: number;
   tech: number;
+  fireworker: number;
 }
 
 export interface ShowInventory {
