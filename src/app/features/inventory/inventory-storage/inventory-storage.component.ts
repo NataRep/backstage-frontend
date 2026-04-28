@@ -25,7 +25,6 @@ import { InventoryTableComponent } from '../inventory-table/inventory-table.comp
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InventoryStorageComponent {
-
   @ViewChild('inventoryForm') inventoryForm!: InventoryFormComponent;
 
   private readonly store = inject(Store);

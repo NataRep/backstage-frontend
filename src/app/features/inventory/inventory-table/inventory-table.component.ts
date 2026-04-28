@@ -14,6 +14,7 @@ import { ModalContainerComponent } from '../../../shared/components/modal-contai
 import { ModalAction } from '../../../shared/components/modal-container/modal.model';
 import { INVENTORY_TYPES_RU } from '../../../shared/constants/texts/common.texts';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
+import { filterData } from '../../../shared/utils/filter.utils';
 import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 
 
@@ -66,24 +67,19 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
   readonly isLoading = this.store.selectSignal(selectInventoryLoading);
   readonly canEdit = this.store.selectSignal(selectCanEdit);
 
-  readonly filteredInventory = computed(() => {
-    const list = this.allInventory();
-    const currentCategory = this._category();
-    const query = this.searchQuery().toLowerCase().trim();
-    const type = this.selectedType();
-
-    // 1. Фильтр по категории и типу
-    let result = list.filter(item => item.category === currentCategory);
-    if (type != 'all') {
-      result = result.filter(item => item.type == type);
-    }
-    // 2. Фильтр по поиску
-    if (query) {
-      result = result.filter(item => item.name.toLowerCase().includes(query));
-    }
-    // 3. Сортировка
-    return [...result].sort((a, b) => a.name.localeCompare(b.name));
-  });
+  readonly filteredInventory = computed(() =>
+    filterData(this.allInventory(), {
+      query: this.searchQuery(),
+      searchFields: (i) => [i.name],
+      category: this._category(),
+      categoryField: 'category',
+      sortField: (i) => i.name,
+      extraFilter: (item) => {
+        const type = this.selectedType();
+        return type === 'all' || item.type === type;
+      }
+    })
+  );
 
   public readonly items = computed(() => {
     const currentCategory = this._category() || null;

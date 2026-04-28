@@ -16,6 +16,7 @@ import { ModalAction } from '../../../shared/components/modal-container/modal.mo
 import { ROLE_RU } from '../../../shared/constants/texts/common.texts';
 import { GetSocialLinkPipe } from '../../../shared/pipes/get-social-link.pipe';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
+import { filterData } from '../../../shared/utils/filter.utils';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 
@@ -73,26 +74,18 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
   isConfirmDeleteModalOpen = signal(false);
 
   // 7. Computed Properties
-  readonly filteredEmployees = computed(() => {
-    const list = this.allEmployees();
-    const query = this.searchQuery().toLowerCase().trim();
-    const role = this.selectedRole();
-
-    if (list.length === 0) return [];
-
-    const filtered = list.filter(emp => {
-      const fullName = emp.person?.fullName.toLowerCase() || '';
-      const matchesName = !query || fullName.split(" ").some(word => word.startsWith(query));
-      const matchesRole = role === 'all' ||
-        emp.worker?.roles?.some(r => String(r).toLowerCase() === String(role).toLowerCase());
-
-      return matchesName && matchesRole;
-    });
-
-    return filtered.sort((a, b) =>
-      (a.person?.fullName || '').localeCompare(b.person?.fullName || '')
-    );
-  });
+  readonly filteredEmployees = computed(() =>
+    filterData(this.allEmployees(), {
+      query: this.searchQuery(),
+      searchFields: (e) => [e.person?.fullName || ''],
+      sortField: (e) => e.person?.fullName || '',
+      extraFilter: (emp) => {
+        const role = this.selectedRole();
+        return role === 'all' ||
+          !!emp.worker?.roles?.some(r => r.toLowerCase() === role.toLowerCase());
+      }
+    })
+  );
 
   // 8. Lifecycle Hooks
   override ngOnInit() {

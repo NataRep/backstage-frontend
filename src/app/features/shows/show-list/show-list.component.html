@@ -1,8 +1,11 @@
 <div class="content-container">
-  <app-tabs [tabs]="tabs" [useQueryParams]="true"></app-tabs>
+  <app-tabs [tabs]="tabs" [useQueryParams]="true" queryParamName="category"></app-tabs>
   <div class="content-container__content">
+    <div class="controls">
+      <input name="search" (input)="onSearch($event)" [value]="searchQuery()" placeholder="Поиск..." class="search">
+    </div>
     <ul>
-      @for (show of shows(); track show.id) {
+      @for (show of filteredShows(); track show.id) {
       <li>{{ show.title}}</li>
 
       }@empty {Не найдено}
