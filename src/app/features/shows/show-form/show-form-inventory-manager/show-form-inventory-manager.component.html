@@ -1,0 +1,48 @@
+<div class="inventory-manager" [formGroup]="inventoryGroup">
+  @for (cat of inventoryCategories; track cat) {
+  <div class="inventory-section">
+    <h3 class="label label--section">
+      {{ inventoryLabels[cat].plural | upperFirstLetter }}:
+    </h3>
+    <div class="search-wrapper">
+      @let listId = 'results-' + cat;
+      @let searchResults = getFilteredItems(cat);
+
+      <input type="text" [formControl]="searchControls[cat]"
+        [placeholder]="'Найти ' + inventoryLabels[cat].singular + '...'" class="search-input" role="combobox"
+        aria-autocomplete="list" aria-haspopup="listbox" [attr.aria-expanded]="searchResults.length > 0"
+        [attr.aria-controls]="listId" /> @if (searchResults.length > 0) {
+      <ul [id]="listId" class="search-results" role="listbox">
+        @for (item of searchResults; track item.id) {
+        <li tabindex="0" role="option" [attr.aria-selected]="false" (click)="onSelect(item.id!, cat)"
+          (keydown.enter)="onSelect(item.id!, cat)" (keydown.space)="$event.preventDefault(); onSelect(item.id!, cat)">
+          {{ item.name }}
+        </li>
+        }
+      </ul>
+      }
+    </div>
+
+    <div [formArrayName]="cat" class="selected-list">
+      @let currentArray = getInventoryArray(cat);
+
+      @for (ctrl of currentArray.controls; track i; let i = $index) {
+      @let group = asFormGroup(ctrl);
+      @let itemId = group.get('id')?.value;
+      @let info = getItemInfo(itemId);
+
+      <div class="selected-row" [formGroupName]="i">
+        <span class="name">{{ info?.name }}</span>
+
+        <div class="actions">
+          <app-number-input formControlName="count" [min]="1"></app-number-input>
+          <button type="button" class="btn-del" (click)="removeItem.emit({index: i, category: cat})">
+            ×
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>

@@ -12,6 +12,9 @@ export interface NounTranslation {
   plural: string;
 }
 
+
+export type InventoryLabels = Record<InventoryType, NounTranslation>;
+
 export const ROLE_RU: Record<Role, NounTranslation> = {
   owner: { singular: 'владелец', plural: 'владельцы' },
   manager: { singular: 'менеджер', plural: 'менеджеры' },

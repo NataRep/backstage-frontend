@@ -19,6 +19,7 @@ import { NumberInputComponent } from '../../../shared/components/number-input/nu
 import { INVENTORY_TYPES_RU, UNIVERSAL_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
+import { ShowFormInventoryManagerComponent } from './show-form-inventory-manager/show-form-inventory-manager.component';
 import { ShowFormRolesComponent } from './show-form-roles/show-form-roles.component';
 import { ShowFormValue } from './show-form.models';
 
@@ -31,7 +32,8 @@ import { ShowFormValue } from './show-form.models';
     TrimOnBlurDirective,
     UppercaseFirstLetter,
     NumberInputComponent,
-    ShowFormRolesComponent
+    ShowFormRolesComponent,
+    ShowFormInventoryManagerComponent
   ],
   providers: [ShowFormService], // Сервис живет столько же, сколько форма
   templateUrl: './show-form.component.html',

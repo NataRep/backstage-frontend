@@ -46,52 +46,11 @@
 
   <app-show-form-roles [rolesGroup]="form.controls.requiredRoles"></app-show-form-roles>
 
-  <div class="inventory-manager" formGroupName="requiredInventory">
-    @for (cat of inventoryCategories; track cat) {
-    <div class="inventory-section">
-      <h3 class="label label--section">
-        {{ inventoryLabels[cat].plural | upperFirstLetter }}:
-      </h3>
-
-      <div class="search-wrapper">
-        <input type="text" [formControl]="searchControls[cat]"
-          [placeholder]="'Найти ' + inventoryLabels[cat].singular + '...'" class="search-input" />
-
-        @let searchResults = getFilteredItems(cat);
-        @if (searchResults.length > 0) {
-        <ul class="search-results">
-          @for (item of searchResults; track item.id) {
-          <li tabindex="0" (click)="addInventoryItem(item.id!); searchControls[cat].setValue('')"
-            (keydown.enter)="addInventoryItem(item.id!); searchControls[cat].setValue('')"
-            (keydown.space)="$event.preventDefault(); addInventoryItem(item.id!); searchControls[cat].setValue('')">
-            {{ item.name }}
-          </li>
-          }
-        </ul>
-        }
-      </div>
-
-      <div [formArrayName]="cat" class="selected-list">
-        @let currentArray = form.controls.requiredInventory.controls[cat];
-
-        @for (ctrl of currentArray.controls; track ctrl.controls.id.value; let i = $index) {
-        @let info = getItemInfo(ctrl.controls.id.value);
-
-        <div class="selected-row" [formGroupName]="i">
-          <span class="name">{{ info?.name }}</span>
-
-          <div class="actions">
-            <app-number-input formControlName="count" [min]="1"></app-number-input>
-            <button type="button" class="btn-del" (click)="removeInventoryItem(i, cat)">
-              ×
-            </button>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-    }
-  </div>
+  <app-show-form-inventory-manager [inventoryGroup]="form.controls.requiredInventory" [allInventory]="allInventory()"
+    [inventoryEntities]="inventoryEntities()" [searchControls]="searchControls"
+    [inventoryCategories]="inventoryCategories" [inventoryLabels]="inventoryLabels" (addItem)="addInventoryItem($event)"
+    (removeItem)="removeInventoryItem($event.index, $event.category)">
+  </app-show-form-inventory-manager>
 
   <div class="form__grid">
     <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
@@ -123,16 +82,16 @@
   </div>
 
   <div class="form__row">
-    <label for="comment" class="label">Внутренний комментарий:</label>
+    <label for="comment" class="label">Комментарий:</label>
     <textarea id="comment" formControlName="comment" rows="2" appTrimOnBlur></textarea>
   </div>
 
   <div class="row row--buttons">
     <button class="button button--yellow" type="submit" [disabled]="form.invalid">
-      Сохранить программу
+      Save
     </button>
     <button class="button button--border-yellow" type="button" (click)="cancelForm.emit()">
-      Отмена
+      Cancel
     </button>
   </div>
 </form>
