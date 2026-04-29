@@ -36,7 +36,7 @@
     <div class="file-upload-wrapper">
       <input id="image" type="file" #imageInput accept="image/*" (change)="onFileSelected($event, 'image')" hidden />
       <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
-        {{ selectedImage ? 'Изменить фото' : 'Выбрать фото' }}
+        {{ formService.selectedImage() ? 'Изменить фото' : 'Выбрать фото' }}
       </button>
       @if (form.controls.viewImg.value) {
       <span class="file-name">{{ form.controls.viewImg.value.name }}</span>
@@ -133,7 +133,7 @@
     <div class="file-upload-wrapper">
       <input id="music" type="file" #musicInput accept="audio/*" (change)="onFileSelected($event, 'music')" hidden />
       <button type="button" class="button button--border-yellow button--small" (click)="musicInput.click()">
-        {{ selectedMusic ? 'Изменить трек' : 'Выбрать трек' }}
+        {{ formService.selectedImage() ? 'Изменить трек' : 'Выбрать трек' }}
       </button>
       @if (form.controls.music.value) {
       <span class="file-name">{{ form.controls.music.value.name }}</span>

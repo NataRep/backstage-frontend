@@ -11,7 +11,8 @@ import { selectAllShow } from '../../../core/store/shows/shows.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
 import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { filterData } from '../../../shared/utils/filter.utils';
-import { ShowFormComponent, ShowFormValue } from '../show-form/show-form.component';
+import { ShowFormComponent } from '../show-form/show-form.component';
+import { ShowFormValue } from '../show-form/show-form.models';
 
 @Component({
   selector: 'app-show-list',
