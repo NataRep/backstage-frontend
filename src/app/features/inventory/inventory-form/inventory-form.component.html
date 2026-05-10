@@ -1,7 +1,7 @@
 <form [formGroup]="form" class="form">
   <div class="form__row" [class.invalid]="form.controls.category.invalid && form.controls.category.touched">
     <label for="category" class="label">Категория:</label>
-    <select id="category" formControlName="category" class="float-select">
+    <select id="category" formControlName="category">
       <option [ngValue]="null" disabled>Выберите категорию...</option>
       @for (cat of categoryTranslate | keyvalue; track cat.key) {
       <option [value]="cat.key">{{ cat.value | upperFirstLetter }}</option>
@@ -19,7 +19,7 @@
 
   <div class="form__row" [class.invalid]="form.controls.type.invalid && form.controls.type.touched">
     <label for="type" class="label">Тип:</label>
-    <select id="type" formControlName="type" class="float-select">
+    <select id="type" formControlName="type">
       <option [ngValue]="null" disabled>
         Выберите тип...
       </option>

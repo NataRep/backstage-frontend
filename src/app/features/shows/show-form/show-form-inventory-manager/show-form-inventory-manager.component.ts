@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InventoryItem, InventoryType } from '../../../../core/models/interfaces/inventory.models';
+import { IconComponent } from '../../../../shared/components/icons/icons.component';
 import { NumberInputComponent } from '../../../../shared/components/number-input/number-input.component';
 import { InventoryLabels } from '../../../../shared/constants/texts/common.texts';
 import { UppercaseFirstLetter } from '../../../../shared/pipes/uppercase-first-letter.pipe';
@@ -11,7 +12,7 @@ import { UppercaseFirstLetter } from '../../../../shared/pipes/uppercase-first-l
 @Component({
   selector: 'app-show-form-inventory-manager',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NumberInputComponent, UppercaseFirstLetter],
+  imports: [CommonModule, ReactiveFormsModule, NumberInputComponent, UppercaseFirstLetter, IconComponent],
   templateUrl: './show-form-inventory-manager.component.html',
   styleUrl: './show-form-inventory-manager.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

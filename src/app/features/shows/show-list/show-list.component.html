@@ -1,10 +1,11 @@
 <div class="content-container">
   <app-tabs [tabs]="tabs" [useQueryParams]="true" queryParamName="category"></app-tabs>
   <div class="content-container__content">
-    @if(canEdit()){
-    <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
-    }
     <div class="controls">
+      @if(canEdit()){
+      <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
+      }
+
       <input name="search" (input)="onSearch($event)" [value]="searchQuery()" placeholder="Поиск..." class="search">
     </div>
     <ul>
@@ -17,7 +18,7 @@
 </div>
 
 <app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default">
-  <div class="modal__header">Edit inventory</div>
+  <div class="modal__header">Add new show</div>
   <div class="modal__body">
     <app-show-form #showForm (cancelForm)="closeCreateModal()" (save)="createNewShow($event)"></app-show-form>
   </div>

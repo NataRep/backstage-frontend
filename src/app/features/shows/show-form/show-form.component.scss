@@ -1,0 +1,31 @@
+.file-upload-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .file-name {
+    margin-right: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 120%;
+    text-align: left;
+    flex-grow: 1
+  }
+
+  app-icon {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: color 0.5s;
+    color: var(--color-grey-text-dark);
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        color: var(--color-yellow);
+      }
+    }
+  }
+}
+
+app-show-form-roles {
+  margin-bottom: 2.5rem;
+  margin-top: 1.5rem;
+}

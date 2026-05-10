@@ -1,9 +1,10 @@
 <div class="inventory-manager" [formGroup]="inventoryGroup">
+  <h2 class="label label--section">Техническое оснащение:</h2>
   @for (cat of inventoryCategories; track cat) {
   <div class="inventory-section">
-    <h3 class="label label--section">
+    <div class="label label--subsection">
       {{ inventoryLabels[cat].plural | upperFirstLetter }}:
-    </h3>
+    </div>
     <div class="search-wrapper">
       @let listId = 'results-' + cat;
       @let searchResults = getFilteredItems(cat);
@@ -31,14 +32,12 @@
       @let itemId = group.get('id')?.value;
       @let info = getItemInfo(itemId);
 
-      <div class="selected-row" [formGroupName]="i">
+      <div class="selected-item" [formGroupName]="i">
         <span class="name">{{ info?.name }}</span>
 
         <div class="actions">
           <app-number-input formControlName="count" [min]="1"></app-number-input>
-          <button type="button" class="btn-del" (click)="removeItem.emit({index: i, category: cat})">
-            ×
-          </button>
+          <app-icon name="trash" (click)="removeItem.emit({index: i, category: cat})" class="delete-icon"></app-icon>
         </div>
       </div>
       }

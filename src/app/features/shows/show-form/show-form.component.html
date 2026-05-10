@@ -1,7 +1,8 @@
 <form [formGroup]="form" class="form" (ngSubmit)="submit()">
+  <h2 class="label label--section">Информация о шоу:</h2>
   <div class="form__row" [class.invalid]="form.controls.type.invalid && form.controls.type.touched">
-    <label for="type" class="label">Тип шоу:</label>
-    <select id="type" formControlName="type" class="float-select">
+    <label for="type" class="label">Тип шоу*:</label>
+    <select id="type" formControlName="type">
       <option [ngValue]="null" disabled>Выберите тип...</option>
       @for (cat of categoryTranslate | keyvalue; track cat.key) {
       <option [value]="cat.key">{{ cat.value | upperFirstLetter }}</option>
@@ -16,7 +17,7 @@
   </div>
 
   <div class="form__row" [class.invalid]="form.controls.title.invalid && form.controls.title.touched">
-    <label for="title" class="label">Название программы:</label>
+    <label for="title" class="label">Название*:</label>
     <input id="title" type="text" formControlName="title" placeholder="Введите название..." appTrimOnBlur />
 
     @if (form.controls.title.invalid && form.controls.title.touched) {
@@ -26,20 +27,57 @@
     }
   </div>
 
-  <div class="form__row">
-    <label for="description" class="label">Описание:</label>
-    <textarea id="description" formControlName="description" rows="3" appTrimOnBlur></textarea>
+  <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
+    <label for="duration" class="label">Длительность (мин):</label>
+    <app-number-input formControlName="duration" [min]="1"></app-number-input>
+
+    @if (form.controls.duration.invalid && form.controls.duration.touched) {
+    <div class="error-message"><span>Минимум 1 мин.</span></div>
+    }
   </div>
 
   <div class="form__row">
-    <label for="image" class="label">Обложка (фото):</label>
+    <label for="description" class="label">Описание*:</label>
+    <textarea id="description" formControlName="description" rows="3" appTrimOnBlur></textarea>
+  </div>
+
+  <div class="form__row" [class.invalid]="form.controls.price.invalid && form.controls.price.touched">
+    <label for="price" class="label">Цена (₽)*:</label>
+    <app-number-input formControlName="price" [min]="0" [max]="9999999"></app-number-input>
+  </div>
+
+  <div class="form__row">
+    <label for="image" class="label">Обложка*:</label>
     <div class="file-upload-wrapper">
       <input id="image" type="file" #imageInput accept="image/*" (change)="onFileSelected($event, 'image')" hidden />
-      <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
-        {{ formService.selectedImage() ? 'Изменить фото' : 'Выбрать фото' }}
-      </button>
       @if (form.controls.viewImg.value) {
       <span class="file-name">{{ form.controls.viewImg.value.name }}</span>
+      }
+      @if (formService.selectedImage()) {
+      <app-icon name="edit" class="edit-icon" (click)="imageInput.click()"></app-icon>
+      <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('image')"></app-icon>
+      } @else {
+      <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
+        Выбрать фото
+      </button>
+      }
+    </div>
+  </div>
+
+  <div class="form__row">
+    <label for="music" class="label">Музыкальный трек:</label>
+    <div class="file-upload-wrapper">
+      <input id="music" type="file" #musicInput accept="audio/*" (change)="onFileSelected($event, 'music')" hidden />
+      @if (form.controls.music.value) {
+      <span class="file-name">{{ form.controls.music.value.name }}</span>
+      }
+      @if (formService.selectedMusic()) {
+      <app-icon name="edit" class="edit-icon" (click)="musicInput.click()"></app-icon>
+      <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('music')"></app-icon>
+      } @else {
+      <button type="button" class="button button--border-yellow button--small" (click)="musicInput.click()">
+        Выбрать трек
+      </button>
       }
     </div>
   </div>
@@ -51,35 +89,6 @@
     [inventoryCategories]="inventoryCategories" [inventoryLabels]="inventoryLabels" (addItem)="addInventoryItem($event)"
     (removeItem)="removeInventoryItem($event.index, $event.category)">
   </app-show-form-inventory-manager>
-
-  <div class="form__grid">
-    <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
-      <label for="duration" class="label">Длительность (мин):</label>
-      <app-number-input formControlName="duration" [min]="1"></app-number-input>
-
-      @if (form.controls.duration.invalid && form.controls.duration.touched) {
-      <div class="error-message"><span>Минимум 1 мин.</span></div>
-      }
-    </div>
-
-    <div class="form__row" [class.invalid]="form.controls.price.invalid && form.controls.price.touched">
-      <label for="price" class="label">Цена (₽):</label>
-      <app-number-input formControlName="price" [min]="0"></app-number-input>
-    </div>
-  </div>
-
-  <div class="form__row">
-    <label for="music" class="label">Музыкальный трек:</label>
-    <div class="file-upload-wrapper">
-      <input id="music" type="file" #musicInput accept="audio/*" (change)="onFileSelected($event, 'music')" hidden />
-      <button type="button" class="button button--border-yellow button--small" (click)="musicInput.click()">
-        {{ formService.selectedImage() ? 'Изменить трек' : 'Выбрать трек' }}
-      </button>
-      @if (form.controls.music.value) {
-      <span class="file-name">{{ form.controls.music.value.name }}</span>
-      }
-    </div>
-  </div>
 
   <div class="form__row">
     <label for="comment" class="label">Комментарий:</label>

@@ -144,6 +144,22 @@ export class ShowFormService {
     this.selectedMusic.set(null);
   }
 
+  removeFile(type: 'image' | 'music'): void {
+    if (type == 'image') {
+      this.selectedImage.set(null);
+      this.form.patchValue({
+        'viewImg': null
+      });
+    }
+
+    if (type == 'music') {
+      this.selectedMusic.set(null);
+      this.form.patchValue({
+        'music': null
+      });
+    }
+  }
+
   private isFullShow(item: ShowItem): item is FullShowItem {
     return (item as FullShowItem).requiredRoles !== undefined;
   }

@@ -1,20 +1,20 @@
 @if (rolesGroup) {
 <div [formGroup]="rolesGroup" class="form-section">
-  <h3 class="label label--section">Необходимая команда:</h3>
+  <h2 class="label label--section">Минимальное количество участников:</h2>
 
   <div class="form__grid">
-    <div class="form__row">
-      <label for="" class="label">Артисты (чел):</label>
+    <div class="form__column">
+      <label for="artist" class="label">Артисты:</label>
       <app-number-input formControlName="artists" [min]="0"></app-number-input>
     </div>
 
-    <div class="form__row">
-      <label for="" class="label">Техники (чел):</label>
+    <div class="form__column">
+      <label for="tech" class="label">Техники:</label>
       <app-number-input formControlName="tech" [min]="0"></app-number-input>
     </div>
 
-    <div class="form__row">
-      <label for="" class="label">Пиротехники (чел):</label>
+    <div class="form__column">
+      <label for="fireworker" class="label">Пиротехники:</label>
       <app-number-input formControlName="fireworker" [min]="0"></app-number-input>
     </div>
   </div>

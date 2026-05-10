@@ -15,6 +15,7 @@ import { ShowItem } from '../../../core/models/interfaces/show.model';
 import { ShowFormService } from '../../../core/services/show-form.service';
 import { getAllInventoryAction } from '../../../core/store/inventory/inventory.actions';
 import { selectAllInventory, selectInventoryEntities } from '../../../core/store/inventory/inventory.selector';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
 import { INVENTORY_TYPES_RU, UNIVERSAL_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
@@ -33,7 +34,8 @@ import { ShowFormValue } from './show-form.models';
     UppercaseFirstLetter,
     NumberInputComponent,
     ShowFormRolesComponent,
-    ShowFormInventoryManagerComponent
+    ShowFormInventoryManagerComponent,
+    IconComponent
   ],
   providers: [ShowFormService], // Сервис живет столько же, сколько форма
   templateUrl: './show-form.component.html',
@@ -97,6 +99,10 @@ export class ShowFormComponent implements OnInit, OnChanges {
       this.formService.selectedMusic.set(type === 'music' ? file : this.formService.selectedMusic());
       this.formService.updateFileMetadata(file, type);
     }
+  }
+
+  removeSelectedFile(type: 'image' | 'music') {
+    this.formService.removeFile(type);
   }
 
   submit(): void {
