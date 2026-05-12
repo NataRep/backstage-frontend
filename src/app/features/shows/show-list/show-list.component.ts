@@ -12,7 +12,7 @@ import { ModalContainerComponent } from '../../../shared/components/modal-contai
 import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { filterData } from '../../../shared/utils/filter.utils';
 import { ShowFormComponent } from '../show-form/show-form.component';
-import { ShowFormValue } from '../show-form/show-form.models';
+import { RawShowFormValue } from '../show-form/show-form.models';
 
 @Component({
   selector: 'app-show-list',
@@ -70,7 +70,7 @@ export class ShowListComponent implements OnInit {
     this.searchQuery.set(value);
   }
 
-  createNewShow(data: ShowFormValue) {
+  createNewShow(data: RawShowFormValue) {
     console.log(data)
   }
 

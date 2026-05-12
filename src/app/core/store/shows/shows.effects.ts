@@ -1,6 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, switchMap, takeUntil } from 'rxjs';
+import { catchError, exhaustMap, forkJoin, map, mergeMap, of, switchMap, takeUntil } from 'rxjs';
+import { mapFormToShowItem } from '../../../features/shows/show-form/mapFormToShowItem.utils';
+import { ShowItem } from '../../models/interfaces/show.model';
+import { CloudinaryService } from '../../services/cloudinary/cloundinary.service';
 import { ShowsService } from '../../services/shows.service';
 import * as ShowsActions from './shows.actions';
 
@@ -8,6 +11,7 @@ import * as ShowsActions from './shows.actions';
 export class ShowEffects {
   private actions$ = inject(Actions);
   private showService = inject(ShowsService);
+  private cloudinaryService = inject(CloudinaryService);
 
   // --- 1. Realtime Subscription (Long-running) ---
   // Этот эффект работает постоянно, пока не придет сигнал отписки
@@ -27,18 +31,45 @@ export class ShowEffects {
   );
 
   // --- 2. Create ---
-  createShow$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ShowsActions.createShowAction),
-      mergeMap(({ data }) =>
-        this.showService.create(data).pipe(
-          map((id) => ShowsActions.createShowSuccessAction({ data: { ...data, id } })),
-          catchError((err: Error) =>
-            of(ShowsActions.createShowFailureAction({ error: err.message }))
-          )
-        )
-      )
-    )
+  createShow$ = createEffect(
+    (
+    ) => {
+      return this.actions$.pipe(
+        ofType(ShowsActions.createShowAction),
+        exhaustMap(({ data }) => {
+          const uploadRequests = {
+            imageUrl: data.imageFile ? this.cloudinaryService.uploadFile(data.imageFile) : of(null),
+            audioUrl: data.audioFile ? this.cloudinaryService.uploadFile(data.audioFile) : of(null)
+          };
+
+          return forkJoin(uploadRequests).pipe(
+            map(urls => {
+              const mappedData = mapFormToShowItem(data.formValue);
+
+              return {
+                ...mappedData,
+                viewImg: {
+                  ...mappedData.viewImg,
+                  url: urls.imageUrl ?? mappedData.viewImg.url
+                },
+                audio: {
+                  ...mappedData.audio,
+                  url: urls.audioUrl ?? mappedData.audio?.url
+                }
+              } as ShowItem;
+            }),
+            switchMap(finalData =>
+              this.showService.create(finalData).pipe(
+                map(() => ShowsActions.createShowSuccessAction({ data: finalData })),
+                catchError(error => of(ShowsActions.createShowFailureAction({ error: error.message })))
+              )
+            ),
+            catchError(error => of(ShowsActions.createShowFailureAction({ error: `Ошибка загрузки медиа: ${error.message}` })))
+          );
+        })
+      );
+    },
+    { functional: true }
   );
 
   // --- 3. Update ---

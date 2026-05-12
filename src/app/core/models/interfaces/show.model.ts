@@ -1,28 +1,20 @@
-
-/** Базовая модель для простых заказов (Пиротехника, Welcome) */
-export interface BaseShow {
+export interface ShowItem {
   id?: string;
   isActive: boolean;
   type: ShowType;
   title: string;
   description: string;
+  price: number;
+  duration: number;
+  requiredRoles: ShowRoles;
+  requiredInventory: Record<string, number>;
   viewImg: MediaMetadata;
+  audio?: MediaMetadata;
   comment: string;
 }
 
-/** Расширенная модель */
-export interface FullShowItem extends BaseShow {
-  duration: number;
-  price: number;
-  requiredRoles: ShowRoles;
-  requiredInventory: Record<string, number>; // ID предмета -> количество
-  music: MediaMetadata;
-}
-
-export type ShowItem = FullShowItem | BaseShow;
-
 export interface ShowRoles {
-  artists: number;
+  artist: number;
   tech: number;
   fireworker: number;
 }
@@ -37,7 +29,6 @@ export const SHOW_TYPES = [
 ] as const;
 export type ShowType = typeof SHOW_TYPES[number];
 
-/** Вспомогательные интерфейсы для вложенных объектов (Maps) */
 export interface MediaMetadata {
   name: string;
   url: string;

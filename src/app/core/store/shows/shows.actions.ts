@@ -1,8 +1,12 @@
 import { createAction, props } from "@ngrx/store";
+import { CreateShowPayload } from "../../../features/shows/show-form/show-form.models";
 import { ShowItem } from "../../models/interfaces/show.model";
 
 // --- Create ---
-export const createShowAction = createAction('[Shows] Create', props<{ data: ShowItem }>());
+export const createShowAction = createAction(
+  '[Shows] Create',
+  props<{ data: CreateShowPayload }>()
+);
 export const createShowSuccessAction = createAction('[Shows] Create Success', props<{ data: ShowItem }>());
 export const createShowFailureAction = createAction('[Shows] Create Failure', props<{ error: string }>());
 

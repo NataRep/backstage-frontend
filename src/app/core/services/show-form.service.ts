@@ -1,8 +1,12 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
-import { SelectedInventoryItem, ShowForm, ShowFormValue } from '../../features/shows/show-form/show-form.models';
+import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
+import {
+  CreateShowPayload,
+  SelectedInventoryItem,
+  ShowForm
+} from '../../features/shows/show-form/show-form.models';
 import { InventoryItem, InventoryType } from '../models/interfaces/inventory.models';
-import { FullShowItem, MediaMetadata, ShowItem } from '../models/interfaces/show.model';
+import { MediaMetadata, ShowItem } from '../models/interfaces/show.model';
 
 @Injectable()
 export class ShowFormService {
@@ -11,19 +15,18 @@ export class ShowFormService {
   // --- State ---
   readonly form = this.initForm();
   readonly selectedImage = signal<File | null>(null);
-  readonly selectedMusic = signal<File | null>(null);
+  readonly selectedAudio = signal<File | null>(null); // Исправлен регистр CamelCase
 
   // --- Public API ---
 
-  /**
-   * Заполняет форму данными из модели ShowItem
-   */
   patchFormData(item: ShowItem, inventoryEntities: Record<string, InventoryItem>): void {
     this.resetFiles();
-    const inventoryGroups = this.inventoryGroups;
 
+    // Очищаем массивы инвентаря перед заполнением
+    const inventoryGroups = this.inventoryGroups;
     Object.values(inventoryGroups).forEach(array => array.clear());
 
+    // Заполняем форму (поля теперь общие для всех ShowItem)
     this.form.patchValue({
       isActive: item.isActive,
       type: item.type,
@@ -31,57 +34,44 @@ export class ShowFormService {
       description: item.description,
       viewImg: item.viewImg,
       comment: item.comment,
+      duration: item.duration,
+      price: item.price,
+      audio: item.audio ?? null,
+      requiredRoles: item.requiredRoles
     });
 
-    if (this.isFullShow(item)) {
-      this.form.patchValue({
-        duration: item.duration,
-        price: item.price,
-        music: item.music,
-        requiredRoles: item.requiredRoles
-      });
-
-      if (item.requiredInventory) {
-        this.fillInventoryArrays(item.requiredInventory, inventoryEntities);
-      }
-    } else {
-      this.form.patchValue({
-        duration: 0,
-        price: 0,
-        requiredRoles: { artists: 0, tech: 0, fireworker: 0 }
-      });
+    if (item.requiredInventory) {
+      this.fillInventoryArrays(item.requiredInventory, inventoryEntities);
     }
 
     this.form.markAsPristine();
   }
 
-  /**
-   * Добавляет предмет в соответствующий FormArray инвентаря
-   */
   addInventoryItem(itemId: string, category: InventoryType): void {
     const array = this.inventoryGroups[category as keyof typeof this.inventoryGroups];
-
-    const exists = array.controls.some(ctrl => ctrl.controls.id.value === itemId);
+    const exists = array.controls.some(ctrl => ctrl.getRawValue().id === itemId);
     if (exists) return;
 
     array.push(this.createInventoryGroup(itemId, 1));
   }
 
-  /**
-   * Удаляет предмет из FormArray
-   */
   removeInventoryItem(index: number, category: InventoryType): void {
     this.inventoryGroups[category as keyof typeof this.inventoryGroups].removeAt(index);
   }
 
   /**
-   * Собирает финальный объект данных для сохранения
+   * Возвращает Payload для эффекта (Данные + Файлы)
    */
-  getFormValue(): ShowFormValue {
+
+  getFormValue() {
+    return this.form.getRawValue()
+  }
+
+  getPayload(): CreateShowPayload {
     return {
-      programData: this.form.getRawValue(),
+      formValue: this.form.getRawValue(),
       imageFile: this.selectedImage(),
-      musicFile: this.selectedMusic()
+      audioFile: this.selectedAudio()
     };
   }
 
@@ -89,18 +79,18 @@ export class ShowFormService {
 
   private initForm(): FormGroup<ShowForm> {
     return this.fb.group<ShowForm>({
-      isActive: new FormControl(true, { nonNullable: true }),
-      type: new FormControl(null, [Validators.required]),
-      title: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
-      description: new FormControl('', { nonNullable: true }),
-      viewImg: new FormControl(null),
-      comment: new FormControl('', { nonNullable: true }),
-      duration: new FormControl(0, { nonNullable: true, validators: [Validators.min(1)] }),
-      price: new FormControl(0, { nonNullable: true, validators: [Validators.min(0)] }),
+      isActive: this.fb.control(true),
+      type: this.fb.control(null, [Validators.required]),
+      title: this.fb.control('', [Validators.required]),
+      description: this.fb.control(''),
+      viewImg: this.fb.control(null),
+      comment: this.fb.control(''),
+      duration: this.fb.control(0, [Validators.min(0)]), // Изменил min на 0 для универсальности
+      price: this.fb.control(0, [Validators.min(0)]),
       requiredRoles: this.fb.group({
-        artists: new FormControl(0, { nonNullable: true }),
-        tech: new FormControl(0, { nonNullable: true }),
-        fireworker: new FormControl(0, { nonNullable: true }),
+        artist: this.fb.control(0),
+        tech: this.fb.control(0),
+        fireworker: this.fb.control(0),
       }),
       requiredInventory: this.fb.group({
         prop: this.fb.array<FormGroup<SelectedInventoryItem>>([]),
@@ -108,14 +98,14 @@ export class ShowFormService {
         equipment: this.fb.array<FormGroup<SelectedInventoryItem>>([]),
         costume: this.fb.array<FormGroup<SelectedInventoryItem>>([]),
       }),
-      music: new FormControl(null)
+      audio: this.fb.control(null)
     });
   }
 
   private createInventoryGroup(id: string, count: number): FormGroup<SelectedInventoryItem> {
     return this.fb.group({
-      id: new FormControl(id, { nonNullable: true }),
-      count: new FormControl(count, { nonNullable: true, validators: [Validators.min(1)] })
+      id: this.fb.control(id),
+      count: this.fb.control(count, [Validators.min(1)])
     });
   }
 
@@ -127,11 +117,9 @@ export class ShowFormService {
 
     Object.entries(requiredInventory).forEach(([itemId, count]) => {
       const info = entities[itemId];
-
       if (info?.type) {
         const category = info.type as keyof typeof inventoryControls;
         const targetArray = inventoryControls[category];
-
         if (targetArray) {
           targetArray.push(this.createInventoryGroup(itemId, count));
         }
@@ -141,54 +129,42 @@ export class ShowFormService {
 
   private resetFiles(): void {
     this.selectedImage.set(null);
-    this.selectedMusic.set(null);
+    this.selectedAudio.set(null);
   }
 
-  removeFile(type: 'image' | 'music'): void {
-    if (type == 'image') {
+  removeFile(type: 'image' | 'audio'): void {
+    if (type === 'image') {
       this.selectedImage.set(null);
-      this.form.patchValue({
-        'viewImg': null
-      });
-    }
-
-    if (type == 'music') {
-      this.selectedMusic.set(null);
-      this.form.patchValue({
-        'music': null
-      });
+      this.form.patchValue({ viewImg: null });
+    } else {
+      this.selectedAudio.set(null);
+      this.form.patchValue({ audio: null });
     }
   }
 
-  private isFullShow(item: ShowItem): item is FullShowItem {
-    return (item as FullShowItem).requiredRoles !== undefined;
-  }
-
-  updateFileMetadata(file: File, type: 'image' | 'music'): void {
+  updateFileMetadata(file: File, type: 'image' | 'audio'): void {
     const fileMetadata: MediaMetadata = {
       name: file.name,
-      url: '', // Будет заполнено позже (например, после загрузки на сервер)
+      url: '',
       metadata: {
         size: file.size,
         format: file.type,
       }
     };
 
-    const controlName = type === 'image' ? 'viewImg' : 'music';
-
-    this.form.patchValue({
-      [controlName]: fileMetadata
-    });
+    if (type === 'image') {
+      this.selectedImage.set(file);
+      this.form.patchValue({ viewImg: fileMetadata });
+    } else {
+      this.selectedAudio.set(file);
+      this.form.patchValue({ audio: fileMetadata });
+    }
   }
 
   resetForm(): void {
     this.form.reset();
-
-    const inventoryGroups = this.form.controls.requiredInventory.controls;
-    Object.values(inventoryGroups).forEach(array => array.clear());
-
+    Object.values(this.inventoryGroups).forEach(array => array.clear());
     this.resetFiles();
-
     this.form.markAsPristine();
     this.form.markAsUntouched();
   }

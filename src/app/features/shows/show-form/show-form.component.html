@@ -65,17 +65,17 @@
   </div>
 
   <div class="form__row">
-    <label for="music" class="label">Музыкальный трек:</label>
+    <label for="audio" class="label">Музыкальный трек:</label>
     <div class="file-upload-wrapper">
-      <input id="music" type="file" #musicInput accept="audio/*" (change)="onFileSelected($event, 'music')" hidden />
-      @if (form.controls.music.value) {
-      <span class="file-name">{{ form.controls.music.value.name }}</span>
+      <input id="audio" type="file" #audioInput accept="audio/*" (change)="onFileSelected($event, 'audio')" hidden />
+      @if (form.controls.audio.value) {
+      <span class="file-name">{{ form.controls.audio.value.name }}</span>
       }
-      @if (formService.selectedMusic()) {
-      <app-icon name="edit" class="edit-icon" (click)="musicInput.click()"></app-icon>
-      <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('music')"></app-icon>
+      @if (formService.selectedAudio()) {
+      <app-icon name="edit" class="edit-icon" (click)="audioInput.click()"></app-icon>
+      <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('audio')"></app-icon>
       } @else {
-      <button type="button" class="button button--border-yellow button--small" (click)="musicInput.click()">
+      <button type="button" class="button button--border-yellow button--small" (click)="audioInput.click()">
         Выбрать трек
       </button>
       }

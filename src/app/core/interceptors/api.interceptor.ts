@@ -11,7 +11,7 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, from, Observable, throwError } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
-import { environment } from '../environments/environments';
+import { environment } from '../../environments/environments';
 import { AuthService } from '../services/auth.service';
 
 export const SKIP_AUTH = new HttpContextToken<boolean>(() => false);

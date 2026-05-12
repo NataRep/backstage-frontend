@@ -1,6 +1,5 @@
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { MediaMetadata, ShowType } from "../../../core/models/interfaces/show.model";
-import { ShowFormComponent } from "./show-form.component";
 
 export interface SelectedInventoryItem {
   id: FormControl<string>;
@@ -12,12 +11,10 @@ export interface ShowForm {
   type: FormControl<ShowType | null>;
   title: FormControl<string>;
   description: FormControl<string>;
-  viewImg: FormControl<MediaMetadata | null>;
-  comment: FormControl<string>;
   duration: FormControl<number>;
   price: FormControl<number>;
   requiredRoles: FormGroup<{
-    artists: FormControl<number>;
+    artist: FormControl<number>;
     tech: FormControl<number>;
     fireworker: FormControl<number>;
   }>;
@@ -27,11 +24,15 @@ export interface ShowForm {
     equipment: FormArray<FormGroup<SelectedInventoryItem>>;
     costume: FormArray<FormGroup<SelectedInventoryItem>>;
   }>;
-  music: FormControl<MediaMetadata | null>;
+  viewImg: FormControl<MediaMetadata | null>;
+  audio: FormControl<MediaMetadata | null>;
+  comment: FormControl<string>;
 }
 
-export interface ShowFormValue {
-  programData: ReturnType<ShowFormComponent['form']['getRawValue']>;
+export type RawShowFormValue = ReturnType<FormGroup<ShowForm>['getRawValue']>;
+
+export interface CreateShowPayload {
+  formValue: RawShowFormValue;
   imageFile: File | null;
-  musicFile: File | null;
+  audioFile: File | null;
 }

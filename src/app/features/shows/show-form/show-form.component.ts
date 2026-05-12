@@ -22,7 +22,7 @@ import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.dire
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 import { ShowFormInventoryManagerComponent } from './show-form-inventory-manager/show-form-inventory-manager.component';
 import { ShowFormRolesComponent } from './show-form-roles/show-form-roles.component';
-import { ShowFormValue } from './show-form.models';
+import { RawShowFormValue } from './show-form.models';
 
 @Component({
   selector: 'app-show-form',
@@ -37,14 +37,14 @@ import { ShowFormValue } from './show-form.models';
     ShowFormInventoryManagerComponent,
     IconComponent
   ],
-  providers: [ShowFormService], // Сервис живет столько же, сколько форма
+  providers: [ShowFormService],
   templateUrl: './show-form.component.html',
   styleUrl: './show-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowFormComponent implements OnInit, OnChanges {
   @Input() inventoryItem: ShowItem | null = null;
-  @Output() save = new EventEmitter<ShowFormValue>();
+  @Output() save = new EventEmitter<RawShowFormValue>();
   @Output() cancelForm = new EventEmitter<void>();
 
   private readonly store = inject(Store);
@@ -66,7 +66,6 @@ export class ShowFormComponent implements OnInit, OnChanges {
     equipment: this.fb.control(''),
     costume: this.fb.control('')
   };
-
 
   ngOnInit(): void {
     if (this.allInventory().length === 0) {
@@ -92,16 +91,16 @@ export class ShowFormComponent implements OnInit, OnChanges {
     this.formService.removeInventoryItem(index, category);
   }
 
-  onFileSelected(event: Event, type: 'image' | 'music'): void {
+  onFileSelected(event: Event, type: 'image' | 'audio'): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
       this.formService.selectedImage.set(type === 'image' ? file : this.formService.selectedImage());
-      this.formService.selectedMusic.set(type === 'music' ? file : this.formService.selectedMusic());
+      this.formService.selectedAudio.set(type === 'audio' ? file : this.formService.selectedAudio());
       this.formService.updateFileMetadata(file, type);
     }
   }
 
-  removeSelectedFile(type: 'image' | 'music') {
+  removeSelectedFile(type: 'image' | 'audio') {
     this.formService.removeFile(type);
   }
 
