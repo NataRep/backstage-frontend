@@ -1,0 +1,28 @@
+<div class="wrapper {{type}}">
+  <div class="main">
+    <div class="image">
+      @if( show.viewImg ){
+      <img [src]="show.viewImg.url" alt="show img" width="200">
+      }@else {
+      <app-icon name="placeholder"></app-icon>
+      }
+    </div>
+    <ul class="info">
+      <li>
+        <h2 class="title">{{ show.title}}</h2>
+      </li>
+      <li><app-icon name="clock"></app-icon>{{ show.duration }} мин</li>
+      @if(show.requiredRoles.artist > 0){
+      <li><app-icon name="team"></app-icon> {{ show.requiredRoles.artist }}
+        {{ show.requiredRoles.artist | declension:['артист', 'артиста', 'артистов'] }}</li>
+      }
+      <li><app-icon name="piggy-bank"></app-icon>{{ show.price }} ₽</li>
+      <li>Детали</li>
+    </ul>
+  </div>
+  @if(show.audio){
+  <div class="audio">
+    <app-audio-player [meta]="show.audio"></app-audio-player>
+  </div>
+  }
+</div>

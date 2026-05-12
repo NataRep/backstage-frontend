@@ -5,13 +5,13 @@
       @if(canEdit()){
       <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
       }
-
       <input name="search" (input)="onSearch($event)" [value]="searchQuery()" placeholder="Поиск..." class="search">
     </div>
-    <ul>
+    <ul class="show-list grid">
       @for (show of filteredShows(); track show.id) {
-      <li>{{ show.title}}</li>
-
+      <li>
+        <app-show-item [show]="show" type="card"></app-show-item>
+      </li>
       }@empty {Не найдено}
     </ul>
   </div>

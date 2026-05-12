@@ -6,20 +6,24 @@ import { Store } from '@ngrx/store';
 import { SHOW_TYPES } from '../../../core/models/interfaces/show.model';
 import { ShowsService } from '../../../core/services/shows.service';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { getAllShowAction } from '../../../core/store/shows/shows.actions';
+import { createShowAction, getAllShowAction } from '../../../core/store/shows/shows.actions';
 import { selectAllShow } from '../../../core/store/shows/shows.selector';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
 import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { filterData } from '../../../shared/utils/filter.utils';
 import { ShowFormComponent } from '../show-form/show-form.component';
-import { RawShowFormValue } from '../show-form/show-form.models';
+import { CreateShowPayload } from '../show-form/show-form.models';
+import { ShowItemComponent } from './show-item/show-item.component';
 
 @Component({
   selector: 'app-show-list',
   standalone: true,
   imports: [TabsComponent,
     ModalContainerComponent,
-    ShowFormComponent],
+    ShowFormComponent,
+    ShowItemComponent,
+    IconComponent],
   templateUrl: './show-list.component.html',
   styleUrl: './show-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -70,8 +74,9 @@ export class ShowListComponent implements OnInit {
     this.searchQuery.set(value);
   }
 
-  createNewShow(data: RawShowFormValue) {
-    console.log(data)
+  createNewShow(data: CreateShowPayload) {
+    this.store.dispatch(createShowAction({ data }));
+    this.closeCreateModal();
   }
 
   openCreateModal() {

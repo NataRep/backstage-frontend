@@ -1,10 +1,33 @@
+.content-container {
+  max-width: calc(100% - 8rem);
+  width: 1200px;
+}
+
 .controls {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
   margin-bottom: 1rem;
 }
 
 .button--add {
   flex-shrink: 0;
   margin-right: 2rem;
+}
+
+.show-list {
+  padding: 0;
+  list-style: none;
+
+  &.grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+}
+
+.search {
+  max-width: 320px;
 }

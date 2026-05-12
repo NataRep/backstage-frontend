@@ -37,6 +37,7 @@ export class ShowEffects {
       return this.actions$.pipe(
         ofType(ShowsActions.createShowAction),
         exhaustMap(({ data }) => {
+
           const uploadRequests = {
             imageUrl: data.imageFile ? this.cloudinaryService.uploadFile(data.imageFile) : of(null),
             audioUrl: data.audioFile ? this.cloudinaryService.uploadFile(data.audioFile) : of(null)

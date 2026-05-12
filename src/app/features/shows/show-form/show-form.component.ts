@@ -22,7 +22,7 @@ import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.dire
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 import { ShowFormInventoryManagerComponent } from './show-form-inventory-manager/show-form-inventory-manager.component';
 import { ShowFormRolesComponent } from './show-form-roles/show-form-roles.component';
-import { RawShowFormValue } from './show-form.models';
+import { CreateShowPayload } from './show-form.models';
 
 @Component({
   selector: 'app-show-form',
@@ -44,7 +44,7 @@ import { RawShowFormValue } from './show-form.models';
 })
 export class ShowFormComponent implements OnInit, OnChanges {
   @Input() inventoryItem: ShowItem | null = null;
-  @Output() save = new EventEmitter<RawShowFormValue>();
+  @Output() save = new EventEmitter<CreateShowPayload>();
   @Output() cancelForm = new EventEmitter<void>();
 
   private readonly store = inject(Store);
@@ -106,8 +106,7 @@ export class ShowFormComponent implements OnInit, OnChanges {
 
   submit(): void {
     if (this.form.valid) {
-      this.save.emit(this.formService.getFormValue());
-      console.log('отправка', this.formService.getFormValue())
+      this.save.emit(this.formService.getPayload());
     }
   }
 
