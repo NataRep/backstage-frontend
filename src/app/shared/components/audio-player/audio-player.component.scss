@@ -1,3 +1,105 @@
 .download {
   cursor: pointer;
+  display: flex;
+  color: var(--color-grey-text-dark);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-green);
+    }
+  }
+}
+
+.audioPlayer {
+  display: flex;
+  align-items: center;
+  color: var(--color-green);
+  opacity: 0.8;
+  transition: opacity 0.25s ease-in-out;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &.active {
+    opacity: 1;
+
+  }
+
+  .duration-wrapper {
+    font-size: 0.75rem;
+    margin-left: 0.75rem;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  app-icon {
+    --icon-fill-color: var(--color-green);
+    --icon-size: 1rem;
+  }
+}
+
+.bar {
+  flex: 1;
+}
+
+.progress {
+  height: 1rem;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.progress::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(var(--color-grey-text-dark-rgb), 0.8);
+
+  background: linear-gradient(to right,
+      var(--color-green) 0%,
+      var(--color-green) var(--progress),
+      var(--color-grey-text-dark) var(--progress),
+      var(--color-grey-text-dark) 100%);
+}
+
+.progress::-webkit-slider-thumb {
+  appearance: none;
+  width: 8px;
+  height: 8px;
+  margin-top: -3.5px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-green);
+}
+
+.progress::-moz-range-track {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-grey-text-dark);
+}
+
+.progress::-moz-range-progress {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-green);
+}
+
+.progress::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-green);
+}
+
+.title {
+  font-size: 0.75rem;
+  margin-left: 0.25rem;
 }

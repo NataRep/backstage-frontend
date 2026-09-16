@@ -15,7 +15,7 @@ export class ShowFormService {
   // --- State ---
   readonly form = this.initForm();
   readonly selectedImage = signal<File | null>(null);
-  readonly selectedAudio = signal<File | null>(null); // Исправлен регистр CamelCase
+  readonly selectedAudio = signal<File | null>(null);
 
   // --- Public API ---
 

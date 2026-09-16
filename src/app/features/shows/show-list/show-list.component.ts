@@ -8,7 +8,6 @@ import { ShowsService } from '../../../core/services/shows.service';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { createShowAction, getAllShowAction } from '../../../core/store/shows/shows.actions';
 import { selectAllShow } from '../../../core/store/shows/shows.selector';
-import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
 import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { filterData } from '../../../shared/utils/filter.utils';
@@ -22,8 +21,8 @@ import { ShowItemComponent } from './show-item/show-item.component';
   imports: [TabsComponent,
     ModalContainerComponent,
     ShowFormComponent,
-    ShowItemComponent,
-    IconComponent],
+    ShowItemComponent
+  ],
   templateUrl: './show-list.component.html',
   styleUrl: './show-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

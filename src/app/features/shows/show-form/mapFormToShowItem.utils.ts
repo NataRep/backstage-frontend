@@ -26,7 +26,7 @@ export function mapFormToShowItem(formValue: RawShowFormValue): ShowItem {
     requiredRoles: roles,
     requiredInventory: inventoryRecord,
     viewImg: (formValue.viewImg as unknown as MediaMetadata) ?? { name: '', url: '', metadata: { size: 0, format: '' } },
-    audio: (formValue.viewImg as unknown as MediaMetadata) ?? { name: '', url: '', metadata: { size: 0, format: '' } },
+    audio: (formValue.audio as unknown as MediaMetadata) ?? { name: '', url: '', metadata: { size: 0, format: '' } },
     comment: formValue.comment ?? ''
   };
 }
