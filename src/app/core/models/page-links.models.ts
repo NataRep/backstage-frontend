@@ -2,58 +2,58 @@ interface MainLayoutLink {
   title: string;
   link: string;
   isMainNav: boolean;
-  isUserNav: boolean,
+  isUserNav: boolean;
   icon: string;
 }
 
 export const PAGE_LINKS_LIST: MainLayoutLink[] = [
   {
-    title: "Profile",
-    link: "profile",
-    icon: "user",
+    title: 'Profile',
+    link: 'profile',
+    icon: 'user',
     isMainNav: false,
     isUserNav: true,
   },
   {
-    title: "Dashboard",
-    link: "dashboard",
+    title: 'Dashboard',
+    link: 'dashboard',
     isMainNav: true,
     isUserNav: false,
-    icon: "home",
+    icon: 'home',
   },
   {
-    title: "Orders calendar",
-    link: "orders",
+    title: 'Orders calendar',
+    link: 'orders',
     isMainNav: true,
     isUserNav: false,
-    icon: "calendar"
+    icon: 'calendar',
   },
   {
-    title: "Team",
-    link: "team",
+    title: 'Team',
+    link: 'team',
     isMainNav: true,
     isUserNav: false,
-    icon: "team"
+    icon: 'team',
   },
   {
-    title: "Shows",
-    link: "shows",
+    title: 'Shows',
+    link: 'shows',
     isMainNav: true,
     isUserNav: false,
-    icon: "firework-rocket"
+    icon: 'firework-rocket',
   },
   {
-    title: "Inventory",
-    link: "inventory",
+    title: 'Inventory',
+    link: 'inventory',
     isMainNav: true,
     isUserNav: false,
-    icon: "storage"
+    icon: 'storage',
   },
   {
-    title: "Statistics",
-    link: "statistics",
+    title: 'Statistics',
+    link: 'statistics',
     isMainNav: true,
     isUserNav: false,
-    icon: "statistics"
-  }
+    icon: 'statistics',
+  },
 ];

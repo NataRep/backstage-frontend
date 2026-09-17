@@ -1,23 +1,31 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectionStrategy, Component,
+  ChangeDetectionStrategy,
+  Component,
   EventEmitter,
-  inject, Input, OnChanges, OnInit, Output, SimpleChanges
+  inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {
-  FormControl,
-  NonNullableFormBuilder,
-  ReactiveFormsModule
-} from '@angular/forms';
+import { FormControl, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { InventoryItem, InventoryType } from '../../../core/models/interfaces/inventory.models';
 import { ShowItem } from '../../../core/models/interfaces/show.model';
 import { ShowFormService } from '../../../core/services/show-form.service';
 import { getAllInventoryAction } from '../../../core/store/inventory/inventory.actions';
-import { selectAllInventory, selectInventoryEntities } from '../../../core/store/inventory/inventory.selector';
+import {
+  selectAllInventory,
+  selectInventoryEntities,
+} from '../../../core/store/inventory/inventory.selector';
 import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
-import { INVENTORY_TYPES_RU, UNIVERSAL_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
+import {
+  INVENTORY_TYPES_RU,
+  UNIVERSAL_CATEGORY_RU,
+} from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 import { ShowFormInventoryManagerComponent } from './show-form-inventory-manager/show-form-inventory-manager.component';
@@ -35,7 +43,7 @@ import { CreateShowPayload } from './show-form.models';
     NumberInputComponent,
     ShowFormRolesComponent,
     ShowFormInventoryManagerComponent,
-    IconComponent
+    IconComponent,
   ],
   providers: [ShowFormService],
   templateUrl: './show-form.component.html',
@@ -64,7 +72,7 @@ export class ShowFormComponent implements OnInit, OnChanges {
     prop: this.fb.control(''),
     consumable: this.fb.control(''),
     equipment: this.fb.control(''),
-    costume: this.fb.control('')
+    costume: this.fb.control(''),
   };
 
   ngOnInit(): void {
@@ -94,8 +102,12 @@ export class ShowFormComponent implements OnInit, OnChanges {
   onFileSelected(event: Event, type: 'image' | 'audio'): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
-      this.formService.selectedImage.set(type === 'image' ? file : this.formService.selectedImage());
-      this.formService.selectedAudio.set(type === 'audio' ? file : this.formService.selectedAudio());
+      this.formService.selectedImage.set(
+        type === 'image' ? file : this.formService.selectedImage()
+      );
+      this.formService.selectedAudio.set(
+        type === 'audio' ? file : this.formService.selectedAudio()
+      );
       this.formService.updateFileMetadata(file, type);
     }
   }
@@ -114,9 +126,8 @@ export class ShowFormComponent implements OnInit, OnChanges {
     const query = this.searchControls[key].value?.toLowerCase() || '';
     if (query.length < 2) return [];
 
-    return this.allInventory().filter(item =>
-      item.type === key &&
-      item.name.toLowerCase().includes(query)
+    return this.allInventory().filter(
+      (item) => item.type === key && item.name.toLowerCase().includes(query)
     );
   }
 

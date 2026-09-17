@@ -1,15 +1,12 @@
-import { Component } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import {
-  FormControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TrimOnBlurDirective } from './trim-on-blur.directive';
 
 @Component({
   standalone: true,
   imports: [ReactiveFormsModule, TrimOnBlurDirective],
-  template: `<input [formControl]="control" appTrimOnBlur>`
+  template: `<input [formControl]="control" appTrimOnBlur />`,
 })
 class TestHostComponent {
   control = new FormControl('  начальное значение  ');
@@ -18,10 +15,9 @@ class TestHostComponent {
 @Component({
   standalone: true,
   imports: [TrimOnBlurDirective],
-  template: `<input appTrimOnBlur>`
+  template: `<input appTrimOnBlur />`,
 })
-class TestNoFormControlComponent {
-}
+class TestNoFormControlComponent {}
 
 describe('TrimOnBlurDirective', () => {
   let fixture: ComponentFixture<TestHostComponent>;
@@ -29,7 +25,7 @@ describe('TrimOnBlurDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestHostComponent]
+      imports: [TestHostComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestHostComponent);
@@ -47,11 +43,10 @@ describe('TrimOnBlurDirective', () => {
     inputElement.dispatchEvent(new Event('blur'));
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.control.value).toEqual(expectedValue)
+    expect(fixture.componentInstance.control.value).toEqual(expectedValue);
   });
 
   it('should trim the value on blur input in single input', () => {
-
     const fixtureNoForm = TestBed.createComponent(TestNoFormControlComponent);
     fixtureNoForm.detectChanges();
     const input = fixtureNoForm.nativeElement.querySelector('input');
@@ -82,7 +77,6 @@ describe('TrimOnBlurDirective', () => {
   });
 
   it('should return empty string', () => {
-
     const fixtureNoForm = TestBed.createComponent(TestNoFormControlComponent);
     fixtureNoForm.detectChanges();
     const input = fixtureNoForm.nativeElement.querySelector('input');
@@ -96,4 +90,4 @@ describe('TrimOnBlurDirective', () => {
 
     expect(input.value).toEqual(expectValue);
   });
-})
+});

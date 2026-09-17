@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Input, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  Input,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -6,8 +15,18 @@ import { Role } from '../../../core/models/enums/employee.enums';
 import { EmployeeProfile, WorkerBase } from '../../../core/models/interfaces/employee.models';
 import { Person } from '../../../core/models/interfaces/person.model';
 import { selectAuthUser, selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { deleteEmployeeAction, deleteEmployeeSuccessAction, getAllActiveEmployeesAction, getAllEmployeesAction, updateEmployeeAction, updateEmployeeSuccessAction } from '../../../core/store/employees/employees.actions';
-import { selectAllEmployees, selectEmployeesLoading } from '../../../core/store/employees/employees.selector';
+import {
+  deleteEmployeeAction,
+  deleteEmployeeSuccessAction,
+  getAllActiveEmployeesAction,
+  getAllEmployeesAction,
+  updateEmployeeAction,
+  updateEmployeeSuccessAction,
+} from '../../../core/store/employees/employees.actions';
+import {
+  selectAllEmployees,
+  selectEmployeesLoading,
+} from '../../../core/store/employees/employees.selector';
 import { BaseTableDirective } from '../../../shared/components/data-table/base-table.directive';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
 import { IconComponent } from '../../../shared/components/icons/icons.component';
@@ -20,20 +39,20 @@ import { filterData } from '../../../shared/utils/filter.utils';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
 import { EmployeeInfoComponent } from '../employee-info/employee-info.component';
 
-export type EmployeesViewMode =
-  | 'all'
-  | 'active';
+export type EmployeesViewMode = 'all' | 'active';
 
 @Component({
   selector: 'app-employees-table',
   standalone: true,
-  imports: [IconComponent,
+  imports: [
+    IconComponent,
     ModalContainerComponent,
     EmployeeFormComponent,
     EmployeeInfoComponent,
     DataTableComponent,
     GetSocialLinkPipe,
-    UppercaseFirstLetter],
+    UppercaseFirstLetter,
+  ],
   templateUrl: './employees-table.component.html',
   styleUrl: './employees-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +84,9 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
 
   // 6. Local State (Signals)
   selectedEmployee = signal<EmployeeProfile | null>(null);
-  selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
+  selectedRole = signal<Role | 'all'>(
+    (this.route.snapshot.queryParamMap.get('role') as Role) || 'all'
+  );
 
   // Модальные окна (UI State)
   isEditModalOpen = signal(false);
@@ -81,9 +102,10 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
       sortField: (e) => e.person?.fullName || '',
       extraFilter: (emp) => {
         const role = this.selectedRole();
-        return role === 'all' ||
-          !!emp.worker?.roles?.some(r => r.toLowerCase() === role.toLowerCase());
-      }
+        return (
+          role === 'all' || !!emp.worker?.roles?.some((r) => r.toLowerCase() === role.toLowerCase())
+        );
+      },
     })
   );
 
@@ -110,19 +132,21 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
       default:
         this.store.dispatch(getAllEmployeesAction());
     }
-  };
+  }
 
   updateSelectedEmployee(data: { person: Person; worker: WorkerBase }) {
     const selectedEmployee = this.selectedEmployee();
-    const personId = selectedEmployee?.person?.personId
+    const personId = selectedEmployee?.person?.personId;
 
     if (!selectedEmployee || !personId) return;
 
-    this.store.dispatch(updateEmployeeAction({
-      personId,
-      person: { ...data.person },
-      worker: { ...data.worker }
-    }));
+    this.store.dispatch(
+      updateEmployeeAction({
+        personId,
+        person: { ...data.person },
+        worker: { ...data.worker },
+      })
+    );
   }
 
   deleteSelectedEmployee() {
@@ -166,20 +190,18 @@ export class EmployeesTableComponent extends BaseTableDirective<EmployeeProfile>
 
   // 11. Private Helpers & Subscriptions
   private initModalsSubscriptions() {
-    this.actions.pipe(
-      ofType(updateEmployeeSuccessAction),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.employeeForm?.resetForm();
-      this.closeEditModal();
-    });
+    this.actions
+      .pipe(ofType(updateEmployeeSuccessAction), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.employeeForm?.resetForm();
+        this.closeEditModal();
+      });
 
-    this.actions.pipe(
-      ofType(deleteEmployeeSuccessAction),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.closeConfirmDeleteModal();
-    });
+    this.actions
+      .pipe(ofType(deleteEmployeeSuccessAction), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.closeConfirmDeleteModal();
+      });
   }
 
   protected override getExtraParams() {

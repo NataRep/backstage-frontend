@@ -18,7 +18,7 @@
   cursor: pointer;
   margin-left: 1rem;
 
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     margin-right: 0.5rem;
   }
 }
@@ -61,7 +61,6 @@
     padding: 0;
     max-height: 400px;
     overflow-y: auto;
-
   }
 
   &__item {
@@ -129,10 +128,8 @@
   }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .menu {
-
     &__content,
     &__item-link {
       transition: none;

@@ -8,8 +8,6 @@ import { IconComponent } from '../../shared/components/icons/icons.component';
   imports: [RouterModule, IconComponent],
   templateUrl: './not-found.component.html',
   styleUrl: './not-found.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotFoundComponent {
-
-}
+export class NotFoundComponent {}

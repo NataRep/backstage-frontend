@@ -1,0 +1,9 @@
+<div class="search-wrapper">
+  <input name="search" [value]="value()" (input)="onSearch($event)" [placeholder]="placeholder()" class="search" />
+  @if (value()) {
+  <button type="button" class="clear-button" (click)="clearSearch()" aria-label="Очистить поиск">
+    <app-icon name="close"></app-icon>
+  </button>
+  }
+  <app-icon name="search" class="search-icon"></app-icon>
+</div>

@@ -7,7 +7,10 @@ import { WorkerBase } from '../../core/models/interfaces/employee.models';
 import { PersonBase } from '../../core/models/interfaces/person.model';
 import { selectAuthUser } from '../../core/store/auth/auth.selectors';
 import { updateEmployeeAction } from '../../core/store/employees/employees.actions';
-import { selectEmployeesError, selectEmployeesLoading } from '../../core/store/employees/employees.selector';
+import {
+  selectEmployeesError,
+  selectEmployeesLoading,
+} from '../../core/store/employees/employees.selector';
 import { IconComponent } from '../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../shared/components/modal-container/modal-container.component';
 import { EmployeeFormComponent } from '../employee/employee-form/employee-form.component';
@@ -57,20 +60,21 @@ export class UserProfileComponent {
     const personId = user?.person?.personId;
 
     if (personId) {
-      this.store.dispatch(updateEmployeeAction({
-        personId,
-        person: { ...data.person },
-        worker: { ...data.worker }
-      }));
+      this.store.dispatch(
+        updateEmployeeAction({
+          personId,
+          person: { ...data.person },
+          worker: { ...data.worker },
+        })
+      );
     }
   }
 
   openPasswordModal() {
-    this.isPasswordModalOpen.set(true)
+    this.isPasswordModalOpen.set(true);
   }
 
   handleUpdatePasswordAction() {
     this.isPasswordModalOpen.set(false);
   }
-
 }

@@ -5,62 +5,100 @@
 <form [formGroup]="authForm" (ngSubmit)="login()">
   <div class="form__row" [class.invalid]="emailError">
     <label for="email">Email</label>
-    <input id="email" type="email" formControlName="email" appTrimOnBlur placeholder="" autocomplete="on"
-      (focus)="onEmailFocus()" (blur)="onEmailBlur()">
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      appTrimOnBlur
+      placeholder=""
+      autocomplete="on"
+      (focus)="onEmailFocus()"
+      (blur)="onEmailBlur()"
+    />
     @if (emailError) {
-    <div class="error-message">
-      <span>{{emailErrorMessage()}}</span>
-    </div>
+      <div class="error-message">
+        <span>{{ emailErrorMessage() }}</span>
+      </div>
     }
   </div>
 
   <div class="form__row" [class.invalid]="password?.invalid && password?.touched">
     <label for="password">Password</label>
-    <input id="password" [type]="isPasswordVisibility ? 'text' : 'password'" formControlName="password" placeholder=""
-      autocomplete="on">
+    <input
+      id="password"
+      [type]="isPasswordVisibility ? 'text' : 'password'"
+      formControlName="password"
+      placeholder=""
+      autocomplete="on"
+    />
 
-    <div class="password__eye" [class.isOpen]="isPasswordVisibility" (click)="togglePasswordVisibility()"
-      (keydown.enter)="togglePasswordVisibility()" tabindex="0" role="button" aria-label="Показать пароль">
-      @if(isPasswordVisibility){
-      <app-icon name="eye-open"></app-icon>
+    <div
+      class="password__eye"
+      [class.isOpen]="isPasswordVisibility"
+      (click)="togglePasswordVisibility()"
+      (keydown.enter)="togglePasswordVisibility()"
+      tabindex="0"
+      role="button"
+      aria-label="Показать пароль"
+    >
+      @if (isPasswordVisibility) {
+        <app-icon name="eye-open"></app-icon>
       } @else {
-      <app-icon name="eye-close"></app-icon>
+        <app-icon name="eye-close"></app-icon>
       }
     </div>
 
     @if (password?.invalid && password?.touched) {
-    <div class="error-message">
-      @if (password?.errors?.['required']) {
-      <span>Введите пароль</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (password?.errors?.['required']) {
+          <span>Введите пароль</span>
+        }
+      </div>
     }
   </div>
 
-  @if(loginError){
-  <div class="form__error">Неверный пароль или эл.адрес</div>
+  @if (loginError) {
+    <div class="form__error">Неверный пароль или эл.адрес</div>
   }
 
   <button type="submit" class="button button--big button--yellow-gradient">Login</button>
 
-  <div class="reset-password" (click)="openResetModal()" (keydown.enter)="openResetModal()" tabindex="0" role="button">
+  <div
+    class="reset-password"
+    (click)="openResetModal()"
+    (keydown.enter)="openResetModal()"
+    tabindex="0"
+    role="button"
+  >
     Forgot your password?
   </div>
 </form>
 
-<app-modal-container [(isOpen)]="isModalOpen" type="action" actionButton="Ok" (action)="handleModalAction($event)">
+<app-modal-container
+  [(isOpen)]="isModalOpen"
+  type="action"
+  actionButton="Ok"
+  (action)="handleModalAction($event)"
+>
   <div class="modal__header">Reset password</div>
   <div class="modal__body">
     <p>Отправить вам ссылку для сброса пароля на электронную почту?</p>
     <form [formGroup]="resetPasswordForm" [class.invalid]="isResetEmailError()" class="reset-form">
       <div class="form__row" [class.invalid]="isResetEmailError()">
         <label for="reset-email">Email</label>
-        <input id="reset-email" type="email" formControlName="email" placeholder="" autocomplete="on"
-          (focus)="onResetEmailFocus()" (blur)="onResetEmailBlur()">
+        <input
+          id="reset-email"
+          type="email"
+          formControlName="email"
+          placeholder=""
+          autocomplete="on"
+          (focus)="onResetEmailFocus()"
+          (blur)="onResetEmailBlur()"
+        />
         @if (isResetEmailError()) {
-        <div class="error-message">
-          <span>{{resetEmailErrorMessage()}}</span>
-        </div>
+          <div class="error-message">
+            <span>{{ resetEmailErrorMessage() }}</span>
+          </div>
         }
       </div>
     </form>

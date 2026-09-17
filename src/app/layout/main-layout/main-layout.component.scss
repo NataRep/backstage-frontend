@@ -58,7 +58,7 @@
   h1 {
     display: flex;
     margin: 0;
-    font-family: "Road Rage", sans-serif;
+    font-family: 'Road Rage', sans-serif;
     font-size: 2.875rem;
     font-weight: 500;
     line-height: 2rem;
@@ -101,8 +101,8 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    "header"
-    "main";
+    'header'
+    'main';
   width: 100%;
   padding: 0;
   gap: 0;
@@ -132,8 +132,8 @@
   grid-template-rows: 1fr auto;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "content"
-    "footer";
+    'content'
+    'footer';
   gap: 1rem;
 
   @media (max-width: 768px) {

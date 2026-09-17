@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from 'firebase/firestore';
 
 export interface OrderType {
   id: string;
@@ -31,7 +31,7 @@ export interface OrderType {
     employees: {
       employeeId: string;
       name?: string;
-      role: "artist" | "pirotech" | "tech" | "driver" | "manager";
+      role: 'artist' | 'pirotech' | 'tech' | 'driver' | 'manager';
       rateId: string;
       rateValue?: number;
       hoursWorked: number;
@@ -48,7 +48,7 @@ export interface OrderType {
     profit?: number; // вычисляемое: totalPrice - totalSalaries - expenses
   };
 
-  status: "planned" | "confirmed" | "in_progress" | "done" | "cancelled";
+  status: 'planned' | 'confirmed' | 'in_progress' | 'done' | 'cancelled';
   createdBy: string;
   notes?: string;
   updatedAt: Timestamp;

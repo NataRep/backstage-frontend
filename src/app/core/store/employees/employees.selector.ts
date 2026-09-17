@@ -3,27 +3,20 @@ import { EmployeesState } from './employees.reducer';
 
 export const selectEmployeesState = createFeatureSelector<EmployeesState>('employees');
 
-export const selectAllEmployees = createSelector(
-  selectEmployeesState,
-  (state) => state.employees
-);
+export const selectAllEmployees = createSelector(selectEmployeesState, (state) => state.employees);
 
-export const selectEmployeeById = (personId: string) => createSelector(
-  selectEmployeesState,
-  (state) => state.employees.find(emp => emp.person?.personId === personId)
-);
+export const selectEmployeeById = (personId: string) =>
+  createSelector(selectEmployeesState, (state) =>
+    state.employees.find((emp) => emp.person?.personId === personId)
+  );
 
 export const selectEmployeesLoading = createSelector(
   selectEmployeesState,
   (state) => state.loading
 );
 
-export const selectEmployeesError = createSelector(
-  selectEmployeesState,
-  (state) => state.error
-);
+export const selectEmployeesError = createSelector(selectEmployeesState, (state) => state.error);
 
-export const selectAllActiveEmployees = createSelector(
-  selectEmployeesState,
-  (state) => state.employees.filter(emp => emp.worker?.isActive === true)
+export const selectAllActiveEmployees = createSelector(selectEmployeesState, (state) =>
+  state.employees.filter((emp) => emp.worker?.isActive === true)
 );

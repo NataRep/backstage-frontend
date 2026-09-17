@@ -21,13 +21,8 @@ export interface ShowRoles {
 
 export type showType = 'firework' | 'fireshow' | 'ledshow' | 'welcome';
 
-export const SHOW_TYPES = [
-  'firework',
-  'fireshow',
-  'ledshow',
-  'welcome',
-] as const;
-export type ShowType = typeof SHOW_TYPES[number];
+export const SHOW_TYPES = ['firework', 'fireshow', 'ledshow', 'welcome'] as const;
+export type ShowType = (typeof SHOW_TYPES)[number];
 
 export interface MediaMetadata {
   name: string;
@@ -58,7 +53,7 @@ export const SAFETY_ITEMS_RU = {
   blanket: 'ткань для тушения',
   stands: 'подставки под реквизит',
   soaking: 'замочка',
-  fuel: 'керосин'
+  fuel: 'керосин',
 } as const;
 
 export const FIRE_SAFETY_KIT: ShowInventory = {
@@ -69,7 +64,7 @@ export const FIRE_SAFETY_KIT: ShowInventory = {
     SAFETY_ITEMS_RU.extinguisher,
     SAFETY_ITEMS_RU.blanket,
     SAFETY_ITEMS_RU.stands,
-    SAFETY_ITEMS_RU.soaking
+    SAFETY_ITEMS_RU.soaking,
   ],
-  costume: []
+  costume: [],
 };

@@ -6,13 +6,9 @@ import {
   inject,
   Input,
   OnChanges,
-  Output
+  Output,
 } from '@angular/core';
-import {
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AccessLevel } from '../../../core/models/enums/auth.enums';
 import { Role } from '../../../core/models/enums/employee.enums';
@@ -27,22 +23,24 @@ import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-lett
 @Component({
   selector: 'app-employee-form',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     IconComponent,
     UppercaseFirstLetter,
     TrimOnBlurDirective,
-    UppercaseFirstLetter],
+    UppercaseFirstLetter,
+  ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeFormComponent implements OnChanges {
-  //TODO - после реализации создания учетки авторизации при создании пользователя на беке убрать полуе id. 
+  //TODO - после реализации создания учетки авторизации при создании пользователя на беке убрать полуе id.
   // он должен генерироваться в firebase auth и добавляться в данные пользователя на беке из uid
 
   @Input() employee: EmployeeProfile | null = null;
-  @Output() save = new EventEmitter<{ person: Person, worker: WorkerBase }>();
+  @Output() save = new EventEmitter<{ person: Person; worker: WorkerBase }>();
   @Output() cancelForm = new EventEmitter<void>();
 
   private store = inject(Store);
@@ -55,15 +53,21 @@ export class EmployeeFormComponent implements OnChanges {
 
   form = this.fb.group({
     id: ['', [Validators.minLength(16), Validators.pattern(/^\S+$/)]],
-    lastName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]],
-    firstName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)]],
+    lastName: [
+      '',
+      [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)],
+    ],
+    firstName: [
+      '',
+      [Validators.required, Validators.maxLength(20), Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ-]+$/)],
+    ],
     roles: this.fb.array<Role | null>([], [Validators.required]),
     isAdmin: [false],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', [Validators.required, Validators.pattern(/^\+?[78]\d{10}$/)]],
     telegram: ['', [Validators.pattern(/^\S+$/)]],
     vk: ['', [Validators.pattern(/^\S+$/)]],
-    whatsapp: ['', [Validators.pattern(/^\S+$/)]]
+    whatsapp: ['', [Validators.pattern(/^\S+$/)]],
   });
 
   // Геттер для удобного доступа к массиву ролей
@@ -88,16 +92,16 @@ export class EmployeeFormComponent implements OnChanges {
     this.save.emit(newEmployeeData);
   }
 
-  private createNewEmployeeData(): { person: Person, worker: WorkerBase } {
-
-    const { id, email, firstName, lastName, phone, telegram, vk, whatsapp, roles } = this.form.controls;
+  private createNewEmployeeData(): { person: Person; worker: WorkerBase } {
+    const { id, email, firstName, lastName, phone, telegram, vk, whatsapp, roles } =
+      this.form.controls;
 
     const socialLinks: SocialLink[] = [];
 
     const socialMappings = [
       { control: telegram, type: SocialType.TELEGRAM },
       { control: vk, type: SocialType.VK },
-      { control: whatsapp, type: SocialType.WHATSAPP }
+      { control: whatsapp, type: SocialType.WHATSAPP },
     ];
 
     socialMappings.forEach(({ control, type }) => {
@@ -108,31 +112,30 @@ export class EmployeeFormComponent implements OnChanges {
 
     const personalData: Person = {
       personId: id.value!,
-      type: "employee",
+      type: 'employee',
       fullName: `${lastName.value} ${firstName.value}`,
-      email: email.value || "",
+      email: email.value || '',
       phone: phone.value || undefined,
-      socialLinks: socialLinks
+      socialLinks: socialLinks,
     };
 
     const accessLevel = () => {
       if (this.isAdmin) {
-        return AccessLevel.Admin
+        return AccessLevel.Admin;
       } else if (roles.value.includes(Role.Owner)) {
-        return AccessLevel.Owner
+        return AccessLevel.Owner;
+      } else if (roles.value.includes(Role.Manager)) {
+        return AccessLevel.Manager;
       }
-      else if (roles.value.includes(Role.Manager)) {
-        return AccessLevel.Manager
-      }
-      return AccessLevel.Employee
-    }
+      return AccessLevel.Employee;
+    };
 
     const employeeData: WorkerBase = {
-      roles: [...roles.value as Role[]],
+      roles: [...(roles.value as Role[])],
       isActive: true,
       accessLevel: accessLevel(),
-      availability: this.employee?.worker?.availability || []
-    }
+      availability: this.employee?.worker?.availability || [],
+    };
 
     return { person: personalData, worker: employeeData };
   }
@@ -155,7 +158,7 @@ export class EmployeeFormComponent implements OnChanges {
       phone: '',
       telegram: '',
       vk: '',
-      whatsapp: ''
+      whatsapp: '',
     });
   }
 
@@ -167,7 +170,7 @@ export class EmployeeFormComponent implements OnChanges {
     this.isAdmin = this.employee.worker?.accessLevel === AccessLevel.Admin;
 
     const findSocial = (type: SocialType) =>
-      person.socialLinks?.find(link => link.type === type)?.link ?? '';
+      person.socialLinks?.find((link) => link.type === type)?.link ?? '';
 
     this.form.patchValue({
       id: person.personId,
@@ -184,20 +187,17 @@ export class EmployeeFormComponent implements OnChanges {
     this.setRolesByEmployee();
   }
 
-
   setRolesByEmployee() {
     this.rolesArray.clear();
     const roles = this.employee?.worker?.roles || [];
 
-    roles.forEach(role => {
+    roles.forEach((role) => {
       this.rolesArray.push(this.fb.control(role, [Validators.required]));
     });
   }
 
   addRole() {
-    this.rolesArray.push(
-      this.fb.control<Role | null>(null, [Validators.required])
-    );
+    this.rolesArray.push(this.fb.control<Role | null>(null, [Validators.required]));
   }
 
   removeRole(index: number) {
@@ -218,10 +218,7 @@ export class EmployeeFormComponent implements OnChanges {
 
   canAppointAdmin() {
     const accessLevel = this.currentUser()?.worker?.accessLevel;
-    return (
-      accessLevel === AccessLevel.Owner ||
-      accessLevel === AccessLevel.Admin
-    );
+    return accessLevel === AccessLevel.Owner || accessLevel === AccessLevel.Admin;
   }
 
   canAddRole() {
@@ -241,7 +238,7 @@ export class EmployeeFormComponent implements OnChanges {
       .filter((role) => role !== null) as Role[];
 
     let availableRoles = this.roles.filter(
-      (role) => !selectedRoles.includes(role) || role === currentControlValue,
+      (role) => !selectedRoles.includes(role) || role === currentControlValue
     );
 
     const accessLevel = this.currentUser()?.worker?.accessLevel;

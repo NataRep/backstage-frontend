@@ -1,11 +1,11 @@
-import { inject, Injectable } from "@angular/core";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { Store } from "@ngrx/store";
-import { catchError, concatMap, exhaustMap, filter, map, of, switchMap } from "rxjs";
-import { EmployeeFacade } from "../../services/employee-facade.service";
-import { ToastService } from "../../services/toasts.service";
-import { setUserProfileAction } from "../auth/auth.actions";
-import { selectAuthUser } from "../auth/auth.selectors";
+import { inject, Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { catchError, concatMap, exhaustMap, filter, map, of, switchMap } from 'rxjs';
+import { EmployeeFacade } from '../../services/employee-facade.service';
+import { ToastService } from '../../services/toasts.service';
+import { setUserProfileAction } from '../auth/auth.actions';
+import { selectAuthUser } from '../auth/auth.selectors';
 import {
   createEmployeeAction,
   createEmployeeFailureAction,
@@ -22,8 +22,8 @@ import {
   updateEmployeeSuccessAction,
   updateWorkerEmployeeAction,
   updateWorkerEmployeeFailureAction,
-  updateWorkerEmployeeSuccessAction
-} from "./employees.actions";
+  updateWorkerEmployeeSuccessAction,
+} from './employees.actions';
 
 @Injectable()
 export class EmployeesEffects {
@@ -38,14 +38,12 @@ export class EmployeesEffects {
       ofType(createEmployeeAction),
       switchMap(({ person, worker }) =>
         this.employeeManagerService.createEmployee(person, worker).pipe(
-          map(employee => {
-            return createEmployeeSuccessAction({ employee })
-          }
-          ),
-          catchError(error => {
-            return of(createEmployeeFailureAction({ error }))
-          }
-          )
+          map((employee) => {
+            return createEmployeeSuccessAction({ employee });
+          }),
+          catchError((error) => {
+            return of(createEmployeeFailureAction({ error }));
+          })
         )
       )
     )
@@ -56,12 +54,18 @@ export class EmployeesEffects {
       ofType(updateEmployeeAction),
       switchMap(({ personId, person, worker }) =>
         this.employeeManagerService.updateFullEmployeeProfile(personId, person, worker).pipe(
-          map((employeeProfile) => updateEmployeeSuccessAction({
-            employee: employeeProfile
-          })),
-          catchError(error => of(updateEmployeeFailureAction({
-            error: error.message || error
-          })))
+          map((employeeProfile) =>
+            updateEmployeeSuccessAction({
+              employee: employeeProfile,
+            })
+          ),
+          catchError((error) =>
+            of(
+              updateEmployeeFailureAction({
+                error: error.message || error,
+              })
+            )
+          )
         )
       )
     )
@@ -74,26 +78,30 @@ export class EmployeesEffects {
       map(({ employee }) =>
         setUserProfileAction({
           person: employee.person!,
-          worker: employee.worker!
+          worker: employee.worker!,
         })
       )
     )
   );
-
-
 
   updateWorkerEmployee$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateWorkerEmployeeAction),
       concatMap(({ personId, worker }) =>
         this.employeeManagerService.updateWorkerEmployeeProfile(worker).pipe(
-          map((updatedWorker) => updateWorkerEmployeeSuccessAction({
-            personId,
-            worker: updatedWorker
-          })),
-          catchError((error) => of(updateWorkerEmployeeFailureAction({
-            error: error.message || 'Ошибка сервера'
-          })))
+          map((updatedWorker) =>
+            updateWorkerEmployeeSuccessAction({
+              personId,
+              worker: updatedWorker,
+            })
+          ),
+          catchError((error) =>
+            of(
+              updateWorkerEmployeeFailureAction({
+                error: error.message || 'Ошибка сервера',
+              })
+            )
+          )
         )
       )
     )
@@ -102,12 +110,12 @@ export class EmployeesEffects {
   updateWorkerSuccessSyncAuth$ = createEffect(() =>
     this.actions$.pipe(
       ofType(updateWorkerEmployeeSuccessAction),
-      map(action => ({ action, currentUser: this.currentUser() })),
+      map((action) => ({ action, currentUser: this.currentUser() })),
       filter(({ action, currentUser }) => currentUser?.person?.personId === action.personId),
       map(({ action, currentUser }) =>
         setUserProfileAction({
           person: currentUser!.person!,
-          worker: action.worker
+          worker: action.worker,
         })
       )
     )
@@ -118,12 +126,18 @@ export class EmployeesEffects {
       ofType(deleteEmployeeAction),
       switchMap(({ personId }) =>
         this.employeeManagerService.deleteFullEmployeeProfile(personId).pipe(
-          map((id) => deleteEmployeeSuccessAction({
-            personId: id
-          })),
-          catchError(error => of(deleteEmployeeFailureAction({
-            error: error.message || error
-          })))
+          map((id) =>
+            deleteEmployeeSuccessAction({
+              personId: id,
+            })
+          ),
+          catchError((error) =>
+            of(
+              deleteEmployeeFailureAction({
+                error: error.message || error,
+              })
+            )
+          )
         )
       )
     )
@@ -134,13 +148,21 @@ export class EmployeesEffects {
       ofType(getAllEmployeesAction),
       exhaustMap(() =>
         this.employeeManagerService.getAllEmployees().pipe(
-          map((employees) => getAllEmployeesSuccessAction({
-            employees
-          })),
-          catchError(error => of(getAllEmployeesFailureAction({
-            error
-          }))))
-      ))
+          map((employees) =>
+            getAllEmployeesSuccessAction({
+              employees,
+            })
+          ),
+          catchError((error) =>
+            of(
+              getAllEmployeesFailureAction({
+                error,
+              })
+            )
+          )
+        )
+      )
+    )
   );
 
   getAllActiveEmployees$ = createEffect(() =>
@@ -148,10 +170,12 @@ export class EmployeesEffects {
       ofType(getAllActiveEmployeesAction),
       switchMap(() =>
         this.employeeManagerService.subscribeAllActiveEmployees().pipe(
-          map((employees) => getAllEmployeesSuccessAction({
-            employees
-          })),
-          catchError(error => {
+          map((employees) =>
+            getAllEmployeesSuccessAction({
+              employees,
+            })
+          ),
+          catchError((error) => {
             console.error('Ошибка подписки:', error);
             return of(getAllEmployeesFailureAction({ error }));
           })

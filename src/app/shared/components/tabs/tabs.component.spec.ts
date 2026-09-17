@@ -13,11 +13,7 @@ describe('TabsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TabsComponent],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        provideRouter([])
-      ]
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TabsComponent);
@@ -29,7 +25,7 @@ describe('TabsComponent', () => {
   it('should render the correct number of tabs', () => {
     const testTabs: TabItem[] = [
       { label: 'Dashboard', link: '/dashboard', icon: 'dashboard' },
-      { label: 'Team', link: '/team', icon: 'team' }
+      { label: 'Team', link: '/team', icon: 'team' },
     ];
 
     fixture.componentRef.setInput('tabs', testTabs);
@@ -42,7 +38,7 @@ describe('TabsComponent', () => {
   it('should render tab labels correctly', () => {
     const testTabs: TabItem[] = [
       { label: 'Dashboard', link: '/dashboard', icon: 'dashboard' },
-      { label: 'Team', link: '/team', icon: 'team' }
+      { label: 'Team', link: '/team', icon: 'team' },
     ];
 
     fixture.componentRef.setInput('tabs', testTabs);
@@ -57,7 +53,7 @@ describe('TabsComponent', () => {
   it('should apply active class to the tab matching current URL', () => {
     const testTabs: TabItem[] = [
       { label: 'Dashboard', link: '/dashboard', icon: 'dashboard' },
-      { label: 'Team', link: '/team', icon: 'team' }
+      { label: 'Team', link: '/team', icon: 'team' },
     ];
 
     fixture.componentRef.setInput('tabs', testTabs);
@@ -72,7 +68,7 @@ describe('TabsComponent', () => {
   it('should update active class when URL changes', () => {
     const testTabs: TabItem[] = [
       { label: 'Dashboard', link: '/dashboard', icon: 'dashboard' },
-      { label: 'Team', link: '/team', icon: 'team' }
+      { label: 'Team', link: '/team', icon: 'team' },
     ];
     fixture.componentRef.setInput('tabs', testTabs);
 
@@ -89,7 +85,7 @@ describe('TabsComponent', () => {
   it('should have correct router links', () => {
     const testTabs: TabItem[] = [
       { label: 'Dashboard', link: '/dashboard', icon: 'dashboard' },
-      { label: 'Team', link: '/team', icon: 'team' }
+      { label: 'Team', link: '/team', icon: 'team' },
     ];
     fixture.componentRef.setInput('tabs', testTabs);
     fixture.detectChanges();
@@ -103,7 +99,7 @@ describe('TabsComponent', () => {
   it('should pass correct icon names to all app-icons', () => {
     const testTabs: TabItem[] = [
       { label: 'Home', link: '/home', icon: 'house' },
-      { label: 'Settings', link: '/settings', icon: 'gear' }
+      { label: 'Settings', link: '/settings', icon: 'gear' },
     ];
     fixture.componentRef.setInput('tabs', testTabs);
     fixture.detectChanges();
@@ -115,4 +111,4 @@ describe('TabsComponent', () => {
     expect(iconDebugElements[0].componentInstance.name).toBe('house');
     expect(iconDebugElements[1].componentInstance.name).toBe('gear');
   });
-})
+});

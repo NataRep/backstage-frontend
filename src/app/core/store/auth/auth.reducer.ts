@@ -1,5 +1,5 @@
-import { createReducer, on } from "@ngrx/store";
-import { EmployeeProfile } from "../../models/interfaces/employee.models";
+import { createReducer, on } from '@ngrx/store';
+import { EmployeeProfile } from '../../models/interfaces/employee.models';
 import {
   clearLoginErrorAction,
   loginAction,
@@ -9,20 +9,20 @@ import {
   logoutFailureAction,
   logoutSuccessAction,
   setUserDataAction,
-  setUserProfileAction
-} from "./auth.actions";
+  setUserProfileAction,
+} from './auth.actions';
 
 export interface UserState {
-  profile: EmployeeProfile | null,
-  loading: boolean,
-  error: string | null
-};
+  profile: EmployeeProfile | null;
+  loading: boolean;
+  error: string | null;
+}
 
 const initialState: UserState = {
   profile: null,
   loading: false,
-  error: null
-}
+  error: null,
+};
 
 export const authReducer = createReducer(
   initialState,
@@ -43,14 +43,14 @@ export const authReducer = createReducer(
     ...state,
     profile: user,
     loading: false,
-    error: null
+    error: null,
   })),
 
   on(logoutSuccessAction, (state) => ({
     ...state,
     profile: null,
     loading: false,
-    error: null
+    error: null,
   })),
 
   on(logoutFailureAction, (state, { error }) => ({
@@ -61,14 +61,14 @@ export const authReducer = createReducer(
 
   on(clearLoginErrorAction, (state) => ({
     ...state,
-    error: null
+    error: null,
   })),
 
   on(setUserProfileAction, (state, user) => ({
     ...state,
     profile: user,
     loading: false,
-    error: null
+    error: null,
   })),
 
   on(loginCredentialsFailureAction, loginContextFailureAction, (state, { error }) => ({
@@ -81,7 +81,6 @@ export const authReducer = createReducer(
     ...state,
     profile: null,
     loading: false,
-    error: null
-  })),
-
+    error: null,
+  }))
 );

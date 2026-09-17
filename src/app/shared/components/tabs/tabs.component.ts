@@ -17,11 +17,10 @@ export interface TabItem {
 @Component({
   selector: 'app-tabs',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, IconComponent,
-    UppercaseFirstLetter],
+  imports: [CommonModule, RouterLink, RouterLinkActive, IconComponent, UppercaseFirstLetter],
   templateUrl: './tabs.component.html',
   styleUrl: './tabs.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsComponent {
   @Input() tabs: TabItem[] = [];
@@ -55,9 +54,9 @@ export class TabsComponent {
 }
 
 export const getCategoryTabs = (array: readonly (ShowType | InventoryCategory)[]): TabItem[] => {
-  return [...array].map(key => ({
+  return [...array].map((key) => ({
     label: UNIVERSAL_CATEGORY_RU[key as keyof typeof UNIVERSAL_CATEGORY_RU],
     link: key,
-    icon: key
+    icon: key,
   }));
 };

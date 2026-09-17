@@ -25,7 +25,6 @@
 
   &.active {
     opacity: 1;
-
   }
 
   .duration-wrapper {
@@ -62,11 +61,13 @@
   border-radius: 2px;
   background: rgba(var(--color-grey-text-dark-rgb), 0.8);
 
-  background: linear-gradient(to right,
-      var(--color-green) 0%,
-      var(--color-green) var(--progress),
-      var(--color-grey-text-dark) var(--progress),
-      var(--color-grey-text-dark) 100%);
+  background: linear-gradient(
+    to right,
+    var(--color-green) 0%,
+    var(--color-green) var(--progress),
+    var(--color-grey-text-dark) var(--progress),
+    var(--color-grey-text-dark) 100%
+  );
 }
 
 .progress::-webkit-slider-thumb {

@@ -2,10 +2,10 @@
   <app-tabs [tabs]="applicationTabs" [useQueryParams]="true" queryParamName="category"></app-tabs>
   <div class="content-container__content">
     @if (isLoading()) {
-    <div class="loader">Загрузка склада...</div>
+      <div class="loader">Загрузка склада...</div>
     }
-    @if(canEdit()){
-    <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
+    @if (canEdit()) {
+      <button class="button button--yellow button--add" (click)="openCreateModal()">Add new</button>
     }
     <app-inventory-table [category]="category()"></app-inventory-table>
   </div>
@@ -14,7 +14,10 @@
 <app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default">
   <div class="modal__header">Edit inventory</div>
   <div class="modal__body">
-    <app-inventory-form #inventoryForm (cancelForm)="closeCreateModal()"
-      (save)="createItem($event)"></app-inventory-form>
+    <app-inventory-form
+      #inventoryForm
+      (cancelForm)="closeCreateModal()"
+      (save)="createItem($event)"
+    ></app-inventory-form>
   </div>
 </app-modal-container>

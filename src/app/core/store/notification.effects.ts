@@ -11,40 +11,44 @@ export class NotificationEffects {
   private actions$ = inject(Actions);
   private toastService = inject(ToastService);
 
-  showSuccessToast$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(
-        EmployeeActions.updateEmployeeSuccessAction,
-        EmployeeActions.createEmployeeSuccessAction,
-        EmployeeActions.updateWorkerEmployeeSuccessAction,
-        InventoryActions.createInventorySuccessAction,
-        InventoryActions.updateInventorySuccessAction,
-        ShowsActions.createShowSuccessAction,
-        ShowsActions.updateShowSuccessAction,
-        ShowsActions.deleteShowSuccessAction
+  showSuccessToast$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(
+          EmployeeActions.updateEmployeeSuccessAction,
+          EmployeeActions.createEmployeeSuccessAction,
+          EmployeeActions.updateWorkerEmployeeSuccessAction,
+          InventoryActions.createInventorySuccessAction,
+          InventoryActions.updateInventorySuccessAction,
+          ShowsActions.createShowSuccessAction,
+          ShowsActions.updateShowSuccessAction,
+          ShowsActions.deleteShowSuccessAction
+        ),
+        tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
       ),
-      tap(() => this.toastService.show('Данные сохранены', 'success', 'top-right'))
-    ),
     { dispatch: false }
   );
 
-  showErrorToast$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(
-        EmployeeActions.getAllEmployeesFailureAction,
-        EmployeeActions.deleteEmployeeFailureAction,
-        EmployeeActions.updateEmployeeFailureAction,
-        EmployeeActions.createEmployeeFailureAction,
-        EmployeeActions.updateWorkerEmployeeFailureAction,
-        InventoryActions.updateInventoryFailureAction,
-        InventoryActions.deleteInventoryFailureAction,
-        InventoryActions.createInventoryFailureAction,
-        ShowsActions.createShowFailureAction,
-        ShowsActions.updateShowFailureAction,
-        ShowsActions.deleteShowFailureAction,
+  showErrorToast$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(
+          EmployeeActions.getAllEmployeesFailureAction,
+          EmployeeActions.deleteEmployeeFailureAction,
+          EmployeeActions.updateEmployeeFailureAction,
+          EmployeeActions.createEmployeeFailureAction,
+          EmployeeActions.updateWorkerEmployeeFailureAction,
+          InventoryActions.updateInventoryFailureAction,
+          InventoryActions.deleteInventoryFailureAction,
+          InventoryActions.createInventoryFailureAction,
+          ShowsActions.createShowFailureAction,
+          ShowsActions.updateShowFailureAction,
+          ShowsActions.deleteShowFailureAction
+        ),
+        tap(() =>
+          this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center')
+        )
       ),
-      tap(() => this.toastService.show('Что-то пошло не так. Попробуйте еще раз', 'warning', 'center'))
-    ),
     { dispatch: false }
   );
 }

@@ -4,7 +4,7 @@ import { NgControl } from '@angular/forms';
 @Directive({
   selector: '[appNumberStepper]',
   standalone: true,
-  exportAs: 'stepper' // Позволяет обращаться к директиве через #stepper="stepper"
+  exportAs: 'stepper', // Позволяет обращаться к директиве через #stepper="stepper"
 })
 export class NumberStepperDirective {
   @ContentChild('numInput', { static: true }) inputElement!: ElementRef<HTMLInputElement>;

@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ToastPosition, ToastType } from '../../../core/services/toasts.service';
 import { IconComponent } from '../icons/icons.component';
 

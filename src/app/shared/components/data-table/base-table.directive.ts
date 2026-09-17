@@ -38,9 +38,7 @@ export abstract class BaseTableDirective<T> implements OnInit {
     return data.slice(startIndex, startIndex + size);
   });
 
-  pages = computed(() =>
-    Array.from({ length: this.totalPages() }, (_, i) => i + 1)
-  );
+  pages = computed(() => Array.from({ length: this.totalPages() }, (_, i) => i + 1));
 
   constructor() {
     effect(() => {
@@ -50,7 +48,7 @@ export abstract class BaseTableDirective<T> implements OnInit {
         queryParams: {
           page: this.currentPage(),
           search: this.searchQuery() || null,
-          ...this.getExtraParams()
+          ...this.getExtraParams(),
         },
         queryParamsHandling: 'merge',
       });
@@ -72,11 +70,11 @@ export abstract class BaseTableDirective<T> implements OnInit {
 
   increasePage() {
     if (this.isTableLocked()) return;
-    if (this.currentPage() < this.totalPages()) this.currentPage.update(p => p + 1);
+    if (this.currentPage() < this.totalPages()) this.currentPage.update((p) => p + 1);
   }
 
   reducePage() {
     if (this.isTableLocked()) return;
-    if (this.currentPage() > 1) this.currentPage.update(p => p - 1);
+    if (this.currentPage() > 1) this.currentPage.update((p) => p - 1);
   }
 }

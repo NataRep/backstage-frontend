@@ -35,7 +35,7 @@
     margin-bottom: 0.25rem;
   }
 
-  select:open+.remove {
+  select:open + .remove {
     display: none;
   }
 }

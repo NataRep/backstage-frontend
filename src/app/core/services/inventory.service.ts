@@ -1,16 +1,15 @@
-import { inject, Injectable } from "@angular/core";
-import { QueryConstraint } from "firebase/firestore";
-import { from, Observable, retry, RetryConfig } from "rxjs";
-import { InventoryItem } from "../models/interfaces/inventory.models";
-import { APP_RETRY_CONFIG } from "../models/retry-config.model";
-import { FirebaseService } from "./firebase/firebase-base.service";
+import { inject, Injectable } from '@angular/core';
+import { QueryConstraint } from 'firebase/firestore';
+import { from, Observable, retry, RetryConfig } from 'rxjs';
+import { InventoryItem } from '../models/interfaces/inventory.models';
+import { APP_RETRY_CONFIG } from '../models/retry-config.model';
+import { FirebaseService } from './firebase/firebase-base.service';
 
 @Injectable({ providedIn: 'root' })
 export class InventoryService {
   private readonly collectionName = 'inventory';
   private firebase = inject(FirebaseService);
   private retryConfig: RetryConfig = inject(APP_RETRY_CONFIG);
-
 
   create(data: InventoryItem): Observable<string> {
     return from(this.firebase.create<InventoryItem>(this.collectionName, data));
@@ -41,10 +40,16 @@ export class InventoryService {
 
   // ---- Subscriptions ----
   subscribeAll(constraints: QueryConstraint[] = []): Observable<InventoryItem[]> {
-    return this.firebase.subscribeCollection<InventoryItem>(this.collectionName, constraints).pipe(retry(this.retryConfig));
+    return this.firebase
+      .subscribeCollection<InventoryItem>(this.collectionName, constraints)
+      .pipe(retry(this.retryConfig));
   }
 
-  subscribeChanges(constraints: QueryConstraint[] = []): Observable<{ type: 'added' | 'modified' | 'removed', doc: InventoryItem }[]> {
-    return this.firebase.subscribeCollectionChanges<InventoryItem>(this.collectionName, constraints).pipe(retry(this.retryConfig));
+  subscribeChanges(
+    constraints: QueryConstraint[] = []
+  ): Observable<{ type: 'added' | 'modified' | 'removed'; doc: InventoryItem }[]> {
+    return this.firebase
+      .subscribeCollectionChanges<InventoryItem>(this.collectionName, constraints)
+      .pipe(retry(this.retryConfig));
   }
 }

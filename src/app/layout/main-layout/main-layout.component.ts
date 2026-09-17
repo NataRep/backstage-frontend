@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
@@ -13,17 +20,22 @@ import { MainNavComponent } from './main-nav/main-nav.component';
 import { WelcomeMessageService } from './services/welcome-message.service';
 import { UserNavComponent } from './user-nav/user-nav.component';
 
-
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, IconComponent, MainNavComponent, FooterComponent, UserNavComponent],
+  imports: [
+    RouterOutlet,
+    RouterModule,
+    IconComponent,
+    MainNavComponent,
+    FooterComponent,
+    UserNavComponent,
+  ],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLayoutComponent implements OnInit {
-
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
   private store = inject(Store);
@@ -33,31 +45,34 @@ export class MainLayoutComponent implements OnInit {
 
   user = this.store.selectSignal(selectAuthUser);
 
-  pageTitle = "";
-  userName = "";
-  fullName: string[] = ["", ""];
+  pageTitle = '';
+  userName = '';
+  fullName: string[] = ['', ''];
   TEXT = TEXT;
-  dashboard = PAGE_LINKS_LIST.find((item) => item.link === "dashboard");
+  dashboard = PAGE_LINKS_LIST.find((item) => item.link === 'dashboard');
 
   ngOnInit() {
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.updateTitle();
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.updateTitle();
+      });
 
     this.updateTitle();
 
-    this.store.select(selectAuthUser).pipe(
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(user => {
-      if (user?.person?.fullName) {
-        this.fullName = user.person.fullName.split(" ");
-        this.userName = this.fullName[1] || "";
-        this.showWelcomeMessage();
-      }
-    });
+    this.store
+      .select(selectAuthUser)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        if (user?.person?.fullName) {
+          this.fullName = user.person.fullName.split(' ');
+          this.userName = this.fullName[1] || '';
+          this.showWelcomeMessage();
+        }
+      });
   }
 
   showWelcomeMessage(): void {
@@ -83,6 +98,6 @@ export class MainLayoutComponent implements OnInit {
   }
 
   getTitleFromRoute(route: string): string {
-    return PAGE_LINKS_LIST.find(item => item.link == route)?.title || 'Current Page';
+    return PAGE_LINKS_LIST.find((item) => item.link == route)?.title || 'Current Page';
   }
 }

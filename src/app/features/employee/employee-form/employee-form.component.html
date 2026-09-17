@@ -1,154 +1,186 @@
 <form [formGroup]="form">
-  @if(isCreateForm){
-  <div class="form__row" [class.invalid]="form.controls.id.invalid && form.controls.id.touched">
-    <label for="personId" class="label">Id:</label>
-    <input id="personId" type="text" formControlName="id" placeholder="" appTrimOnBlur [required]="isCreateForm" />
-    @if (form.controls.id.invalid && form.controls.id.touched) {
-    <div class="error-message">
-      @if (form.controls.lastName.errors?.['required']) {
-      <span>Поле обязательно</span>
-      } @else if (form.controls.id.errors?.['minlength']) {
-      <span>Минимум 16 символов</span>
-      } @else if (form.controls.id.errors?.['pattern']) {
-      <span>Только латинский буквы и цифры</span>
+  @if (isCreateForm) {
+    <div class="form__row" [class.invalid]="form.controls.id.invalid && form.controls.id.touched">
+      <label for="personId" class="label">Id:</label>
+      <input
+        id="personId"
+        type="text"
+        formControlName="id"
+        placeholder=""
+        appTrimOnBlur
+        [required]="isCreateForm"
+      />
+      @if (form.controls.id.invalid && form.controls.id.touched) {
+        <div class="error-message">
+          @if (form.controls.lastName.errors?.['required']) {
+            <span>Поле обязательно</span>
+          } @else if (form.controls.id.errors?.['minlength']) {
+            <span>Минимум 16 символов</span>
+          } @else if (form.controls.id.errors?.['pattern']) {
+            <span>Только латинский буквы и цифры</span>
+          }
+        </div>
       }
     </div>
-    }
-  </div>
   }
-  <div class="form__row" [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched">
+  <div
+    class="form__row"
+    [class.invalid]="form.controls.lastName.invalid && form.controls.lastName.touched"
+  >
     <label for="lastame" class="label">Фамилия:</label>
     <input id="lastname" type="text" formControlName="lastName" placeholder="" appTrimOnBlur />
 
     @if (form.controls.lastName.invalid && form.controls.lastName.touched) {
-    <div class="error-message">
-      @if (form.controls.lastName.errors?.['required']) {
-      <span>Поле обязательно</span>
-      } @else if (form.controls.lastName.errors?.['maxlength']) {
-      <span>Максимум 20 символов</span>
-      } @else if (form.controls.lastName.errors?.['pattern']) {
-      <span>Только буквы (RU/EN)</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.lastName.errors?.['required']) {
+          <span>Поле обязательно</span>
+        } @else if (form.controls.lastName.errors?.['maxlength']) {
+          <span>Максимум 20 символов</span>
+        } @else if (form.controls.lastName.errors?.['pattern']) {
+          <span>Только буквы (RU/EN)</span>
+        }
+      </div>
     }
   </div>
-  <div class="form__row" [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched">
+  <div
+    class="form__row"
+    [class.invalid]="form.controls.firstName.invalid && form.controls.firstName.touched"
+  >
     <label for="firstname" class="label">Имя:</label>
     <input id="firstname" type="text" formControlName="firstName" appTrimOnBlur />
 
     @if (form.controls.firstName.invalid && form.controls.firstName.touched) {
-    <div class="error-message">
-      @if (form.controls.firstName.errors?.['required']) {
-      <span>Поле обязательно</span>
-      } @else if (form.controls.firstName.errors?.['maxlength']) {
-      <span>Максимум 20 символов</span>
-      } @else if (form.controls.firstName.errors?.['pattern']) {
-      <span>Только буквы (RU/EN)</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.firstName.errors?.['required']) {
+          <span>Поле обязательно</span>
+        } @else if (form.controls.firstName.errors?.['maxlength']) {
+          <span>Максимум 20 символов</span>
+        } @else if (form.controls.firstName.errors?.['pattern']) {
+          <span>Только буквы (RU/EN)</span>
+        }
+      </div>
     }
   </div>
   @if (canEditRole()) {
-  <div class="form__row" [class.invalid]="rolesArray.hasError('required') && rolesArray.touched">
-    <div class="label">Роль в команде:</div>
-    <div class="roles-list" formArrayName="roles">
-      @for (control of rolesArray.controls; let i = $index; track control) {
-      <div class="role-item">
-        <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)" class="float-select">
-          @if (!control.value) {
-          <option [value]="null" disabled>Выберете...</option>
-          }
-          @for (role of getAvailableRolesForControl(i); track role) {
-          <option [value]="role">{{ rolesTranslate[role].singular| upperFirstLetter }}</option>
-          }
-        </select>
-        <button class="button button--icon remove" (click)="removeRole(i)" title="Remove role">
-          −
-        </button>
+    <div class="form__row" [class.invalid]="rolesArray.hasError('required') && rolesArray.touched">
+      <div class="label">Роль в команде:</div>
+      <div class="roles-list" formArrayName="roles">
+        @for (control of rolesArray.controls; let i = $index; track control) {
+          <div class="role-item">
+            <select [formControlName]="i" [attr.id]="'Role-' + (i + 1)" class="float-select">
+              @if (!control.value) {
+                <option [value]="null" disabled>Выберете...</option>
+              }
+              @for (role of getAvailableRolesForControl(i); track role) {
+                <option [value]="role">
+                  {{ rolesTranslate[role].singular | upperFirstLetter }}
+                </option>
+              }
+            </select>
+            <button class="button button--icon remove" (click)="removeRole(i)" title="Remove role">
+              −
+            </button>
+          </div>
+        }
       </div>
+      @if (canAddRole()) {
+        <button class="button button--small" (click)="addRole()">＋&nbsp;Add&nbsp;role</button>
+      }
+      @if (rolesArray.invalid && (rolesArray.touched || rolesArray.dirty)) {
+        <div class="error-message">
+          @if (rolesArray.errors?.['required']) {
+            <span>Добавьте хотя бы одну роль</span>
+          }
+        </div>
       }
     </div>
-    @if (canAddRole()) {
-    <button class="button button--small" (click)="addRole()">＋&nbsp;Add&nbsp;role</button>
-    }
-    @if (rolesArray.invalid && (rolesArray.touched || rolesArray.dirty)) {
-    <div class="error-message">
-      @if (rolesArray.errors?.['required']) {
-      <span>Добавьте хотя бы одну роль</span>
-      }
-    </div>
-    }
-  </div>
   }
-  <div class="form__row" [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched">
+  <div
+    class="form__row"
+    [class.invalid]="form.controls.phone.invalid && form.controls.phone.touched"
+  >
     <label for="phone" class="label"><app-icon name="phone"></app-icon></label>
     <input id="phone" type="phone" formControlName="phone" placeholder="" appTrimOnBlur />
     @if (form.controls.phone.invalid && form.controls.phone.touched) {
-    <div class="error-message">
-      @if (form.controls.phone.errors?.['required']) {
-      <span>Поле обязательно</span>
-      } @else if (form.controls.phone.errors?.['pattern']) {
-      <span>Неверный формат</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.phone.errors?.['required']) {
+          <span>Поле обязательно</span>
+        } @else if (form.controls.phone.errors?.['pattern']) {
+          <span>Неверный формат</span>
+        }
+      </div>
     }
   </div>
-  <div class="form__row" [class.invalid]="form.controls.email.invalid && form.controls.email.touched">
+  <div
+    class="form__row"
+    [class.invalid]="form.controls.email.invalid && form.controls.email.touched"
+  >
     <label for="email" class="label" title="Email"><app-icon name="email"></app-icon></label>
     <input id="email" type="email" formControlName="email" placeholder="" appTrimOnBlur />
     @if (form.controls.email.invalid && form.controls.email.touched) {
-    <div class="error-message">
-      @if (form.controls.email.errors?.['required']) {
-      <span>Поле обязательно</span>
-      } @else if (form.controls.email.errors?.['email']) {
-      <span>Неверный формат</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.email.errors?.['required']) {
+          <span>Поле обязательно</span>
+        } @else if (form.controls.email.errors?.['email']) {
+          <span>Неверный формат</span>
+        }
+      </div>
     }
   </div>
-  <div class="form__row" [class.invalid]="form.controls.telegram.invalid && form.controls.telegram.touched">
-    <label for="telegram" class="label" title="Telegram"><app-icon name="telegram"></app-icon></label>
+  <div
+    class="form__row"
+    [class.invalid]="form.controls.telegram.invalid && form.controls.telegram.touched"
+  >
+    <label for="telegram" class="label" title="Telegram"
+      ><app-icon name="telegram"></app-icon
+    ></label>
     <input id="telegram" type="text" formControlName="telegram" placeholder="" appTrimOnBlur />
     @if (form.controls.telegram.invalid && form.controls.telegram.touched) {
-    <div class="error-message">
-      @if (form.controls.telegram.errors?.['pattern']) {
-      <span>Неверный формат</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.telegram.errors?.['pattern']) {
+          <span>Неверный формат</span>
+        }
+      </div>
     }
   </div>
   <div class="form__row" [class.invalid]="form.controls.vk.invalid && form.controls.vk.touched">
     <label for="vk" class="label" title="Vk"><app-icon name="vk"></app-icon></label>
     <input id="vk" type="text" formControlName="vk" placeholder="" appTrimOnBlur />
     @if (form.controls.vk.invalid && form.controls.vk.touched) {
-    <div class="error-message">
-      @if (form.controls.vk.errors?.['pattern']) {
-      <span>Неверный формат</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.vk.errors?.['pattern']) {
+          <span>Неверный формат</span>
+        }
+      </div>
     }
   </div>
-  <div class="form__row" [class.invalid]="form.controls.whatsapp.invalid && form.controls.whatsapp.touched">
-    <label for="whatsapp" class="label" title="Whatsapp"><app-icon name="whatsapp"></app-icon></label>
+  <div
+    class="form__row"
+    [class.invalid]="form.controls.whatsapp.invalid && form.controls.whatsapp.touched"
+  >
+    <label for="whatsapp" class="label" title="Whatsapp"
+      ><app-icon name="whatsapp"></app-icon
+    ></label>
     <input id="whatsapp" type="text" formControlName="whatsapp" placeholder="" appTrimOnBlur />
     @if (form.controls.whatsapp.invalid && form.controls.whatsapp.touched) {
-    <div class="error-message">
-      @if (form.controls.whatsapp.errors?.['pattern']) {
-      <span>Неверный формат</span>
-      }
-    </div>
+      <div class="error-message">
+        @if (form.controls.whatsapp.errors?.['pattern']) {
+          <span>Неверный формат</span>
+        }
+      </div>
     }
   </div>
 
-  @if(canAppointAdmin()){
-  <div class="form__row">
-    <div class="checkbox chekbox--with-label">
-      <input id="admin" type="checkbox" formControlName="isAdmin" placeholder="" />
-      <span class="checkbox__box"></span>
-      <label for="admin" class="label">{{ isCheckedAdmin ? 'Админ Backstage' : 'Сделать админом Backstage'
+  @if (canAppointAdmin()) {
+    <div class="form__row">
+      <div class="checkbox chekbox--with-label">
+        <input id="admin" type="checkbox" formControlName="isAdmin" placeholder="" />
+        <span class="checkbox__box"></span>
+        <label for="admin" class="label">{{
+          isCheckedAdmin ? 'Админ Backstage' : 'Сделать админом Backstage'
         }}</label>
+      </div>
     </div>
-  </div>
   }
   <div class="row row--buttons">
     <button class="button button--yellow" (click)="onSave()" [disabled]="form.invalid">Save</button>

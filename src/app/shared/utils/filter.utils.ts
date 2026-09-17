@@ -6,20 +6,20 @@ export interface FilterOptions<T> {
   sortField: (item: T) => string; // Поле для алфавитной сортировки
   extraFilter?: (item: T) => boolean; // Специфичные фильтры (например, роли)
 }
-
 export function filterData<T>(data: T[], options: FilterOptions<T>): T[] {
   const { query, searchFields, category, categoryField, sortField, extraFilter } = options;
-  const normalizedQuery = query?.toLowerCase().trim();
+  const normalizedQuery = query?.toLowerCase().trim() || '';
 
-  const filtered = data.filter(item => {
+  const filtered = data.filter((item) => {
     if (category && category !== 'all' && categoryField) {
       if (item[categoryField] !== category) return false;
     }
 
     if (normalizedQuery) {
-      const isMatch = searchFields(item).some(field =>
-        field.toLowerCase().includes(normalizedQuery)
-      );
+      const isMatch = searchFields(item).some((field) => {
+        if (field == null) return false;
+        return String(field).toLowerCase().includes(normalizedQuery);
+      });
       if (!isMatch) return false;
     }
 
@@ -28,7 +28,5 @@ export function filterData<T>(data: T[], options: FilterOptions<T>): T[] {
     return true;
   });
 
-  return [...filtered].sort((a, b) =>
-    sortField(a).localeCompare(sortField(b))
-  );
+  return [...filtered].sort((a, b) => sortField(a).localeCompare(sortField(b)));
 }

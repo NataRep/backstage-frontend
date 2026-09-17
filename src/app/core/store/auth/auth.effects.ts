@@ -1,10 +1,10 @@
-import { inject, Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { catchError, exhaustMap, forkJoin, from, map, of, retry, switchMap, tap } from "rxjs";
-import { AuthService } from "../../services/auth.service";
-import { PersonDataService } from "../../services/persons.service";
-import { WorkerDataService } from "../../services/workers.service";
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, exhaustMap, forkJoin, from, map, of, retry, switchMap, tap } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { PersonDataService } from '../../services/persons.service';
+import { WorkerDataService } from '../../services/workers.service';
 import {
   loginAction,
   loginContextFailureAction,
@@ -14,8 +14,8 @@ import {
   logoutAction,
   logoutFailureAction,
   logoutSuccessAction,
-  setUserDataAction
-} from "./auth.actions";
+  setUserDataAction,
+} from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -25,26 +25,27 @@ export class AuthEffects {
   private employeeService = inject(WorkerDataService);
   private router = inject(Router);
 
-
   login$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loginAction),
       exhaustMap(({ email, password }) =>
-        from(this.authService.login(email, password))
-          .pipe(
-            map((response) => loginSuccessAction({
+        from(this.authService.login(email, password)).pipe(
+          map((response) =>
+            loginSuccessAction({
               user: {
                 email: response.user.email,
                 personId: response.user.uid,
-                name: response.user.displayName
-              }
-            })),
-            catchError(() => {
-              return of(loginCredentialsFailureAction({ error: 'Incorrect email or password' }))
+                name: response.user.displayName,
+              },
             })
-          ))
-    )
-  })
+          ),
+          catchError(() => {
+            return of(loginCredentialsFailureAction({ error: 'Incorrect email or password' }));
+          })
+        )
+      )
+    );
+  });
 
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
@@ -60,10 +61,9 @@ export class AuthEffects {
               if (!person && !worker) {
                 return loginContextFailureAction({ error: 'Error: load User context failed' });
               } else if (!person) {
-                errorText = "Error: load User personal context failed"
-              }
-              else {
-                errorText = "Error: load User employee context failed"
+                errorText = 'Error: load User personal context failed';
+              } else {
+                errorText = 'Error: load User employee context failed';
               }
 
               return loginFailureAction({ error: errorText });
@@ -80,14 +80,13 @@ export class AuthEffects {
                   isActive: worker.isActive,
                   personId: worker.personId,
                   accessLevel: worker.accessLevel,
-                }
-              }
+                },
+              },
             });
           }),
-          catchError(error => {
+          catchError((error) => {
             return of(loginFailureAction({ error }));
-          }
-          )
+          })
         )
       )
     )
@@ -99,20 +98,23 @@ export class AuthEffects {
       exhaustMap(() =>
         from(this.authService.logout()).pipe(
           map(() => logoutSuccessAction()),
-          catchError(error => of(logoutFailureAction({ error })))
+          catchError((error) => of(logoutFailureAction({ error })))
         )
       )
     );
   });
 
-  logoutSuccess$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(logoutSuccessAction),
-      tap(() => {
-        this.router.navigate(['/login']);
-      })
-    );
-  }, { dispatch: false });
+  logoutSuccess$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(logoutSuccessAction),
+        tap(() => {
+          this.router.navigate(['/login']);
+        })
+      );
+    },
+    { dispatch: false }
+  );
 
   autoLogin$ = createEffect(() => {
     return this.actions$.pipe(
@@ -120,13 +122,15 @@ export class AuthEffects {
       switchMap(() => {
         const currentUser = this.authService.getCurrentUser();
         if (currentUser) {
-          return of(loginSuccessAction({
-            user: {
-              email: currentUser.email,
-              personId: currentUser.uid,
-              name: currentUser.displayName
-            }
-          }));
+          return of(
+            loginSuccessAction({
+              user: {
+                email: currentUser.email,
+                personId: currentUser.uid,
+                name: currentUser.displayName,
+              },
+            })
+          );
         }
         return of({ type: 'NO_ACTION' });
       })
@@ -140,10 +144,10 @@ export class AuthEffects {
         from(this.authService.logout()).pipe(
           retry(1),
           map(() => {
-            return logoutSuccessAction()
+            return logoutSuccessAction();
           }),
-          catchError(error => {
-            console.error("Logout failed twice", error);
+          catchError((error) => {
+            console.error('Logout failed twice', error);
             return of(logoutSuccessAction());
           })
         )

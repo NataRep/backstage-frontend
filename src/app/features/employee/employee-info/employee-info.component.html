@@ -1,48 +1,50 @@
 @if (hasEmployee) {
-<div class="row">
-  <h2>
-    <span class="name">{{ fullName }}</span>
-    <span class="role">
-      @for (role of employee?.worker?.roles; track role; let last = $last) {
-      {{ rolesTranslate[role].singular| upperFirstLetter }}{{ last ? '' : ', ' }}
+  <div class="row">
+    <h2>
+      <span class="name">{{ fullName }}</span>
+      <span class="role">
+        @for (role of employee?.worker?.roles; track role; let last = $last) {
+          {{ rolesTranslate[role].singular | upperFirstLetter }}{{ last ? '' : ', ' }}
+        }
+      </span>
+    </h2>
+  </div>
+  <div class="row">
+    <app-icon name="phone"></app-icon>
+    <div class="value">
+      @if (showLinks) {
+        <a [href]="phone | socialLink: 'phone'">{{ phone }}</a>
+      } @else {
+        {{ phone }}
       }
-    </span>
-  </h2>
-</div>
-<div class="row">
-  <app-icon name="phone"></app-icon>
-  <div class="value">
-    @if (showLinks) {
-    <a [href]="phone | socialLink: 'phone'">{{ phone }}</a>
-    } @else {
-    {{ phone }}
-    }
+    </div>
   </div>
-</div>
-<div class="row">
-  <app-icon name="email"></app-icon>
-  <div class="value">
-    {{ email }}
+  <div class="row">
+    <app-icon name="email"></app-icon>
+    <div class="value">
+      {{ email }}
+    </div>
   </div>
-</div>
-@for (item of socialLinks; track item.link) {
-<div class="row">
-  <app-icon [name]="item.type"></app-icon>
-  <div class="value">
-    @if (showLinks) {
-    <a [href]="item.link | socialLink: item.type" target="_blank" rel="noopener noreferrer">{{ item.link }}</a>
-    } @else {
-    {{ item.link }}
-    }
-  </div>
-</div>
-}
+  @for (item of socialLinks; track item.link) {
+    <div class="row">
+      <app-icon [name]="item.type"></app-icon>
+      <div class="value">
+        @if (showLinks) {
+          <a [href]="item.link | socialLink: item.type" target="_blank" rel="noopener noreferrer">{{
+            item.link
+          }}</a>
+        } @else {
+          {{ item.link }}
+        }
+      </div>
+    </div>
+  }
 } @else {
-<div class="row row__name-skeleton"><app-skeleton /></div>
-<div class="row"><app-skeleton /></div>
-<div class="row"><app-skeleton /></div>
-<div class="row"><app-skeleton /></div>
-<div class="row"><app-skeleton /></div>
-<div class="row"><app-skeleton /></div>
-<div class="row"><app-skeleton /></div>
+  <div class="row row__name-skeleton"><app-skeleton /></div>
+  <div class="row"><app-skeleton /></div>
+  <div class="row"><app-skeleton /></div>
+  <div class="row"><app-skeleton /></div>
+  <div class="row"><app-skeleton /></div>
+  <div class="row"><app-skeleton /></div>
+  <div class="row"><app-skeleton /></div>
 }

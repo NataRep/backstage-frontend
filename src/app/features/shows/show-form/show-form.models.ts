@@ -1,5 +1,5 @@
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { MediaMetadata, ShowType } from "../../../core/models/interfaces/show.model";
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { MediaMetadata, ShowType } from '../../../core/models/interfaces/show.model';
 
 export interface SelectedInventoryItem {
   id: FormControl<string>;

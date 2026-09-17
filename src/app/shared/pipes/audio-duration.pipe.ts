@@ -2,10 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'duration',
-  standalone: true
+  standalone: true,
 })
 export class AudioDurationPipe implements PipeTransform {
-
   transform(duration: number): string {
     if (!isNaN(duration)) {
       const allSeconds = Math.floor(duration);
@@ -17,7 +16,7 @@ export class AudioDurationPipe implements PipeTransform {
 
       return `${formattedMins}:${formattedSeconds}`;
     } else {
-      return "--";
+      return '--';
     }
   }
 }

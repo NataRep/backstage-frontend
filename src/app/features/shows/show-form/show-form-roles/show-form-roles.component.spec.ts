@@ -8,9 +8,8 @@ describe('ShowFormRoleComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShowFormRolesComponent]
-    })
-      .compileComponents();
+      imports: [ShowFormRolesComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ShowFormRolesComponent);
     component = fixture.componentInstance;

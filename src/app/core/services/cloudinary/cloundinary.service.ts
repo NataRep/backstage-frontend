@@ -11,7 +11,7 @@ export interface CloudinaryResponse {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CloudinaryService {
   private http = inject(HttpClient);
@@ -26,10 +26,11 @@ export class CloudinaryService {
     formData.append('upload_preset', this.uploadPreset);
 
     return this.http.post<CloudinaryResponse>(this.apiUrl, formData).pipe(
-      map(response => response.secure_url),
-      catchError(error => {
+      map((response) => response.secure_url),
+      catchError((error) => {
         console.error('Cloudinary upload error:', error);
         return throwError(() => new Error('Ошибка при загрузке медиа-файла'));
-      }))
+      })
+    );
   }
 }

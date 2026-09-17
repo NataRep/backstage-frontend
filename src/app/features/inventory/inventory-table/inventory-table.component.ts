@@ -1,12 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { InventoryCategory, InventoryItem, InventoryType } from '../../../core/models/interfaces/inventory.models';
+import {
+  InventoryCategory,
+  InventoryItem,
+  InventoryType,
+} from '../../../core/models/interfaces/inventory.models';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { deleteInventoryAction, deleteInventorySuccessAction, subscribeAllInventoryAction, unsubscribeAllInventoryAction, updateInventoryAction, updateInventorySuccessAction } from '../../../core/store/inventory/inventory.actions';
-import { selectAllInventory, selectInventoryByCategory, selectInventoryLoading } from '../../../core/store/inventory/inventory.selector';
+import {
+  deleteInventoryAction,
+  deleteInventorySuccessAction,
+  subscribeAllInventoryAction,
+  unsubscribeAllInventoryAction,
+  updateInventoryAction,
+  updateInventorySuccessAction,
+} from '../../../core/store/inventory/inventory.actions';
+import {
+  selectAllInventory,
+  selectInventoryByCategory,
+  selectInventoryLoading,
+} from '../../../core/store/inventory/inventory.selector';
 import { BaseTableDirective } from '../../../shared/components/data-table/base-table.directive';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
 import { IconComponent } from '../../../shared/components/icons/icons.component';
@@ -17,7 +42,6 @@ import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-lett
 import { filterData } from '../../../shared/utils/filter.utils';
 import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 
-
 @Component({
   selector: 'app-inventory-table',
   standalone: true,
@@ -27,13 +51,16 @@ import { InventoryFormComponent } from '../inventory-form/inventory-form.compone
     UppercaseFirstLetter,
     InventoryFormComponent,
     DataTableComponent,
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './inventory-table.component.html',
   styleUrl: './inventory-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InventoryTableComponent extends BaseTableDirective<InventoryItem> implements OnDestroy, OnInit {
+export class InventoryTableComponent
+  extends BaseTableDirective<InventoryItem>
+  implements OnDestroy, OnInit
+{
   // Используем setter для @Input, чтобы сбрасывать страницу при смене вкладки
   @Input() set category(value: InventoryCategory) {
     this._category.set(value);
@@ -51,7 +78,6 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
 
   selectedType = signal<InventoryType | 'all'>('all');
   inventoryTypes = INVENTORY_TYPES_RU;
-
 
   // Реализация абстрактных методов для BaseTableDirective
   protected override sourceData = () => this.filteredInventory();
@@ -77,7 +103,7 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
       extraFilter: (item) => {
         const type = this.selectedType();
         return type === 'all' || item.type === type;
-      }
+      },
     })
   );
 
@@ -108,9 +134,11 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
     const id = this.selectedItem()?.id;
     if (!id) return;
 
-    this.store.dispatch(updateInventoryAction({
-      data: { ...data, id }
-    }));
+    this.store.dispatch(
+      updateInventoryAction({
+        data: { ...data, id },
+      })
+    );
   }
 
   deleteItem() {
@@ -138,22 +166,18 @@ export class InventoryTableComponent extends BaseTableDirective<InventoryItem> i
 
   // 10. Подписки на успех (закрытие окон)
   private initModalsSubscriptions() {
+    this.actions
+      .pipe(ofType(updateInventorySuccessAction), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.isEditModalOpen.set(false);
+        this.selectedItem.set(null);
+      });
 
-    this.actions.pipe(
-      ofType(updateInventorySuccessAction),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.isEditModalOpen.set(false);
-      this.selectedItem.set(null);
-    });
-
-    this.actions.pipe(
-      ofType(deleteInventorySuccessAction),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.isConfirmDeleteModalOpen.set(false);
-      this.selectedItem.set(null);
-    });
+    this.actions
+      .pipe(ofType(deleteInventorySuccessAction), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.isConfirmDeleteModalOpen.set(false);
+        this.selectedItem.set(null);
+      });
   }
-
 }

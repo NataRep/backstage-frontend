@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { TEXT } from '../../../shared/constants/texts/common.texts';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WelcomeMessageService {
-  message = "";
+  message = '';
   needShow = true;
   countShow = 0;
 
@@ -14,19 +14,19 @@ export class WelcomeMessageService {
       return;
     }
 
-    this.message = userName?.trim() ?
-      `${userName}, добро пожаловать в "${TEXT.PROJECT_NAME}"!` :
-      `Добро пожаловать в "${TEXT.PROJECT_NAME}"`;
+    this.message = userName?.trim()
+      ? `${userName}, добро пожаловать в "${TEXT.PROJECT_NAME}"!`
+      : `Добро пожаловать в "${TEXT.PROJECT_NAME}"`;
     this.countShow++;
   }
 
   hide(): void {
-    this.message = "";
+    this.message = '';
     this.needShow = false;
   }
 
   reset() {
-    this.message = "";
+    this.message = '';
     this.needShow = true;
     this.countShow = 0;
   }

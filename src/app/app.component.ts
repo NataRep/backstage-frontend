@@ -8,9 +8,9 @@ import { ToastComponent } from './shared/components/toast/toast.component';
   standalone: true,
   imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  toastService = inject(ToastService)
+  toastService = inject(ToastService);
   title = 'backstage-erp';
 }

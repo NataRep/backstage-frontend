@@ -9,7 +9,7 @@ import { IconComponent } from '../../../shared/components/icons/icons.component'
   imports: [RouterModule, IconComponent],
   templateUrl: './main-nav.component.html',
   styleUrl: './main-nav.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainNavComponent {
   navList = PAGE_LINKS_LIST;

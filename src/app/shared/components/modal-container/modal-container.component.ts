@@ -8,7 +8,7 @@ import { ModalAction, ModalActionButton, ModalSize, ModalType } from './modal.mo
   imports: [IconComponent],
   templateUrl: './modal-container.component.html',
   styleUrl: './modal-container.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalContainerComponent {
   @Input() size: ModalSize = 'medium';

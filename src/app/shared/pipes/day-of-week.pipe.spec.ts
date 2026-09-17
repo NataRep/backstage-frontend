@@ -5,8 +5,8 @@ describe('DayOfWeekPipe', () => {
   let pipe: DayOfWeekPipe;
 
   beforeEach(() => {
-    pipe = new DayOfWeekPipe()
-  })
+    pipe = new DayOfWeekPipe();
+  });
 
   it('should be created', () => {
     expect(pipe).toBeTruthy();
@@ -24,4 +24,4 @@ describe('DayOfWeekPipe', () => {
       expect(result).toEqual(WEEK_DAYS[expectedIndex]);
     });
   });
-})
+});

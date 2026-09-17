@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'socialLink',
-  standalone: true
+  standalone: true,
 })
 export class SocialLinkPipe implements PipeTransform {
   transform(value: string, type: string): string {

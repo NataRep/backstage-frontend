@@ -3,10 +3,9 @@ import { WEEK_DAYS, WeekDayMetadata } from '../../core/models/interfaces/calenda
 
 @Pipe({
   name: 'getDayOfWeek',
-  standalone: true
+  standalone: true,
 })
 export class DayOfWeekPipe implements PipeTransform {
-
   transform(dayOfMonth: number, firstDayOfMonthIndex: number): WeekDayMetadata {
     const dayIndex = (dayOfMonth - 1 + firstDayOfMonthIndex) % 7;
     return WEEK_DAYS[dayIndex];

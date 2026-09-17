@@ -1,24 +1,36 @@
-<audio #audio [src]="meta.url" (loadedmetadata)="setAudioState()" (play)="onPlay()" (pause)="onPause()"
-  (timeupdate)="onTimeupdate()" (volumechange)="onVolumeChange()"></audio>
+<audio
+  #audio
+  [src]="meta.url"
+  (loadedmetadata)="setAudioState()"
+  (play)="onPlay()"
+  (pause)="onPause()"
+  (timeupdate)="onTimeupdate()"
+  (volumechange)="onVolumeChange()"
+></audio>
 <div class="audioPlayer" [class.active]="audioState.isPlaying">
   <button (click)="togglePlay()">
     @if (audioState.isPlaying) {
-    <app-icon name="pause"></app-icon>
+      <app-icon name="pause"></app-icon>
     } @else {
-    <app-icon name="play"></app-icon>
+      <app-icon name="play"></app-icon>
     }
   </button>
   <div class="bar">
-    <input class="progress" type="range" min="0" max="100" [value]="progress" [style.--progress.%]="progress"
-      (input)="onSetProgress($event)">
+    <input
+      class="progress"
+      type="range"
+      min="0"
+      max="100"
+      [value]="progress"
+      [style.--progress.%]="progress"
+      (input)="onSetProgress($event)"
+    />
   </div>
   <div class="duration-wrapper">
     {{ audioState.currentTime | duration }} / {{ audioState.duration | duration }}
   </div>
   <button (click)="downloadTrack(meta.url)" class="download" title="Скачать трек">
     <app-icon name="download"></app-icon>
-    <div class="title">
-      {{meta.name}} ({{meta.metadata.size | fileSize}})
-    </div>
+    <div class="title">{{ meta.name }} ({{ meta.metadata.size | fileSize }})</div>
   </button>
 </div>

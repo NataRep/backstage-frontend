@@ -1,11 +1,11 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Person, PersonBase, PersonsProps } from "../models/interfaces/person.model";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Person, PersonBase, PersonsProps } from '../models/interfaces/person.model';
 
 /**
  * во всех методах в качестве id используется localId персоны из firebase
- * 
+ *
  */
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +26,7 @@ export class PersonDataService {
       Object.entries(snakeProps).forEach(([key, value]) => {
         if (value !== undefined && value !== null) {
           if (Array.isArray(value)) {
-            value.forEach(v => params = params.append(key, String(v)));
+            value.forEach((v) => (params = params.append(key, String(v))));
           } else {
             params = params.append(key, String(value));
           }
@@ -73,7 +73,7 @@ function convertToSnakeRecursive(obj: unknown): unknown {
 
   // 2. Обработка массивов (проходим по каждому элементу)
   if (Array.isArray(obj)) {
-    return obj.map(item => convertToSnakeRecursive(item));
+    return obj.map((item) => convertToSnakeRecursive(item));
   }
 
   // 3. Обработка объектов

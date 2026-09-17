@@ -22,7 +22,7 @@ import {
   updateDoc,
   where,
   WhereFilterOp,
-  writeBatch
+  writeBatch,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
@@ -34,9 +34,7 @@ export type WithId<T> = T & { id: string };
  */
 
 @Injectable({ providedIn: 'root' })
-
 export class FirebaseService {
-
   private db = inject(Firestore);
 
   // ---- Helpers ----
@@ -55,7 +53,7 @@ export class FirebaseService {
   }
 
   private querySnapshotToEntities<T>(snap: QuerySnapshot<DocumentData>): WithId<T>[] {
-    return snap.docs.map(d => ({ ...(d.data() as T), id: d.id } as WithId<T>));
+    return snap.docs.map((d) => ({ ...(d.data() as T), id: d.id }) as WithId<T>);
   }
 
   async exists(collectionName: string, id: string): Promise<boolean> {
@@ -83,10 +81,7 @@ export class FirebaseService {
     field: string,
     value: unknown
   ): Promise<WithId<T>[]> {
-    const q = firestoreQuery(
-      this.colRef(collectionName),
-      where(field, '==', value)
-    );
+    const q = firestoreQuery(this.colRef(collectionName), where(field, '==', value));
     const snap = await getDocs(q);
     return this.querySnapshotToEntities<T>(snap);
   }
@@ -96,11 +91,7 @@ export class FirebaseService {
     field: string,
     value: unknown
   ): Promise<WithId<T> | null> {
-    const q = firestoreQuery(
-      this.colRef(collectionName),
-      where(field, '==', value),
-      limit(1)
-    );
+    const q = firestoreQuery(this.colRef(collectionName), where(field, '==', value), limit(1));
     const snap = await getDocs(q);
     return snap.empty ? null : this.querySnapshotToEntities<T>(snap)[0];
   }
@@ -114,7 +105,10 @@ export class FirebaseService {
    * Выполнить запрос с набором QueryConstraint (where, orderBy, limit и т.д.)
    * Пример constraints: [where('status', '==', 'open'), orderBy('createdAt', 'desc'), limit(20)]
    */
-  async query<T>(collectionName: string, constraints: QueryConstraint[] = []): Promise<WithId<T>[]> {
+  async query<T>(
+    collectionName: string,
+    constraints: QueryConstraint[] = []
+  ): Promise<WithId<T>[]> {
     const q = firestoreQuery(this.colRef(collectionName), ...constraints);
     const snap = await getDocs(q);
     return this.querySnapshotToEntities<T>(snap);
@@ -136,7 +130,14 @@ export class FirebaseService {
    * operations — массив объектов вида:
    * { type: 'set'|'update'|'delete', collection: 'name', id?: 'id', data?: unknown }
    */
-  async batch(operations: { type: 'set' | 'update' | 'delete', collection: string, id: string, data?: unknown }[]): Promise<void> {
+  async batch(
+    operations: {
+      type: 'set' | 'update' | 'delete';
+      collection: string;
+      id: string;
+      data?: unknown;
+    }[]
+  ): Promise<void> {
     const b = writeBatch(this.db);
     for (const op of operations) {
       const dref = this.docRef(op.collection, op.id);
@@ -153,9 +154,11 @@ export class FirebaseService {
     constraints: QueryConstraint[] = [],
     pageSize = 20,
     startAfterDoc?: DocumentSnapshot<DocumentData>
-  ): Promise<{ data: WithId<T>[], lastDoc?: DocumentSnapshot<DocumentData> }> {
+  ): Promise<{ data: WithId<T>[]; lastDoc?: DocumentSnapshot<DocumentData> }> {
     const allConstraints = [...constraints, orderBy('__name__'), limit(pageSize)];
-    const q = startAfterDoc ? firestoreQuery(this.colRef(collectionName), ...allConstraints, startAfter(startAfterDoc)) : firestoreQuery(this.colRef(collectionName), ...allConstraints);
+    const q = startAfterDoc
+      ? firestoreQuery(this.colRef(collectionName), ...allConstraints, startAfter(startAfterDoc))
+      : firestoreQuery(this.colRef(collectionName), ...allConstraints);
     const snap = await getDocs(q);
     const items = this.querySnapshotToEntities<T>(snap);
     const last = snap.docs.length ? snap.docs[snap.docs.length - 1] : undefined;
@@ -184,15 +187,19 @@ export class FirebaseService {
     collectionName: string,
     constraints: QueryConstraint[] = []
   ): Observable<WithId<T>[]> {
-    return new Observable(subscriber => {
+    return new Observable((subscriber) => {
       const q = constraints.length
         ? firestoreQuery(this.colRef(collectionName), ...constraints)
         : this.colRef(collectionName);
 
-      const unsubscribe = onSnapshot(q, snapshot => {
-        const items = this.querySnapshotToEntities<T>(snapshot);
-        subscriber.next(items);
-      }, error => subscriber.error(error));
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const items = this.querySnapshotToEntities<T>(snapshot);
+          subscriber.next(items);
+        },
+        (error) => subscriber.error(error)
+      );
 
       // при отписке вызывается unsubscribe
       return unsubscribe;
@@ -203,16 +210,17 @@ export class FirebaseService {
    * Подписка на один документ
    * Возвращает Observable документа (или null, если не существует)
    */
-  subscribeDoc<T>(
-    collectionName: string,
-    id: string
-  ): Observable<WithId<T> | null> {
-    return new Observable(subscriber => {
+  subscribeDoc<T>(collectionName: string, id: string): Observable<WithId<T> | null> {
+    return new Observable((subscriber) => {
       const docRef = this.docRef(collectionName, id);
-      const unsubscribe = onSnapshot(docRef, snapshot => {
-        const entity = this.snapshotToEntity<T>(snapshot);
-        subscriber.next(entity);
-      }, error => subscriber.error(error));
+      const unsubscribe = onSnapshot(
+        docRef,
+        (snapshot) => {
+          const entity = this.snapshotToEntity<T>(snapshot);
+          subscriber.next(entity);
+        },
+        (error) => subscriber.error(error)
+      );
 
       return unsubscribe;
     });
@@ -225,22 +233,25 @@ export class FirebaseService {
   subscribeCollectionChanges<T>(
     collectionName: string,
     constraints: QueryConstraint[] = []
-  ): Observable<{ type: 'added' | 'modified' | 'removed', doc: WithId<T> }[]> {
-    return new Observable(subscriber => {
+  ): Observable<{ type: 'added' | 'modified' | 'removed'; doc: WithId<T> }[]> {
+    return new Observable((subscriber) => {
       const q = constraints.length
         ? firestoreQuery(this.colRef(collectionName), ...constraints)
         : this.colRef(collectionName);
 
-      const unsubscribe = onSnapshot(q, snapshot => {
-        const changes = snapshot.docChanges().map(change => ({
-          type: change.type as 'added' | 'modified' | 'removed',
-          doc: { ...(change.doc.data() as T), id: change.doc.id } as WithId<T>
-        }));
-        subscriber.next(changes);
-      }, error => subscriber.error(error));
+      const unsubscribe = onSnapshot(
+        q,
+        (snapshot) => {
+          const changes = snapshot.docChanges().map((change) => ({
+            type: change.type as 'added' | 'modified' | 'removed',
+            doc: { ...(change.doc.data() as T), id: change.doc.id } as WithId<T>,
+          }));
+          subscriber.next(changes);
+        },
+        (error) => subscriber.error(error)
+      );
 
       return unsubscribe;
     });
   }
-
 }

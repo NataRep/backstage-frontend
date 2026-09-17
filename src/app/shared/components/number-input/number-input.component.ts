@@ -1,6 +1,5 @@
-import { Component, forwardRef, Input } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@angular/forms";
-
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-number-input',
@@ -10,11 +9,11 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from "@a
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NumberInputComponent),
-      multi: true
-    }
+      multi: true,
+    },
   ],
   templateUrl: './number-input.component.html',
-  styleUrl: './number-input.component.scss'
+  styleUrl: './number-input.component.scss',
 })
 export class NumberInputComponent implements ControlValueAccessor {
   @Input() label = '';
@@ -24,8 +23,12 @@ export class NumberInputComponent implements ControlValueAccessor {
   value = 0;
   isDisabled = false;
 
-  private onChange: (value: number) => void = () => { /* Заглушка для Angular */ };
-  private onTouched: () => void = () => { /* Заглушка для Angular */ };
+  private onChange: (value: number) => void = () => {
+    /* Заглушка для Angular */
+  };
+  private onTouched: () => void = () => {
+    /* Заглушка для Angular */
+  };
 
   increment() {
     if (this.value < this.max) {

@@ -1,18 +1,33 @@
-import { createReducer, on } from "@ngrx/store";
-import { EmployeeProfile } from "../../models/interfaces/employee.models";
-import { createEmployeeAction, createEmployeeFailureAction, createEmployeeSuccessAction, deleteEmployeeAction, deleteEmployeeFailureAction, deleteEmployeeSuccessAction, getAllEmployeesAction, getAllEmployeesFailureAction, getAllEmployeesSuccessAction, updateEmployeeAction, updateEmployeeFailureAction, updateEmployeeSuccessAction, updateWorkerEmployeeFailureAction, updateWorkerEmployeeSuccessAction } from "./employees.actions";
+import { createReducer, on } from '@ngrx/store';
+import { EmployeeProfile } from '../../models/interfaces/employee.models';
+import {
+  createEmployeeAction,
+  createEmployeeFailureAction,
+  createEmployeeSuccessAction,
+  deleteEmployeeAction,
+  deleteEmployeeFailureAction,
+  deleteEmployeeSuccessAction,
+  getAllEmployeesAction,
+  getAllEmployeesFailureAction,
+  getAllEmployeesSuccessAction,
+  updateEmployeeAction,
+  updateEmployeeFailureAction,
+  updateEmployeeSuccessAction,
+  updateWorkerEmployeeFailureAction,
+  updateWorkerEmployeeSuccessAction,
+} from './employees.actions';
 
 export interface EmployeesState {
-  employees: EmployeeProfile[],
-  loading: boolean,
-  error: unknown
-};
+  employees: EmployeeProfile[];
+  loading: boolean;
+  error: unknown;
+}
 
 const initialState: EmployeesState = {
   employees: [],
   loading: false,
-  error: null
-}
+  error: null,
+};
 
 export const employeeReducer = createReducer(
   initialState,
@@ -46,7 +61,8 @@ export const employeeReducer = createReducer(
     ...state,
     employees: [
       ...state.employees.filter((item) => item.person?.personId != employee.person?.personId),
-      employee],
+      employee,
+    ],
     loading: false,
     error: null,
   })),
@@ -60,9 +76,7 @@ export const employeeReducer = createReducer(
   on(updateWorkerEmployeeSuccessAction, (state, { personId, worker }) => ({
     ...state,
     employees: state.employees.map((emp) =>
-      emp.person?.personId === personId
-        ? { ...emp, worker: { ...worker } }
-        : emp
+      emp.person?.personId === personId ? { ...emp, worker: { ...worker } } : emp
     ),
     loading: false,
     error: null,
@@ -82,8 +96,7 @@ export const employeeReducer = createReducer(
 
   on(deleteEmployeeSuccessAction, (state, { personId }) => ({
     ...state,
-    employees: [
-      ...state.employees.filter((item) => item.person?.personId != personId)],
+    employees: [...state.employees.filter((item) => item.person?.personId != personId)],
     loading: false,
     error: null,
   })),
@@ -102,8 +115,7 @@ export const employeeReducer = createReducer(
 
   on(getAllEmployeesSuccessAction, (state, { employees }) => {
     const map = new Map(
-      [...state.employees, ...employees]
-        .map(emp => [emp.worker?.personId, emp])
+      [...state.employees, ...employees].map((emp) => [emp.worker?.personId, emp])
     );
 
     return {
@@ -118,5 +130,5 @@ export const employeeReducer = createReducer(
     ...state,
     loading: false,
     error: error,
-  })),
-)
+  }))
+);

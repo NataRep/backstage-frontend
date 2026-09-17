@@ -21,17 +21,13 @@ export const routes: Routes = [
     path: 'login',
     component: LoginLayoutComponent,
     canActivate: [authGuard],
-    children: [
-      { path: '', component: LoginComponent },
-    ]
+    children: [{ path: '', component: LoginComponent }],
   },
   {
     path: 'reset-password',
     component: LoginLayoutComponent,
     canActivate: [authGuard],
-    children: [
-      { path: '', component: ResetPasswordComponent },
-    ]
+    children: [{ path: '', component: ResetPasswordComponent }],
   },
   {
     path: '',
@@ -45,29 +41,34 @@ export const routes: Routes = [
         component: TeamComponent,
         children: [
           { path: 'list', component: TeamListComponent },
-          { path: 'availability', component: TeamCalendarComponent, canDeactivate: [pendingChangesGuard] },
-          { path: '', redirectTo: 'list', pathMatch: 'full' }
-        ]
+          {
+            path: 'availability',
+            component: TeamCalendarComponent,
+            canDeactivate: [pendingChangesGuard],
+          },
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+        ],
       },
       { path: 'inventory', component: InventoryStorageComponent },
       {
-        path: 'shows', component: ShowsComponent,
+        path: 'shows',
+        component: ShowsComponent,
         children: [
           { path: 'list', component: ShowListComponent },
           {
             path: ':id',
-            component: ShowDetailComponent
+            component: ShowDetailComponent,
           },
-          { path: '', redirectTo: 'list', pathMatch: 'full' }
-        ]
+          { path: '', redirectTo: 'list', pathMatch: 'full' },
+        ],
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    ]
+    ],
   },
 
   {
     path: '**',
     component: NotFoundComponent,
-    //canActivate: [notFoundGuard] 
-  }
+    //canActivate: [notFoundGuard]
+  },
 ];

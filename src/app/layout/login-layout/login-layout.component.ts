@@ -9,7 +9,7 @@ import { FooterComponent } from '../shared/footer/footer.component';
   imports: [RouterOutlet, RouterModule, FooterComponent],
   templateUrl: './login-layout.component.html',
   styleUrl: './login-layout.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginLayoutComponent implements OnInit {
   private welcomeMessage = inject(WelcomeMessageService);

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, Input, OnDestroy, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  Input,
+  OnDestroy,
+  signal,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { PAGE_LINKS_LIST } from '../../../core/models/page-links.models';
@@ -11,7 +20,7 @@ import { IconComponent } from '../../../shared/components/icons/icons.component'
   imports: [RouterModule, IconComponent],
   templateUrl: './user-nav.component.html',
   styleUrl: './user-nav.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserNavComponent implements OnDestroy {
   @Input() userName: string[] | undefined = [];

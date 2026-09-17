@@ -1,5 +1,5 @@
-import { createReducer, on } from "@ngrx/store";
-import { ShowItem } from "../../models/interfaces/show.model";
+import { createReducer, on } from '@ngrx/store';
+import { ShowItem } from '../../models/interfaces/show.model';
 import * as ShowsActions from './shows.actions';
 
 export interface ShowState {
@@ -11,7 +11,7 @@ export interface ShowState {
 const initialState: ShowState = {
   shows: [],
   loading: false,
-  error: null
+  error: null,
 };
 
 export const showReducer = createReducer(
@@ -33,12 +33,12 @@ export const showReducer = createReducer(
   // --- Success Operations ---
   on(ShowsActions.createShowSuccessAction, (state, { data }) => {
     // Проверяем, есть ли уже такой ID в стейте
-    const exists = state.shows.some(item => item.id === data.id);
+    const exists = state.shows.some((item) => item.id === data.id);
 
     return {
       ...state,
       shows: exists
-        ? state.shows.map(item => item.id === data.id ? data : item)
+        ? state.shows.map((item) => (item.id === data.id ? data : item))
         : [...state.shows, data],
       loading: false,
     };
@@ -46,7 +46,7 @@ export const showReducer = createReducer(
 
   on(ShowsActions.updateShowSuccessAction, (state, { data }) => ({
     ...state,
-    shows: state.shows.map(item => item.id === data.id ? data : item),
+    shows: state.shows.map((item) => (item.id === data.id ? data : item)),
     loading: false,
   })),
 
@@ -79,5 +79,5 @@ export const showReducer = createReducer(
       loading: false,
       error: error as string,
     })
-  ),
+  )
 );

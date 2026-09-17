@@ -1,29 +1,54 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  inject,
+  Input,
+  OnChanges,
+  Output,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { INVENTORY_TYPES, InventoryCategory, InventoryConditionStatus, InventoryItem, InventoryType } from '../../../core/models/interfaces/inventory.models';
+import {
+  INVENTORY_TYPES,
+  InventoryCategory,
+  InventoryConditionStatus,
+  InventoryItem,
+  InventoryType,
+} from '../../../core/models/interfaces/inventory.models';
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
-import { INVENTORY_TYPES_RU, UNIVERSAL_CATEGORY_RU } from '../../../shared/constants/texts/common.texts';
+import {
+  INVENTORY_TYPES_RU,
+  UNIVERSAL_CATEGORY_RU,
+} from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
   selector: 'app-inventory-form',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     ReactiveFormsModule,
     UppercaseFirstLetter,
     TrimOnBlurDirective,
     UppercaseFirstLetter,
-    NumberInputComponent],
+    NumberInputComponent,
+  ],
   templateUrl: './inventory-form.component.html',
   styleUrl: './inventory-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InventoryFormComponent implements OnChanges {
-
   @Input() inventoryItem: InventoryItem | null = null;
   @Output() save = new EventEmitter<InventoryItem>();
   @Output() cancelForm = new EventEmitter<void>();
@@ -43,7 +68,7 @@ export class InventoryFormComponent implements OnChanges {
   readonly statusOptions = [
     { value: 1, label: 'Хорошее' },
     { value: 2, label: 'Среднее' },
-    { value: 3, label: 'Плохое' }
+    { value: 3, label: 'Плохое' },
   ];
 
   form = this.fb.group({
@@ -54,19 +79,19 @@ export class InventoryFormComponent implements OnChanges {
       validators: [
         Validators.required,
         Validators.maxLength(200),
-        Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?)(-]+$/)
-      ]
+        Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?)(-]+$/),
+      ],
     }),
     stockQuantity: new FormControl<number | null>(null, [
       Validators.required,
       Validators.min(0),
       Validators.max(100000),
-      Validators.pattern(/^\d+$/)
+      Validators.pattern(/^\d+$/),
     ]),
     conditionStatus: new FormControl<number>(1, [Validators.required]),
     comment: new FormControl('', [
       Validators.maxLength(500),
-      Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?)(-]+$/)
+      Validators.pattern(/^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?)(-]+$/),
     ]),
   });
 
@@ -96,7 +121,7 @@ export class InventoryFormComponent implements OnChanges {
       name,
       stockQuantity,
       conditionStatus,
-      comment
+      comment,
     });
   }
 
@@ -104,10 +129,10 @@ export class InventoryFormComponent implements OnChanges {
     this.form.reset({
       category: this.category(),
       type: null,
-      name: "",
+      name: '',
       stockQuantity: null,
       conditionStatus: null,
-      comment: ''
+      comment: '',
     });
   }
 

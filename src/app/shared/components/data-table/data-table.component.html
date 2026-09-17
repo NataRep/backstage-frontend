@@ -1,13 +1,16 @@
 <div class="controls">
-  <input name="search" (input)="onSearch($event)" [value]="searchQuery" placeholder="Поиск..." class="search"
-    [disabled]="isToolsDisabled">
+  <app-search-input [value]="searchQuery" [placeholder]="'Поиск...'" (searchChange)="onSearch($event)" />
   <ng-content select="[filters]"></ng-content>
 </div>
 
 <div class="table-wrapper">
   <table class="table">
-    <thead><ng-content select="[header]"></ng-content></thead>
-    <tbody><ng-content select="[rows]"></ng-content></tbody>
+    <thead>
+      <ng-content select="[header]"></ng-content>
+    </thead>
+    <tbody>
+      <ng-content select="[rows]"></ng-content>
+    </tbody>
   </table>
 </div>
 

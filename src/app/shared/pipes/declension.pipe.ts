@@ -2,10 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'declension',
-  standalone: true
+  standalone: true,
 })
 export class DeclensionPipe implements PipeTransform {
-
   /**
    * Склоняет слова в зависимости от числа
    * @param value Число

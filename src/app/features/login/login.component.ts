@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -18,10 +27,17 @@ import { TrimOnBlurDirective } from '../../shared/directive/trim-on-blur.directi
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, IconComponent, ModalContainerComponent, ToastComponent, TrimOnBlurDirective],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    IconComponent,
+    ModalContainerComponent,
+    ToastComponent,
+    TrimOnBlurDirective,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
@@ -76,11 +92,13 @@ export class LoginComponent implements OnInit {
       this.emailWasFocused
     );
 
-    passwordControl.valueChanges.pipe(
-      tap(() => this.store.dispatch(clearLoginErrorAction())),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe();
+    passwordControl.valueChanges
+      .pipe(
+        tap(() => this.store.dispatch(clearLoginErrorAction())),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   initResetPasswordForm() {
@@ -107,10 +125,12 @@ export class LoginComponent implements OnInit {
 
     if (this.authForm.valid) {
       const { email, password } = this.authForm.value;
-      this.store.dispatch(loginAction({
-        email: email!,
-        password: password!
-      }));
+      this.store.dispatch(
+        loginAction({
+          email: email!,
+          password: password!,
+        })
+      );
     }
   }
 
@@ -120,20 +140,22 @@ export class LoginComponent implements OnInit {
     errorMessage: WritableSignal<string>,
     wasFocused: WritableSignal<boolean>
   ) {
-    emailControl.valueChanges.pipe(
-      tap(() => {
-        isError.set(false);
-        errorMessage.set('');
-        this.store.dispatch(clearLoginErrorAction());
-      }),
-      debounceTime(500),
-      distinctUntilChanged(),
-      tap(() => {
-        emailControl.markAsTouched({ onlySelf: true });
-        this.updateEmailError(emailControl, isError, errorMessage, wasFocused);
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe();
+    emailControl.valueChanges
+      .pipe(
+        tap(() => {
+          isError.set(false);
+          errorMessage.set('');
+          this.store.dispatch(clearLoginErrorAction());
+        }),
+        debounceTime(500),
+        distinctUntilChanged(),
+        tap(() => {
+          emailControl.markAsTouched({ onlySelf: true });
+          this.updateEmailError(emailControl, isError, errorMessage, wasFocused);
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   private updateEmailError(
@@ -142,8 +164,7 @@ export class LoginComponent implements OnInit {
     errorMessage: WritableSignal<string>,
     wasFocused: WritableSignal<boolean>
   ) {
-    const shouldShowError =
-      emailControl.invalid && (emailControl.touched || wasFocused());
+    const shouldShowError = emailControl.invalid && (emailControl.touched || wasFocused());
 
     isError.set(shouldShowError);
 
@@ -191,7 +212,7 @@ export class LoginComponent implements OnInit {
   }
 
   togglePasswordVisibility() {
-    this.isPasswordVisibility = !this.isPasswordVisibility
+    this.isPasswordVisibility = !this.isPasswordVisibility;
   }
 
   getPasswordError(): boolean {
@@ -204,7 +225,6 @@ export class LoginComponent implements OnInit {
   }
 
   handleModalAction(action: ModalAction) {
-
     if (action == 'confirm') {
       this.sendResetLink();
     } else {
@@ -227,10 +247,14 @@ export class LoginComponent implements OnInit {
 
     sendPasswordResetEmail(this.auth, emailControl.value)
       .then(() => {
-        this.toastService.show('Ссылка для сброса пароля отправлена! Проверьте электронную почту.', 'success', 'center',);
+        this.toastService.show(
+          'Ссылка для сброса пароля отправлена! Проверьте электронную почту.',
+          'success',
+          'center'
+        );
       })
       .catch(() => {
-        this.toastService.show('Произошла ошибка. Попробуйте еще раз', 'warning', 'center',);
+        this.toastService.show('Произошла ошибка. Попробуйте еще раз', 'warning', 'center');
       })
       .finally(() => {
         this.closeResetPasswordForm();

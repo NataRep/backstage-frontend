@@ -17,18 +17,11 @@ interface MockEntity {
 describe('FirebaseService', () => {
   let service: FirebaseService;
 
-  const firestoreMock = jasmine.createSpyObj<Firestore>(
-    'Firestore',
-    [],
-    ['app']
-  );
+  const firestoreMock = jasmine.createSpyObj<Firestore>('Firestore', [], ['app']);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
-        FirebaseService,
-        { provide: Firestore, useValue: firestoreMock }
-      ]
+      providers: [FirebaseService, { provide: Firestore, useValue: firestoreMock }],
     });
 
     service = TestBed.inject(FirebaseService);
@@ -39,18 +32,17 @@ describe('FirebaseService', () => {
   });
 
   describe('snapshotToEntity', () => {
-
     it('should correctly merge ID into data object', () => {
       const mockId = 'FIRE-ID-123';
 
       const mockData: Record<string, unknown> = {
-        name: 'Test Object'
+        name: 'Test Object',
       };
 
       const fakeSnapshot: MockSnapshot = {
         id: mockId,
         exists: () => true,
-        data: () => mockData
+        data: () => mockData,
       };
 
       const result = service['snapshotToEntity'](
@@ -65,7 +57,7 @@ describe('FirebaseService', () => {
       const fakeSnapshot: MockSnapshot = {
         id: 'FIRE-ID-404',
         exists: () => false,
-        data: () => ({})
+        data: () => ({}),
       };
 
       const result = service['snapshotToEntity'](
@@ -74,18 +66,16 @@ describe('FirebaseService', () => {
 
       expect(result).toBeNull();
     });
-
   });
 
   describe('exists', () => {
-
     it('should return true if document exists', async () => {
       const collectionName = 'workers';
       const docId = 'worker-123';
 
       const entity: MockEntity = {
         id: docId,
-        name: 'Sergei'
+        name: 'Sergei',
       };
 
       spyOn(service, 'getOne').and.resolveTo(entity);
@@ -107,7 +97,5 @@ describe('FirebaseService', () => {
       expect(result).toBeFalse();
       expect(service.getOne).toHaveBeenCalledWith(collectionName, docId);
     });
-
   });
-
 });

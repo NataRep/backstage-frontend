@@ -1,6 +1,20 @@
-import { createReducer, on } from "@ngrx/store";
-import { InventoryItem } from "../../models/interfaces/inventory.models";
-import { createInventoryAction, createInventoryFailureAction, createInventorySuccessAction, deleteInventoryAction, deleteInventoryFailureAction, deleteInventorySuccessAction, getAllInventoryAction, getAllInventoryFailureAction, getAllInventorySuccessAction, inventoryStreamUpdatedAction, updateInventoryAction, updateInventoryFailureAction, updateInventorySuccessAction } from "./inventory.actions";
+import { createReducer, on } from '@ngrx/store';
+import { InventoryItem } from '../../models/interfaces/inventory.models';
+import {
+  createInventoryAction,
+  createInventoryFailureAction,
+  createInventorySuccessAction,
+  deleteInventoryAction,
+  deleteInventoryFailureAction,
+  deleteInventorySuccessAction,
+  getAllInventoryAction,
+  getAllInventoryFailureAction,
+  getAllInventorySuccessAction,
+  inventoryStreamUpdatedAction,
+  updateInventoryAction,
+  updateInventoryFailureAction,
+  updateInventorySuccessAction,
+} from './inventory.actions';
 
 export interface InventoryState {
   inventory: InventoryItem[];
@@ -11,7 +25,7 @@ export interface InventoryState {
 const initialState: InventoryState = {
   inventory: [],
   loading: false,
-  error: null
+  error: null,
 };
 
 export const inventoryReducer = createReducer(
@@ -33,12 +47,12 @@ export const inventoryReducer = createReducer(
   // --- Success Operations ---
   on(createInventorySuccessAction, (state, { data }) => {
     // Проверяем, есть ли уже такой ID в стейте
-    const exists = state.inventory.some(item => item.id === data.id);
+    const exists = state.inventory.some((item) => item.id === data.id);
 
     return {
       ...state,
       inventory: exists
-        ? state.inventory.map(item => item.id === data.id ? data : item) // Обновляем, если нашли
+        ? state.inventory.map((item) => (item.id === data.id ? data : item)) // Обновляем, если нашли
         : [...state.inventory, data], // Добавляем новый, если не нашли
       loading: false,
     };
@@ -46,7 +60,7 @@ export const inventoryReducer = createReducer(
 
   on(updateInventorySuccessAction, (state, { data }) => ({
     ...state,
-    inventory: state.inventory.map(item => item.id === data.id ? data : item),
+    inventory: state.inventory.map((item) => (item.id === data.id ? data : item)),
     loading: false,
   })),
 
@@ -57,16 +71,12 @@ export const inventoryReducer = createReducer(
   })),
 
   // --- Handle Data (One-time and Stream) ---
-  on(
-    getAllInventorySuccessAction,
-    inventoryStreamUpdatedAction,
-    (state, { items }) => ({
-      ...state,
-      inventory: items,
-      loading: false,
-      error: null,
-    })
-  ),
+  on(getAllInventorySuccessAction, inventoryStreamUpdatedAction, (state, { items }) => ({
+    ...state,
+    inventory: items,
+    loading: false,
+    error: null,
+  })),
 
   // --- Failures ---
   on(
@@ -79,5 +89,5 @@ export const inventoryReducer = createReducer(
       loading: false,
       error: error as string,
     })
-  ),
+  )
 );

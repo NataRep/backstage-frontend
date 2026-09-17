@@ -3,7 +3,7 @@ import { FormGroup, NonNullableFormBuilder, Validators } from '@angular/forms';
 import {
   CreateShowPayload,
   SelectedInventoryItem,
-  ShowForm
+  ShowForm,
 } from '../../features/shows/show-form/show-form.models';
 import { InventoryItem, InventoryType } from '../models/interfaces/inventory.models';
 import { MediaMetadata, ShowItem } from '../models/interfaces/show.model';
@@ -24,7 +24,7 @@ export class ShowFormService {
 
     // Очищаем массивы инвентаря перед заполнением
     const inventoryGroups = this.inventoryGroups;
-    Object.values(inventoryGroups).forEach(array => array.clear());
+    Object.values(inventoryGroups).forEach((array) => array.clear());
 
     // Заполняем форму (поля теперь общие для всех ShowItem)
     this.form.patchValue({
@@ -37,7 +37,7 @@ export class ShowFormService {
       duration: item.duration,
       price: item.price,
       audio: item.audio ?? null,
-      requiredRoles: item.requiredRoles
+      requiredRoles: item.requiredRoles,
     });
 
     if (item.requiredInventory) {
@@ -49,7 +49,7 @@ export class ShowFormService {
 
   addInventoryItem(itemId: string, category: InventoryType): void {
     const array = this.inventoryGroups[category as keyof typeof this.inventoryGroups];
-    const exists = array.controls.some(ctrl => ctrl.getRawValue().id === itemId);
+    const exists = array.controls.some((ctrl) => ctrl.getRawValue().id === itemId);
     if (exists) return;
 
     array.push(this.createInventoryGroup(itemId, 1));
@@ -64,14 +64,14 @@ export class ShowFormService {
    */
 
   getFormValue() {
-    return this.form.getRawValue()
+    return this.form.getRawValue();
   }
 
   getPayload(): CreateShowPayload {
     return {
       formValue: this.form.getRawValue(),
       imageFile: this.selectedImage(),
-      audioFile: this.selectedAudio()
+      audioFile: this.selectedAudio(),
     };
   }
 
@@ -98,14 +98,14 @@ export class ShowFormService {
         equipment: this.fb.array<FormGroup<SelectedInventoryItem>>([]),
         costume: this.fb.array<FormGroup<SelectedInventoryItem>>([]),
       }),
-      audio: this.fb.control(null)
+      audio: this.fb.control(null),
     });
   }
 
   private createInventoryGroup(id: string, count: number): FormGroup<SelectedInventoryItem> {
     return this.fb.group({
       id: this.fb.control(id),
-      count: this.fb.control(count, [Validators.min(1)])
+      count: this.fb.control(count, [Validators.min(1)]),
     });
   }
 
@@ -149,7 +149,7 @@ export class ShowFormService {
       metadata: {
         size: file.size,
         format: file.type,
-      }
+      },
     };
 
     if (type === 'image') {
@@ -163,7 +163,7 @@ export class ShowFormService {
 
   resetForm(): void {
     this.form.reset();
-    Object.values(this.inventoryGroups).forEach(array => array.clear());
+    Object.values(this.inventoryGroups).forEach((array) => array.clear());
     this.resetFiles();
     this.form.markAsPristine();
     this.form.markAsUntouched();

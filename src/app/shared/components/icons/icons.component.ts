@@ -11,7 +11,7 @@ import { IconService } from './icons.service';
   imports: [CommonModule],
   templateUrl: './icon.component.html',
   styleUrl: './icon.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconComponent implements OnInit {
   private iconService = inject(IconService);
@@ -24,8 +24,8 @@ export class IconComponent implements OnInit {
   ngOnInit() {
     if (!this.name) return;
 
-    this.svg$ = this.iconService.getIcon(this.name).pipe(
-      map(svg => this.sanitizer.bypassSecurityTrustHtml((svg as string)))
-    );
+    this.svg$ = this.iconService
+      .getIcon(this.name)
+      .pipe(map((svg) => this.sanitizer.bypassSecurityTrustHtml(svg as string)));
   }
 }

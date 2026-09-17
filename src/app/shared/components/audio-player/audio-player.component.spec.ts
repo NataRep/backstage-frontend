@@ -8,9 +8,8 @@ describe('AudioPlayerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AudioPlayerComponent]
-    })
-    .compileComponents();
+      imports: [AudioPlayerComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AudioPlayerComponent);
     component = fixture.componentInstance;

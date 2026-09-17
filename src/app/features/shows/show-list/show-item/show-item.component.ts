@@ -9,7 +9,7 @@ import { DeclensionPipe } from '../../../../shared/pipes/declension.pipe';
   standalone: true,
   imports: [IconComponent, DeclensionPipe, AudioPlayerComponent],
   templateUrl: './show-item.component.html',
-  styleUrl: './show-item.component.scss'
+  styleUrl: './show-item.component.scss',
 })
 export class ShowItemComponent {
   @Input({ required: true }) show!: ShowItem;

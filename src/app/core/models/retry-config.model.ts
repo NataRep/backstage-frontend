@@ -5,6 +5,6 @@ export const APP_RETRY_CONFIG = new InjectionToken<RetryConfig>('WorkerRetryConf
   providedIn: 'root',
   factory: () => ({
     count: 1,
-    delay: 2000
-  })
+    delay: 2000,
+  }),
 });

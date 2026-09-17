@@ -1,12 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  HostListener,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { HasUnsavedChanges } from '../../../core/guards/pending-changes.guard';
 import { Role } from '../../../core/models/enums/employee.enums';
 import { getDaysInMonth } from '../../../core/models/interfaces/calendar.model';
 import { EmployeeProfile } from '../../../core/models/interfaces/employee.models';
 import { selectAuthUser, selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { getAllEmployeesAction, updateWorkerEmployeeAction } from '../../../core/store/employees/employees.actions';
-import { selectAllActiveEmployees, selectEmployeesLoading } from '../../../core/store/employees/employees.selector';
+import {
+  getAllEmployeesAction,
+  updateWorkerEmployeeAction,
+} from '../../../core/store/employees/employees.actions';
+import {
+  selectAllActiveEmployees,
+  selectEmployeesLoading,
+} from '../../../core/store/employees/employees.selector';
 import { CalendarPikerComponent } from '../../../shared/components/calendar-piker/calendar-piker.component';
 import { BaseTableDirective } from '../../../shared/components/data-table/base-table.directive';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component';
@@ -17,15 +31,15 @@ import { DayOfWeekPipe } from '../../../shared/pipes/day-of-week.pipe';
 @Component({
   selector: 'app-team-calendar',
   standalone: true,
-  imports: [IconComponent,
-    DataTableComponent,
-    CalendarPikerComponent,
-    DayOfWeekPipe],
+  imports: [IconComponent, DataTableComponent, CalendarPikerComponent, DayOfWeekPipe],
   templateUrl: './team-calendar.component.html',
   styleUrl: './team-calendar.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> implements OnInit, HasUnsavedChanges {
+export class TeamCalendarComponent
+  extends BaseTableDirective<EmployeeProfile>
+  implements OnInit, HasUnsavedChanges
+{
   // 1. HostListeners & Decorations
   @HostListener('window:resize')
   onResize() {
@@ -55,9 +69,11 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
   // 6. Local State (Signals)
   selectedPeriod = signal({
     month: new Date().getMonth(),
-    year: new Date().getFullYear()
+    year: new Date().getFullYear(),
   });
-  selectedRole = signal<Role | 'all'>((this.route.snapshot.queryParamMap.get('role') as Role) || 'all');
+  selectedRole = signal<Role | 'all'>(
+    (this.route.snapshot.queryParamMap.get('role') as Role) || 'all'
+  );
 
   editingEmployee = signal<EmployeeProfile | null>(null);
   editDraft = signal<Set<number>>(new Set());
@@ -67,7 +83,10 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
   // 7. Computed Properties
   readonly calendarDays = computed(() =>
-    Array.from({ length: getDaysInMonth(this.selectedPeriod().month, this.selectedPeriod().year) }, (_, i) => i + 1)
+    Array.from(
+      { length: getDaysInMonth(this.selectedPeriod().month, this.selectedPeriod().year) },
+      (_, i) => i + 1
+    )
   );
 
   readonly firstDayIndex = computed(() => {
@@ -80,13 +99,13 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     const employees = this.filteredEmployees();
     const map = new Map<string, Set<number>>();
 
-    employees.forEach(emp => {
+    employees.forEach((emp) => {
       const personId = emp.person?.personId;
 
       if (!personId) return;
 
       const unavailableDays = new Set<number>();
-      emp.worker?.availability?.forEach(timestamp => {
+      emp.worker?.availability?.forEach((timestamp) => {
         const date = new Date(timestamp.seconds * 1000);
         if (date.getMonth() === month && date.getFullYear() === year) {
           unavailableDays.add(date.getDate());
@@ -104,16 +123,19 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
     if (list.length === 0) return [];
 
-    const filtered = list.filter(emp => {
+    const filtered = list.filter((emp) => {
       const fullName = emp.person?.fullName.toLowerCase() || '';
-      const matchesName = !query || fullName.split(" ").some(word => word.startsWith(query));
-      const matchesRole = role === 'all' ||
-        emp.worker?.roles?.some(r => String(r).toLowerCase() === String(role).toLowerCase());
+      const matchesName = !query || fullName.split(' ').some((word) => word.startsWith(query));
+      const matchesRole =
+        role === 'all' ||
+        emp.worker?.roles?.some((r) => String(r).toLowerCase() === String(role).toLowerCase());
 
       return matchesName && matchesRole;
     });
 
-    return filtered.sort((a, b) => (a.person?.fullName || '').localeCompare(b.person?.fullName || ''));
+    return filtered.sort((a, b) =>
+      (a.person?.fullName || '').localeCompare(b.person?.fullName || '')
+    );
   });
 
   // 8. Lifecycle Hooks
@@ -126,7 +148,7 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
   }
 
   // 9. Public Business Logic & Event Handlers
-  onDateChange(event: { month: number, year: number }) {
+  onDateChange(event: { month: number; year: number }) {
     this.selectedPeriod.set(event);
   }
 
@@ -145,7 +167,7 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     const personId = employee.person?.personId;
     if (!personId) return;
 
-    this.editingEmployee.update(current => {
+    this.editingEmployee.update((current) => {
       const currentId = current?.person?.personId;
 
       if (currentId === personId) {
@@ -164,7 +186,7 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
   toggleDayInDraft(day: number, isPast: boolean) {
     if (!this.editingEmployee() || isPast) return;
 
-    this.editDraft.update(currentSet => {
+    this.editDraft.update((currentSet) => {
       const newSet = new Set(currentSet);
 
       if (newSet.has(day)) {
@@ -186,29 +208,35 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
 
     const availability = employee.worker?.availability || [];
 
-    const otherMonthsAvailability = availability.filter(ts => {
-      const d = new Date(ts.seconds * 1000);
-      return d.getMonth() !== month || d.getFullYear() !== year;
-    }) || [];
+    const otherMonthsAvailability =
+      availability.filter((ts) => {
+        const d = new Date(ts.seconds * 1000);
+        return d.getMonth() !== month || d.getFullYear() !== year;
+      }) || [];
 
-    const newMonthAvailability = Array.from(draftDays).map(day => ({
+    const newMonthAvailability = Array.from(draftDays).map((day) => ({
       seconds: Math.floor(new Date(year, month, day).getTime() / 1000),
-      nanoseconds: 0
+      nanoseconds: 0,
     }));
 
     const personId = employee.person?.personId;
     const workerData = employee.worker;
 
     if (personId && workerData) {
-      this.store.dispatch(updateWorkerEmployeeAction({
-        personId,
-        worker: {
-          ...workerData,
-          availability: [...otherMonthsAvailability, ...newMonthAvailability]
-        }
-      }));
+      this.store.dispatch(
+        updateWorkerEmployeeAction({
+          personId,
+          worker: {
+            ...workerData,
+            availability: [...otherMonthsAvailability, ...newMonthAvailability],
+          },
+        })
+      );
     } else {
-      console.warn('Не удалось обновить данные: personId или данные сотрудника отсутствуют', employee);
+      console.warn(
+        'Не удалось обновить данные: personId или данные сотрудника отсутствуют',
+        employee
+      );
     }
 
     this.cancelEdit();
@@ -238,7 +266,8 @@ export class TeamCalendarComponent extends BaseTableDirective<EmployeeProfile> i
     if (!employee) return false;
 
     const personId = employee.person?.personId;
-    const originalDays = (personId ? this.availabilityMap().get(personId) : null) ?? new Set<number>();
+    const originalDays =
+      (personId ? this.availabilityMap().get(personId) : null) ?? new Set<number>();
     const draftDays = this.editDraft();
 
     if (originalDays.size !== draftDays.size) return true;

@@ -47,9 +47,11 @@ export class InventoryEffects {
       ofType(InventoryActions.updateInventoryAction),
       mergeMap(({ data }) => {
         if (!data.id) {
-          return of(InventoryActions.updateInventoryFailureAction({
-            error: 'ID инвентаря отсутствует'
-          }));
+          return of(
+            InventoryActions.updateInventoryFailureAction({
+              error: 'ID инвентаря отсутствует',
+            })
+          );
         }
 
         return this.inventoryService.update(data.id, data).pipe(
@@ -57,7 +59,7 @@ export class InventoryEffects {
           catchError((err: Error) =>
             of(InventoryActions.updateInventoryFailureAction({ error: err.message }))
           )
-        )
+        );
       })
     )
   );

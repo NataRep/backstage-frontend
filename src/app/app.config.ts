@@ -28,17 +28,16 @@ export const appConfig: ApplicationConfig = {
       auth: authReducer,
       employees: employeeReducer,
       inventory: inventoryReducer,
-      shows: showReducer
+      shows: showReducer,
     }),
     provideEffects([
       AuthEffects,
       EmployeesEffects,
       InventoryEffects,
       NotificationEffects,
-      ShowEffects]),
-    provideHttpClient(
-      withInterceptors([apiInterceptor])
-    ),
+      ShowEffects,
+    ]),
+    provideHttpClient(withInterceptors([apiInterceptor])),
     provideStoreDevtools({
       maxAge: 25,
       logOnly: !isDevMode(),
@@ -48,5 +47,5 @@ export const appConfig: ApplicationConfig = {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
-  ]
+  ],
 };

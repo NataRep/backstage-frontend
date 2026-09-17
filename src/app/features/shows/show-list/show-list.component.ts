@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal, untracked, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+  untracked,
+  ViewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Actions } from '@ngrx/effects';
@@ -9,7 +19,12 @@ import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { createShowAction, getAllShowAction } from '../../../core/store/shows/shows.actions';
 import { selectAllShow } from '../../../core/store/shows/shows.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
-import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
+import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
+import {
+  getCategoryTabs,
+  TabItem,
+  TabsComponent,
+} from '../../../shared/components/tabs/tabs.component';
 import { filterData } from '../../../shared/utils/filter.utils';
 import { ShowFormComponent } from '../show-form/show-form.component';
 import { CreateShowPayload } from '../show-form/show-form.models';
@@ -18,14 +33,16 @@ import { ShowItemComponent } from './show-item/show-item.component';
 @Component({
   selector: 'app-show-list',
   standalone: true,
-  imports: [TabsComponent,
+  imports: [
+    TabsComponent,
     ModalContainerComponent,
     ShowFormComponent,
-    ShowItemComponent
+    ShowItemComponent,
+    SearchInputComponent,
   ],
   templateUrl: './show-list.component.html',
   styleUrl: './show-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowListComponent implements OnInit {
   @ViewChild('showForm') showForm!: ShowFormComponent;
@@ -49,7 +66,7 @@ export class ShowListComponent implements OnInit {
       searchFields: (s) => [s.title, s.description],
       category: this.currentCategory() || undefined,
       categoryField: 'type',
-      sortField: (s) => s.title
+      sortField: (s) => s.title,
     })
   );
 
@@ -66,11 +83,6 @@ export class ShowListComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.dispatch(getAllShowAction());
-  }
-
-  onSearch(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchQuery.set(value);
   }
 
   createNewShow(data: CreateShowPayload) {

@@ -1,12 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { WorkerBase } from '../../../core/models/interfaces/employee.models';
 import { Person } from '../../../core/models/interfaces/person.model';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { createEmployeeAction, createEmployeeSuccessAction } from '../../../core/store/employees/employees.actions';
+import {
+  createEmployeeAction,
+  createEmployeeSuccessAction,
+} from '../../../core/store/employees/employees.actions';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
 import { EmployeeFormComponent } from '../../employee/employee-form/employee-form.component';
 import { EmployeesTableComponent } from '../../employee/employees-table/employees-table.component';
@@ -14,20 +25,17 @@ import { EmployeesTableComponent } from '../../employee/employees-table/employee
 @Component({
   selector: 'app-team',
   standalone: true,
-  imports: [CommonModule,
-    ModalContainerComponent,
-    EmployeeFormComponent,
-    EmployeesTableComponent],
+  imports: [CommonModule, ModalContainerComponent, EmployeeFormComponent, EmployeesTableComponent],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TeamListComponent implements OnInit {
   // Таблица сотрудников
   //1. запрашиваем список всех работников с бека - диспатч экшена
   // 2. из стора берем список работников
   // 3. отображаем список на странице
-  // 4. для отображения большого списка используем 
+  // 4. для отображения большого списка используем
 
   // Кнопка Добавить нового
   // 1. по клику открываю форму в модалке
@@ -45,13 +53,12 @@ export class TeamListComponent implements OnInit {
   isCreateNewModalOpen = signal(false);
 
   ngOnInit() {
-    this.actions.pipe(
-      ofType(createEmployeeSuccessAction),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(() => {
-      this.employeeForm?.resetForm();
-      this.closeCreateModal();
-    });
+    this.actions
+      .pipe(ofType(createEmployeeSuccessAction), takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.employeeForm?.resetForm();
+        this.closeCreateModal();
+      });
   }
 
   createNewEmployee(data: { person: Person; worker: WorkerBase }) {

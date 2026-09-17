@@ -19,7 +19,6 @@
   }
 }
 
-
 .modal-wrapper.small {
   z-index: 100;
 }
@@ -42,7 +41,6 @@
   &.info,
   &.action,
   &.default {
-
     background-color: var(--color-grey-dark);
     color: var(--color-grey-text);
     text-align: center;
@@ -68,7 +66,8 @@
     }
   }
 
-  &.warning {}
+  &.warning {
+  }
 
   &.error {
     background-color: var(--color-red);

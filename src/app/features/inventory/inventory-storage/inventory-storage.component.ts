@@ -1,28 +1,45 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { INVENTORY_CATEGORY, InventoryCategory, InventoryItem } from '../../../core/models/interfaces/inventory.models';
+import {
+  INVENTORY_CATEGORY,
+  InventoryCategory,
+  InventoryItem,
+} from '../../../core/models/interfaces/inventory.models';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { createInventoryAction } from '../../../core/store/inventory/inventory.actions';
 import { selectInventoryLoading } from '../../../core/store/inventory/inventory.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
-import { getCategoryTabs, TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
+import {
+  getCategoryTabs,
+  TabItem,
+  TabsComponent,
+} from '../../../shared/components/tabs/tabs.component';
 import { InventoryFormComponent } from '../inventory-form/inventory-form.component';
 import { InventoryTableComponent } from '../inventory-table/inventory-table.component';
 
 @Component({
   selector: 'app-inventory-storage',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     TabsComponent,
     InventoryTableComponent,
     ModalContainerComponent,
-    InventoryFormComponent],
+    InventoryFormComponent,
+  ],
   templateUrl: './inventory-storage.component.html',
   styleUrl: './inventory-storage.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InventoryStorageComponent {
   @ViewChild('inventoryForm') inventoryForm!: InventoryFormComponent;
@@ -41,7 +58,7 @@ export class InventoryStorageComponent {
     return (value as InventoryCategory) || 'firework';
   });
 
-  applicationTabs: TabItem[] = getCategoryTabs(INVENTORY_CATEGORY)
+  applicationTabs: TabItem[] = getCategoryTabs(INVENTORY_CATEGORY);
 
   openCreateModal() {
     this.isCreateNewModalOpen.set(true);
@@ -53,7 +70,7 @@ export class InventoryStorageComponent {
   }
 
   createItem(data: InventoryItem) {
-    this.store.dispatch(createInventoryAction({ data }))
-    this.closeCreateModal()
+    this.store.dispatch(createInventoryAction({ data }));
+    this.closeCreateModal();
   }
 }

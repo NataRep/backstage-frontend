@@ -46,7 +46,6 @@ label,
 }
 
 .modal__body {
-
   label,
   .label {
     margin-right: 1rem;
@@ -55,11 +54,10 @@ label,
 }
 
 :where(body:not(:has(.badge))) {
-
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
-  input[type="phone"] {
+  input[type='text'],
+  input[type='password'],
+  input[type='email'],
+  input[type='phone'] {
     width: 100%;
     border: none;
     background-color: #ffffff08;
@@ -70,10 +68,10 @@ label,
     background-clip: padding-box;
   }
 
-  input[type="text"]:focus-visible,
-  input[type="password"]:focus-visible,
-  input[type="email"]:focus-visible,
-  input[type="phone"]:focus-visible {
+  input[type='text']:focus-visible,
+  input[type='password']:focus-visible,
+  input[type='email']:focus-visible,
+  input[type='phone']:focus-visible {
     border: 1px solid rgba(var(--color-blue-rgb), 0.5);
     outline: none;
   }
@@ -90,7 +88,6 @@ input:-webkit-autofill {
   caret-color: var(--color-grey-extra-light) !important;
   transition: background-color 9999s ease-in-out 0s;
 }
-
 
 .checkbox {
   display: inline-flex;
@@ -132,30 +129,29 @@ input:-webkit-autofill {
   opacity: 0;
 }
 
-.checkbox input:checked+.checkbox__box {
+.checkbox input:checked + .checkbox__box {
   background-color: var(--color-blue);
   border-color: var(--color-blue);
 }
 
-.checkbox input:checked+.checkbox__box::after {
+.checkbox input:checked + .checkbox__box::after {
   opacity: 1;
 }
 
-.checkbox input:focus-visible+.checkbox__box {
+.checkbox input:focus-visible + .checkbox__box {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
 }
 
-.checkbox input:disabled+.checkbox__box {
+.checkbox input:disabled + .checkbox__box {
   background-color: #eee;
   border-color: #aaa;
   cursor: not-allowed;
 }
 
-.checkbox input:disabled~.checkbox__label {
+.checkbox input:disabled ~ .checkbox__label {
   color: #aaa;
   cursor: not-allowed;
 }
-
 
 .form__row {
   position: relative;
@@ -188,7 +184,6 @@ input:-webkit-autofill {
     }
   }
 }
-
 
 select {
   display: flex;

@@ -7,10 +7,8 @@ export const guestGuard: CanActivateFn = async () => {
   const router = inject(Router);
 
   if (authService.role() === null) {
-
     const maxWaitTime = 2000;
     const checkInterval = 10;
-
 
     await new Promise<void>((resolve) => {
       let elapsed = 0;

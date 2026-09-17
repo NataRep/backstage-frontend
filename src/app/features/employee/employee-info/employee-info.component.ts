@@ -10,11 +10,7 @@ import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-lett
 @Component({
   selector: 'app-employee-info',
   standalone: true,
-  imports: [CommonModule,
-    SkeletonComponent,
-    IconComponent,
-    SocialLinkPipe,
-    UppercaseFirstLetter],
+  imports: [CommonModule, SkeletonComponent, IconComponent, SocialLinkPipe, UppercaseFirstLetter],
   templateUrl: './employee-info.component.html',
   styleUrl: './employee-info.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

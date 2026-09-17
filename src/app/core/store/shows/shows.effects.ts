@@ -32,40 +32,46 @@ export class ShowEffects {
 
   // --- 2. Create ---
   createShow$ = createEffect(
-    (
-    ) => {
+    () => {
       return this.actions$.pipe(
         ofType(ShowsActions.createShowAction),
         exhaustMap(({ data }) => {
-
           const uploadRequests = {
             imageUrl: data.imageFile ? this.cloudinaryService.uploadFile(data.imageFile) : of(null),
-            audioUrl: data.audioFile ? this.cloudinaryService.uploadFile(data.audioFile) : of(null)
+            audioUrl: data.audioFile ? this.cloudinaryService.uploadFile(data.audioFile) : of(null),
           };
 
           return forkJoin(uploadRequests).pipe(
-            map(urls => {
+            map((urls) => {
               const mappedData = mapFormToShowItem(data.formValue);
 
               return {
                 ...mappedData,
                 viewImg: {
                   ...mappedData.viewImg,
-                  url: urls.imageUrl ?? mappedData.viewImg.url
+                  url: urls.imageUrl ?? mappedData.viewImg.url,
                 },
                 audio: {
                   ...mappedData.audio,
-                  url: urls.audioUrl ?? mappedData.audio?.url
-                }
+                  url: urls.audioUrl ?? mappedData.audio?.url,
+                },
               } as ShowItem;
             }),
-            switchMap(finalData =>
+            switchMap((finalData) =>
               this.showService.create(finalData).pipe(
                 map(() => ShowsActions.createShowSuccessAction({ data: finalData })),
-                catchError(error => of(ShowsActions.createShowFailureAction({ error: error.message })))
+                catchError((error) =>
+                  of(ShowsActions.createShowFailureAction({ error: error.message }))
+                )
               )
             ),
-            catchError(error => of(ShowsActions.createShowFailureAction({ error: `Ошибка загрузки медиа: ${error.message}` })))
+            catchError((error) =>
+              of(
+                ShowsActions.createShowFailureAction({
+                  error: `Ошибка загрузки медиа: ${error.message}`,
+                })
+              )
+            )
           );
         })
       );
@@ -79,9 +85,11 @@ export class ShowEffects {
       ofType(ShowsActions.updateShowAction),
       mergeMap(({ data }) => {
         if (!data.id) {
-          return of(ShowsActions.updateShowFailureAction({
-            error: 'ID инвентаря отсутствует'
-          }));
+          return of(
+            ShowsActions.updateShowFailureAction({
+              error: 'ID инвентаря отсутствует',
+            })
+          );
         }
 
         return this.showService.update(data.id, data).pipe(
@@ -89,7 +97,7 @@ export class ShowEffects {
           catchError((err: Error) =>
             of(ShowsActions.updateShowFailureAction({ error: err.message }))
           )
-        )
+        );
       })
     )
   );

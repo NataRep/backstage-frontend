@@ -30,7 +30,7 @@ input.stockQuantity {
   position: relative;
 }
 
-.radio-item input[type="radio"] {
+.radio-item input[type='radio'] {
   position: absolute;
   opacity: 0;
   pointer-events: none;
@@ -60,12 +60,11 @@ input.stockQuantity {
   }
 }
 
-.radio-item input:focus+label {
+.radio-item input:focus + label {
   outline: none;
 }
 
-
-.radio-item input:active+label {
+.radio-item input:active + label {
   transform: translateY(1px);
 }
 
@@ -73,32 +72,29 @@ input.stockQuantity {
    STATUS COLORS (по id status-1/2/3)
    ========================================= */
 
-.radio-item input[id$="1"]:checked+label {
+.radio-item input[id$='1']:checked + label {
   background-color: var(--color-green);
   border-color: var(--color-green);
   color: var(--color-grey-dark);
-  box-shadow:
-    0 0 0 1px rgba(var(--color-green-rgb), 0.35);
+  box-shadow: 0 0 0 1px rgba(var(--color-green-rgb), 0.35);
 }
 
-.radio-item input[id$="2"]:checked+label {
+.radio-item input[id$='2']:checked + label {
   background-color: var(--color-orange);
   border-color: var(--color-orange);
   color: var(--color-grey-dark);
-  box-shadow:
-    0 0 0 1px rgba(var(--color-orange-rgb), 0.35);
+  box-shadow: 0 0 0 1px rgba(var(--color-orange-rgb), 0.35);
 }
 
-.radio-item input[id$="3"]:checked+label {
+.radio-item input[id$='3']:checked + label {
   background-color: var(--color-red);
   border-color: var(--color-red);
   color: var(--color-grey-dark);
 
-  box-shadow:
-    0 0 0 1px rgba(var(--color-red-rgb), 0.35);
+  box-shadow: 0 0 0 1px rgba(var(--color-red-rgb), 0.35);
 }
 
-.radio-item input:disabled+label {
+.radio-item input:disabled + label {
   opacity: 0.5;
   cursor: not-allowed;
   box-shadow: none;

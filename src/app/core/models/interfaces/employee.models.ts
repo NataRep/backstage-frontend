@@ -1,6 +1,6 @@
-import { AccessLevel } from "../enums/auth.enums";
-import { Role } from "../enums/employee.enums";
-import { Person } from "./person.model";
+import { AccessLevel } from '../enums/auth.enums';
+import { Role } from '../enums/employee.enums';
+import { Person } from './person.model';
 
 export interface WorkerBase {
   roles: Role[];

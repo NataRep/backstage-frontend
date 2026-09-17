@@ -1,5 +1,5 @@
 :host {
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     width: 100%;
     padding: 0 1rem;
   }
@@ -10,7 +10,7 @@ ul {
   padding: 0 1rem;
   margin: 0 auto;
 
-  @media (max-width:768px) {
+  @media (max-width: 768px) {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -36,7 +36,6 @@ a {
   text-decoration: none;
   color: inherit;
   transition: background-color 0.25s;
-
 
   &:not(.home) {
     padding: 6px;

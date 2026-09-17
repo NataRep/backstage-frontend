@@ -8,9 +8,8 @@ describe('ShowFormInventoryManagerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShowFormInventoryManagerComponent]
-    })
-    .compileComponents();
+      imports: [ShowFormInventoryManagerComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ShowFormInventoryManagerComponent);
     component = fixture.componentInstance;

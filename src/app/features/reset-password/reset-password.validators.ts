@@ -47,7 +47,6 @@ export function passwordsMatchValidator(passwordKey: string, repeatKey: string):
   };
 }
 
-
 export function passwordsMatchGroupValidator(passwordKey: string, repeatKey: string): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const formGroup = group as FormGroup;

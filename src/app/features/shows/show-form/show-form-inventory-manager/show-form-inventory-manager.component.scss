@@ -27,7 +27,9 @@
     line-height: 100%;
     color: var(--color-yellow);
     cursor: pointer;
-    transition: color 0.2s ease, border 0.2s ease;
+    transition:
+      color 0.2s ease,
+      border 0.2s ease;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -50,7 +52,9 @@
   font-weight: 500;
   line-height: 100%;
   color: var(--color-grey-text);
-  transition: color 0.2s ease, border 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border 0.2s ease;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -76,6 +80,5 @@
         }
       }
     }
-
   }
 }

@@ -6,20 +6,20 @@
   <header class="header">
     <div class="header__left-group">
       <h1>
-        @if(dashboard){
-        <a [routerLink]="dashboard.link" routerLinkActive="active" class="home-link">
-          <app-icon [name]="dashboard.icon"></app-icon>
-          <span class="tooltip tooltip--right">{{ dashboard.title }} </span>
-        </a>
+        @if (dashboard) {
+          <a [routerLink]="dashboard.link" routerLinkActive="active" class="home-link">
+            <app-icon [name]="dashboard.icon"></app-icon>
+            <span class="tooltip tooltip--right">{{ dashboard.title }} </span>
+          </a>
         }
         {{ pageTitle }}
       </h1>
     </div>
     <div class="header__right-group">
-      @if(welcomeMessage.needShow && welcomeMessage.message) {
-      <div class="hello-message">
-        {{ welcomeMessage.message }}
-      </div>
+      @if (welcomeMessage.needShow && welcomeMessage.message) {
+        <div class="hello-message">
+          {{ welcomeMessage.message }}
+        </div>
       }
       <app-user-nav [userName]="fullName"></app-user-nav>
     </div>

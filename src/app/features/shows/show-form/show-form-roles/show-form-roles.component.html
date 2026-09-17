@@ -1,22 +1,22 @@
 @if (rolesGroup) {
-<div [formGroup]="rolesGroup" class="form-section">
-  <h2 class="label label--section">Минимальное количество участников:</h2>
+  <div [formGroup]="rolesGroup" class="form-section">
+    <h2 class="label label--section">Минимальное количество участников:</h2>
 
-  <div class="form__grid">
-    <div class="form__column">
-      <label for="artist" class="label">Артисты:</label>
-      <app-number-input formControlName="artist" [min]="0"></app-number-input>
-    </div>
+    <div class="form__grid">
+      <div class="form__column">
+        <label for="artist" class="label">Артисты:</label>
+        <app-number-input formControlName="artist" [min]="0"></app-number-input>
+      </div>
 
-    <div class="form__column">
-      <label for="tech" class="label">Техники:</label>
-      <app-number-input formControlName="tech" [min]="0"></app-number-input>
-    </div>
+      <div class="form__column">
+        <label for="tech" class="label">Техники:</label>
+        <app-number-input formControlName="tech" [min]="0"></app-number-input>
+      </div>
 
-    <div class="form__column">
-      <label for="fireworker" class="label">Пиротехники:</label>
-      <app-number-input formControlName="fireworker" [min]="0"></app-number-input>
+      <div class="form__column">
+        <label for="fireworker" class="label">Пиротехники:</label>
+        <app-number-input formControlName="fireworker" [min]="0"></app-number-input>
+      </div>
     </div>
   </div>
-</div>
 }

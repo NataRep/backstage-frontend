@@ -5,7 +5,7 @@ import {
   HttpEvent,
   HttpHandlerFn,
   HttpInterceptorFn,
-  HttpRequest
+  HttpRequest,
 } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
@@ -17,11 +17,13 @@ import { AuthService } from '../services/auth.service';
 export const SKIP_AUTH = new HttpContextToken<boolean>(() => false);
 export const ALLOW_EXTERNAL = new HttpContextToken<boolean>(() => false);
 
-
 let refreshInProgress = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
-export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
+export const apiInterceptor: HttpInterceptorFn = (
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
@@ -52,11 +54,11 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
             'cache-control',
             'pragma',
             'accept-encoding',
-            'user-agent'
+            'user-agent',
           ]);
 
           let cleaned = req;
-          req.headers.keys().forEach(h => {
+          req.headers.keys().forEach((h) => {
             if (!whitelist.has(h.toLowerCase())) {
               cleaned = cleaned.clone({ headers: cleaned.headers.delete(h) });
             }
@@ -65,7 +67,6 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
           return next(cleaned);
         }
       } catch {
-
         return next(req);
       }
     }
@@ -81,7 +82,8 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
     }
 
     const contentTypeAlready = req.headers.has('Content-Type');
-    const isPlainObjectBody = req.body !== null &&
+    const isPlainObjectBody =
+      req.body !== null &&
       typeof req.body === 'object' &&
       !(req.body instanceof FormData) &&
       !(req.body instanceof ArrayBuffer) &&
@@ -93,7 +95,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
 
     const clonedReq = req.clone({
       url: finalUrl,
-      setHeaders: headers
+      setHeaders: headers,
     });
 
     return next(clonedReq);
@@ -102,7 +104,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
   const handle401Error = (): Observable<HttpEvent<unknown>> => {
     if (refreshInProgress) {
       return refreshTokenSubject.pipe(
-        filter(token => token !== null),
+        filter((token) => token !== null),
         take(1),
         switchMap((token) => handleRequest(token))
       );
@@ -122,7 +124,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
         safeRedirectToLogin(router);
         return throwError(() => new Error('Token refresh failed'));
       }),
-      catchError(err => {
+      catchError((err) => {
         refreshInProgress = false;
         safeRedirectToLogin(router);
         return throwError(() => err);
@@ -148,7 +150,7 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
           safeRedirectToLogin(router);
           return throwError(() => new Error('Token refresh failed'));
         }),
-        catchError(err => {
+        catchError((err) => {
           refreshInProgress = false;
           safeRedirectToLogin(router);
           return throwError(() => err);
@@ -156,9 +158,9 @@ export const apiInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, nex
       );
     } else {
       return refreshTokenSubject.pipe(
-        filter(t => t !== null),
+        filter((t) => t !== null),
         take(1),
-        switchMap(t => handleRequest(t))
+        switchMap((t) => handleRequest(t))
       );
     }
   }
@@ -186,7 +188,7 @@ function isValidReturnUrl(url: string): boolean {
 
     if (!decoded.startsWith('/')) return false;
 
-    if (decoded.split('/').some(segment => segment === '..')) return false;
+    if (decoded.split('/').some((segment) => segment === '..')) return false;
 
     const absoluteUrl = new URL(decoded, window.location.origin);
     return absoluteUrl.origin === window.location.origin;
@@ -194,7 +196,6 @@ function isValidReturnUrl(url: string): boolean {
     return false;
   }
 }
-
 
 function safeRedirectToLogin(router: Router): void {
   const currentUrl = router.url || '';
@@ -205,7 +206,7 @@ function safeRedirectToLogin(router: Router): void {
   }
 
   Promise.resolve().then(() => {
-    router.navigate(['/login'], { queryParams }).catch(err => {
+    router.navigate(['/login'], { queryParams }).catch((err) => {
       console.error('Redirect to login failed:', err);
     });
   });

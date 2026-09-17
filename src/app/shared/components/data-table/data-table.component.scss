@@ -17,18 +17,9 @@
   @media (max-width: 768px) {
     justify-content: space-between;
   }
-}
 
-.search {
-  max-width: 10rem;
-  margin-right: 3rem;
-
-  &::placeholder {
-    transition: color 0.25s ease;
-  }
-
-  &:disabled::placeholder {
-    color: var(--color-grey-medium);
+  app-search-input {
+    margin-right: 3rem;
   }
 }
 

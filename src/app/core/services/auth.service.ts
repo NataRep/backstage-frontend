@@ -9,7 +9,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   User,
-  UserCredential
+  UserCredential,
 } from 'firebase/auth';
 import { loginSuccessAction } from '../store/auth/auth.actions';
 
@@ -39,9 +39,12 @@ export class AuthService {
 
     this.initAuth();
 
-    effect(() => {
-      this.updateToken();
-    }, { allowSignalWrites: true });
+    effect(
+      () => {
+        this.updateToken();
+      },
+      { allowSignalWrites: true }
+    );
   }
 
   private async initAuth() {
@@ -53,13 +56,15 @@ export class AuthService {
 
         if (user) {
           this._role.set('user');
-          this.store.dispatch(loginSuccessAction({
-            user: {
-              email: user.email,
-              personId: user.uid,
-              name: user.displayName
-            }
-          }));
+          this.store.dispatch(
+            loginSuccessAction({
+              user: {
+                email: user.email,
+                personId: user.uid,
+                name: user.displayName,
+              },
+            })
+          );
         } else {
           this._role.set('guest');
         }
@@ -119,7 +124,7 @@ export class AuthService {
     isValid: boolean;
     expiresIn?: number;
     isExpired?: boolean;
-    willExpireSoon?: boolean
+    willExpireSoon?: boolean;
   } {
     const token = this._token();
     const user = this._user();
@@ -138,7 +143,7 @@ export class AuthService {
         isValid: expiresIn > 0,
         expiresIn: Math.floor(expiresIn / 1000),
         isExpired: expiresIn <= 0,
-        willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000
+        willExpireSoon: expiresIn > 0 && expiresIn < 5 * 60 * 1000,
       };
     } catch {
       return { isValid: false, isExpired: true };
