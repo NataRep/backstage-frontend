@@ -25,15 +25,20 @@ export const ROLE_RU: Record<Role, NounTranslation> = {
 
 export type UniversalCategory = ShowType | InventoryCategory;
 
-export const UNIVERSAL_CATEGORY_RU: Record<UniversalCategory, string> = {
-  // Общие (Шоу + Заказы + Инвентарь)
+export const INVENTORY_CATEGORY_RU: Record<UniversalCategory, string> = {
   firework: 'пиротехника',
   fireshow: 'огненное шоу',
   ledshow: 'световое шоу',
   welcome: 'велком',
   other: 'прочее',
-  // Только инвентарь
   stage: 'сцена',
+};
+
+export const SHOW_CATEGORY_RU: Record<ShowType, string> = {
+  firework: 'пиротехника',
+  fireshow: 'огненное шоу',
+  ledshow: 'световое шоу',
+  welcome: 'велком',
 };
 
 export const INVENTORY_TYPES_RU: Record<InventoryType, NounTranslation> = {

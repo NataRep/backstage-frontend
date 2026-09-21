@@ -3,35 +3,28 @@
   <div class="content-container__content">
     <div class="controls">
       @if (canEdit()) {
-        <button class="button button--yellow button--add" (click)="openCreateModal()">
-          Add new
-        </button>
+      <button class="button button--yellow button--add" (click)="openCreateModal()">
+        Add new
+      </button>
       }
-      <app-search-input
-        [value]="searchQuery()"
-        (searchChange)="searchQuery.set($event)"
-        placeholder="Поиск..."
-      />
+      <app-search-input [value]="searchQuery()" (searchChange)="searchQuery.set($event)" placeholder="Поиск..." />
     </div>
     <ul class="show-list grid">
       @for (show of filteredShows(); track show.id) {
-        <li>
-          <app-show-item [show]="show" type="card"></app-show-item>
-        </li>
+      <li>
+        <app-show-item [show]="show" type="card"></app-show-item>
+      </li>
       } @empty {
-        Не найдено
+      Не найдено
       }
     </ul>
   </div>
 </div>
-
-<app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default">
+@if (isCreateNewModalOpen()) {
+<app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default" (action)="onModalAction($event)">
   <div class="modal__header">Add new show</div>
   <div class="modal__body">
-    <app-show-form
-      #showForm
-      (cancelForm)="closeCreateModal()"
-      (save)="createNewShow($event)"
-    ></app-show-form>
+    <app-show-form #showForm (cancelForm)="closeCreateModal()" (save)="createNewShow($event)"></app-show-form>
   </div>
 </app-modal-container>
+}

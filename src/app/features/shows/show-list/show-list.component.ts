@@ -19,6 +19,7 @@ import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { createShowAction, getAllShowAction } from '../../../core/store/shows/shows.actions';
 import { selectAllShow } from '../../../core/store/shows/shows.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
+import { ModalAction } from '../../../shared/components/modal-container/modal.model';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
 import {
   getCategoryTabs,
@@ -97,5 +98,11 @@ export class ShowListComponent implements OnInit {
   closeCreateModal() {
     this.showForm?.resetForm();
     this.isCreateNewModalOpen.set(false);
+  }
+
+  onModalAction(action: ModalAction): void {
+    if (action === 'close') {
+      this.closeCreateModal();
+    }
   }
 }

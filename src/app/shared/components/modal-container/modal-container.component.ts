@@ -22,17 +22,13 @@ export class ModalContainerComponent {
     this.isOpen.set(true);
   }
 
-  close() {
-    this.action.emit('close');
-    this.isOpen.set(false);
-  }
-
   onConfirm() {
     this.action.emit('confirm');
   }
 
   onCancel() {
     this.action.emit('cancel');
-    this.close();
+    this.action.emit('close');
+    this.isOpen.set(false);
   }
 }

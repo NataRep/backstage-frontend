@@ -27,8 +27,8 @@ import {
 } from '../../../core/models/interfaces/inventory.models';
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
 import {
+  INVENTORY_CATEGORY_RU,
   INVENTORY_TYPES_RU,
-  UNIVERSAL_CATEGORY_RU,
 } from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
@@ -64,7 +64,7 @@ export class InventoryFormComponent implements OnChanges {
 
   readonly typesTranslate = INVENTORY_TYPES_RU;
   readonly types = INVENTORY_TYPES;
-  readonly categoryTranslate = UNIVERSAL_CATEGORY_RU;
+  readonly categoryTranslate = INVENTORY_CATEGORY_RU;
   readonly statusOptions = [
     { value: 1, label: 'Хорошее' },
     { value: 2, label: 'Среднее' },

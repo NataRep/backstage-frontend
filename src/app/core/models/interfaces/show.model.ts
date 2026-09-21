@@ -9,7 +9,7 @@ export interface ShowItem {
   requiredRoles: ShowRoles;
   requiredInventory: Record<string, number>;
   viewImg: MediaMetadata;
-  audio?: MediaMetadata;
+  audio: MediaMetadata;
   comment: string;
 }
 

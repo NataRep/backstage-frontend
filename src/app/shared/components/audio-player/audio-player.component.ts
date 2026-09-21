@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MediaMetadata } from '../../../core/models/interfaces/show.model';
-import { AudioDurationPipe } from '../../pipes/audio-duration.pipe';
+import { DurationPipe } from '../../pipes/duration.pipe';
 import { FileSizePipe } from '../../pipes/file-size.pipe';
 import { IconComponent } from '../icons/icons.component';
 
@@ -22,7 +22,7 @@ interface AudioState {
 @Component({
   selector: 'app-audio-player',
   standalone: true,
-  imports: [IconComponent, AudioDurationPipe, FileSizePipe],
+  imports: [IconComponent, FileSizePipe, DurationPipe],
   templateUrl: './audio-player.component.html',
   styleUrl: './audio-player.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -47,8 +47,6 @@ export class AudioPlayerComponent {
       duration: this.audioDuration,
       volume: this.audioVolume,
     };
-
-    console.log(this.audioState);
   }
 
   onPlay(): void {

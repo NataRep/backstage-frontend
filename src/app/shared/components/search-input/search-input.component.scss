@@ -44,9 +44,6 @@ app-icon.search-icon {
   --icon-fill-color: none;
   --icon-size: 1rem;
 
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      --icon-stroke-color: var(--color-green);
-    }
-  }
+  margin-right: 0.25rem;
+
 }

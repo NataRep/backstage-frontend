@@ -24,7 +24,7 @@ import { IconComponent } from '../../../shared/components/icons/icons.component'
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
 import {
   INVENTORY_TYPES_RU,
-  UNIVERSAL_CATEGORY_RU,
+  SHOW_CATEGORY_RU,
 } from '../../../shared/constants/texts/common.texts';
 import { TrimOnBlurDirective } from '../../../shared/directive/trim-on-blur.directive';
 import { UppercaseFirstLetter } from '../../../shared/pipes/uppercase-first-letter.pipe';
@@ -65,7 +65,7 @@ export class ShowFormComponent implements OnInit, OnChanges {
   readonly inventoryEntities = this.store.selectSignal(selectInventoryEntities);
 
   readonly inventoryLabels = INVENTORY_TYPES_RU;
-  readonly categoryTranslate = UNIVERSAL_CATEGORY_RU;
+  readonly categoryTranslate = SHOW_CATEGORY_RU;
   readonly inventoryCategories = Object.keys(INVENTORY_TYPES_RU) as InventoryType[];
 
   readonly searchControls: Record<InventoryType, FormControl<string>> = {
@@ -137,5 +137,9 @@ export class ShowFormComponent implements OnInit, OnChanges {
 
   resetForm(): void {
     this.formService.resetForm();
+  }
+
+  onClose(): void {
+    this.cancelForm.emit();
   }
 }

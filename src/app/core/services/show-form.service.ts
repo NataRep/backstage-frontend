@@ -48,6 +48,7 @@ export class ShowFormService {
   }
 
   addInventoryItem(itemId: string, category: InventoryType): void {
+    console.log('ADD INVENTORY', itemId, category);
     const array = this.inventoryGroups[category as keyof typeof this.inventoryGroups];
     const exists = array.controls.some((ctrl) => ctrl.getRawValue().id === itemId);
     if (exists) return;
@@ -113,6 +114,7 @@ export class ShowFormService {
     requiredInventory: Record<string, number>,
     entities: Record<string, InventoryItem>
   ): void {
+    console.log('FILL INVENTORY', requiredInventory);
     const inventoryControls = this.inventoryGroups;
 
     Object.entries(requiredInventory).forEach(([itemId, count]) => {
@@ -163,7 +165,7 @@ export class ShowFormService {
 
   resetForm(): void {
     this.form.reset();
-    Object.values(this.inventoryGroups).forEach((array) => array.clear());
+    Object.values(this.inventoryGroups).forEach((array) => { array.clear(); });
     this.resetFiles();
     this.form.markAsPristine();
     this.form.markAsUntouched();
