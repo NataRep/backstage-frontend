@@ -1,86 +1,88 @@
 <form [formGroup]="form" class="form" (ngSubmit)="submit()">
-  <h2 class="label label--section">Информация о шоу:</h2>
-  <div class="form__row" [class.invalid]="form.controls.type.invalid && form.controls.type.touched">
-    <label for="type" class="label">Тип шоу*:</label>
-    <select id="type" formControlName="type">
-      <option [ngValue]="null" disabled>Выберите тип...</option>
-      @for (cat of categoryTranslate | keyvalue; track cat.key) {
-      <option [value]="cat.key">{{ cat.value | upperFirstLetter }}</option>
-      }
-    </select>
+  <div class="form-section">
+    <h2 class="label label--section">Информация о шоу:</h2>
+    <div class="form__row" [class.invalid]="form.controls.type.invalid && form.controls.type.touched">
+      <label for="type" class="label">Тип шоу*:</label>
+      <select id="type" formControlName="type">
+        <option [ngValue]="null" disabled>Выберите тип...</option>
+        @for (cat of categoryTranslate | keyvalue; track cat.key) {
+        <option [value]="cat.key">{{ cat.value | upperFirstLetter }}</option>
+        }
+      </select>
 
-    @if (form.controls.type.invalid && form.controls.type.touched) {
-    <div class="error-message">
-      <span>Поле обязательно</span>
-    </div>
-    }
-  </div>
-
-  <div class="form__row" [class.invalid]="form.controls.title.invalid && form.controls.title.touched">
-    <label for="title" class="label">Название*:</label>
-    <input id="title" type="text" formControlName="title" placeholder="Введите название..." appTrimOnBlur />
-
-    @if (form.controls.title.invalid && form.controls.title.touched) {
-    <div class="error-message">
-      @if (form.controls.title.errors?.['required']) {
-      <span>Поле обязательно</span>
+      @if (form.controls.type.invalid && form.controls.type.touched) {
+      <div class="error-message">
+        <span>Поле обязательно</span>
+      </div>
       }
     </div>
-    }
-  </div>
 
-  <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
-    <label for="duration" class="label">Длительность (секунды):</label>
-    <app-number-input formControlName="duration" [min]="1"></app-number-input>
+    <div class="form__row" [class.invalid]="form.controls.title.invalid && form.controls.title.touched">
+      <label for="title" class="label">Название*:</label>
+      <input id="title" type="text" formControlName="title" placeholder="Введите название..." appTrimOnBlur />
 
-    @if (form.controls.duration.invalid && form.controls.duration.touched) {
-    <div class="error-message"><span>Минимум 1 секунда.</span></div>
-    }
-  </div>
-
-  <div class="form__row">
-    <label for="description" class="label">Описание*:</label>
-    <textarea id="description" formControlName="description" rows="3" appTrimOnBlur></textarea>
-  </div>
-
-  <div class="form__row" [class.invalid]="form.controls.price.invalid && form.controls.price.touched">
-    <label for="price" class="label">Цена (₽)*:</label>
-    <app-number-input formControlName="price" [min]="0" [max]="9999999"></app-number-input>
-  </div>
-
-  <div class="form__row">
-    <label for="image" class="label">Обложка*:</label>
-    <div class="file-upload-wrapper">
-      <input id="image" type="file" #imageInput accept="image/*" (change)="onFileSelected($event, 'image')" hidden />
-      @if (form.controls.viewImg.value) {
-      <span class="file-name">{{ form.controls.viewImg.value.name }}</span>
-      }
-      @if (formService.selectedImage()) {
-      <app-icon name="edit" class="edit-icon" (click)="imageInput.click()"></app-icon>
-      <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('image')"></app-icon>
-      } @else {
-      <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
-        Выбрать фото
-      </button>
+      @if (form.controls.title.invalid && form.controls.title.touched) {
+      <div class="error-message">
+        @if (form.controls.title.errors?.['required']) {
+        <span>Поле обязательно</span>
+        }
+      </div>
       }
     </div>
-  </div>
 
-  <div class="form__row">
-    <label for="audio" class="label">Музыкальный трек:</label>
-    <div class="file-upload-wrapper">
-      <input id="audio" type="file" #audioInput accept="audio/*" (change)="onFileSelected($event, 'audio')" hidden />
-      @if (form.controls.audio.value) {
-      <span class="file-name">{{ form.controls.audio.value.name }}</span>
+    <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
+      <label for="duration" class="label">Длительность (секунды):</label>
+      <app-number-input formControlName="duration" [min]="1"></app-number-input>
+
+      @if (form.controls.duration.invalid && form.controls.duration.touched) {
+      <div class="error-message"><span>Минимум 1 секунда.</span></div>
       }
-      @if (formService.selectedAudio()) {
-      <app-icon name="edit" class="edit-icon" (click)="audioInput.click()"></app-icon>
-      <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('audio')"></app-icon>
-      } @else {
-      <button type="button" class="button button--border-yellow button--small" (click)="audioInput.click()">
-        Выбрать трек
-      </button>
-      }
+    </div>
+
+    <div class="form__row">
+      <label for="description" class="label">Описание*:</label>
+      <textarea id="description" formControlName="description" rows="3" appTrimOnBlur></textarea>
+    </div>
+
+    <div class="form__row" [class.invalid]="form.controls.price.invalid && form.controls.price.touched">
+      <label for="price" class="label">Цена (₽)*:</label>
+      <app-number-input formControlName="price" [min]="0" [max]="9999999"></app-number-input>
+    </div>
+
+    <div class="form__row">
+      <label for="image" class="label">Обложка*:</label>
+      <div class="file-upload-wrapper">
+        <input id="image" type="file" #imageInput accept="image/*" (change)="onFileSelected($event, 'image')" hidden />
+        @if (form.controls.viewImg.value) {
+        <span class="file-name">{{ form.controls.viewImg.value.name }}</span>
+        }
+        @if (formService.selectedImage()) {
+        <app-icon name="edit" class="edit-icon" (click)="imageInput.click()"></app-icon>
+        <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('image')"></app-icon>
+        } @else {
+        <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
+          Выбрать фото
+        </button>
+        }
+      </div>
+    </div>
+
+    <div class="form__row">
+      <label for="audio" class="label">Музыкальный трек:</label>
+      <div class="file-upload-wrapper">
+        <input id="audio" type="file" #audioInput accept="audio/*" (change)="onFileSelected($event, 'audio')" hidden />
+        @if (form.controls.audio.value) {
+        <span class="file-name">{{ form.controls.audio.value.name }}</span>
+        }
+        @if (formService.selectedAudio()) {
+        <app-icon name="edit" class="edit-icon" (click)="audioInput.click()"></app-icon>
+        <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('audio')"></app-icon>
+        } @else {
+        <button type="button" class="button button--border-yellow button--small" (click)="audioInput.click()">
+          Выбрать трек
+        </button>
+        }
+      </div>
     </div>
   </div>
 
@@ -92,9 +94,12 @@
     (removeItem)="removeInventoryItem($event.index, $event.category)">
   </app-show-form-inventory-manager>
 
-  <div class="form__row">
-    <label for="comment" class="label">Комментарий:</label>
-    <textarea id="comment" formControlName="comment" rows="2" appTrimOnBlur></textarea>
+  <div class="form-section">
+    <h2 class="label label--section">Дополнительная информация:</h2>
+    <div class="form__row">
+      <textarea id="comment" formControlName="comment" rows="2" appTrimOnBlur
+        placeholder="Напишите то, для чего не нашли поля в форме..."></textarea>
+    </div>
   </div>
 
   <div class="row row--buttons">
