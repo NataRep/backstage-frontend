@@ -51,6 +51,10 @@
       justify-content: center;
       min-width: 72px;
       margin-top: 2rem;
+
+      &--border-yellow {
+        color: var(--color-yellow);
+      }
     }
 
     .header {
@@ -62,15 +66,14 @@
     }
 
     .body {
-      line-height: 150%;
+      line-height: 120%;
     }
   }
 
-  &.warning {
-  }
+  &.warning {}
 
   &.error {
-    background-color: var(--color-red);
+    background-color: var(--color-red-text);
     color: var(--color-black);
   }
 

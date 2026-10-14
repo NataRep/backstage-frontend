@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   OnInit,
@@ -16,7 +17,12 @@ import { Store } from '@ngrx/store';
 import { SHOW_TYPES } from '../../../core/models/interfaces/show.model';
 import { ShowsService } from '../../../core/services/shows.service';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
-import { createShowAction, getAllShowAction } from '../../../core/store/shows/shows.actions';
+import {
+  createShowAction,
+  getAllShowAction,
+  subscribeAllShowAction,
+  unsubscribeAllShowAction
+} from '../../../core/store/shows/shows.actions';
 import { selectAllShow } from '../../../core/store/shows/shows.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../../shared/components/modal-container/modal.model';
@@ -52,6 +58,7 @@ export class ShowListComponent implements OnInit {
   readonly store = inject(Store);
   readonly actions = inject(Actions);
   private route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   tabs: TabItem[] = getCategoryTabs(SHOW_TYPES);
   private readonly queryParams = toSignal(this.route.queryParamMap);
@@ -74,6 +81,12 @@ export class ShowListComponent implements OnInit {
   isCreateNewModalOpen = signal(false);
 
   constructor() {
+    this.store.dispatch(subscribeAllShowAction());
+
+    this.destroyRef.onDestroy(() => {
+      this.store.dispatch(unsubscribeAllShowAction());
+    });
+
     effect(() => {
       this.currentCategory();
       untracked(() => {

@@ -18,7 +18,9 @@ export function filterData<T>(data: T[], options: FilterOptions<T>): T[] {
     if (normalizedQuery) {
       const isMatch = searchFields(item).some((field) => {
         if (field == null) return false;
-        return String(field).toLowerCase().includes(normalizedQuery);
+
+
+        return String(field).toLowerCase().split(' ').some((word) => word.startsWith(normalizedQuery));
       });
       if (!isMatch) return false;
     }

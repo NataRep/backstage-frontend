@@ -1,4 +1,7 @@
 <div class="wrapper {{ type }}">
+  <button type="button" class="delete" (click)="onDelete()" aria-label="Delete item" title="Удалить из базы">
+    <app-icon name="trash"></app-icon>
+  </button>
   <div class="main">
     <div class="image">
       @if (show.viewImg && show.viewImg.url !== "" ) {
@@ -25,7 +28,6 @@
       </li>
       }
       <li><app-icon name="piggy-bank"></app-icon>{{ show.price }} ₽</li>
-      <li>Детали</li>
     </ul>
   </div>
   @if (show.audio && show.audio.url !== "") {
@@ -34,3 +36,15 @@
   </div>
   }
 </div>
+
+@if (isConfirmModalOpen()) {
+<app-modal-container [(isOpen)]="isConfirmModalOpen" type="action" actionButton="Delete"
+  (action)="handleDeleteAction()">
+  <div class="modal__header">Delete this show</div>
+  <div class="modal__body">
+    <p>Вы собираетесь удалить из базы всю информацию об услуге: </p>
+    <p><strong> {{ showTypes[show.type] | upperFirstLetter }} {{ show.title | upperFirstLetter }}</strong></p>
+    <p>Это действие необратимо.</p>
+  </div>
+</app-modal-container>
+}

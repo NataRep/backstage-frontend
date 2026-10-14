@@ -6,11 +6,9 @@
   padding: 1rem;
   border: 1px solid rgba(var(--color-green-rgb), 0.25);
   border-radius: 1.25rem;
-  background: linear-gradient(
-    180deg,
-    rgba(var(--color-grey-medium-rgb), 0.92) 0%,
-    rgba(var(--color-grey-dark-rgb), 0.96) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(var(--color-grey-medium-rgb), 0.92) 0%,
+      rgba(var(--color-grey-dark-rgb), 0.96) 100%);
   box-shadow:
     0 0 20px rgba(var(--color-black-rgb), 0.45),
     inset 0 1px 0 rgba(var(--color-grey-extra-light-rgb), 0.04);
@@ -18,16 +16,21 @@
     border-color 0.2s ease,
     box-shadow 0.2s ease;
   overflow: hidden;
+  position: relative;
 
-  &:hover {
-    border-color: rgba(var(--color-green-rgb), 0.5);
-    box-shadow:
-      0 0 24px rgba(var(--color-green-rgb), 0.08),
-      0 0 40px rgba(var(--color-black-rgb), 0.5);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-color: rgba(var(--color-green-rgb), 0.5);
+      box-shadow:
+        0 0 24px rgba(var(--color-green-rgb), 0.08),
+        0 0 40px rgba(var(--color-black-rgb), 0.5);
+    }
   }
 
   .main {
     display: flex;
+    cursor: pointer;
   }
 
   .image {
@@ -40,11 +43,9 @@
     justify-content: center;
     border-radius: 1rem;
     overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      rgba(var(--color-grey-rgb), 0.9),
-      rgba(var(--color-grey-dark-rgb), 1)
-    );
+    background: linear-gradient(135deg,
+        rgba(var(--color-grey-rgb), 0.9),
+        rgba(var(--color-grey-dark-rgb), 1));
     border: 1px solid rgba(var(--color-grey-extra-light-rgb), 0.06);
 
     img {
@@ -64,20 +65,18 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(var(--color-black-rgb), 0) 40%,
-        rgba(var(--color-black-rgb), 0.2) 100%
-      );
+      background: linear-gradient(180deg,
+          rgba(var(--color-black-rgb), 0) 40%,
+          rgba(var(--color-black-rgb), 0.2) 100%);
       pointer-events: none;
     }
   }
 
   .title {
     margin: 0;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
     line-height: 1.1;
-    font-weight: 700;
+    font-weight: 500;
     text-transform: uppercase;
     color: var(--color-green);
   }
@@ -102,6 +101,25 @@
       app-icon {
         color: var(--color-green);
       }
+    }
+  }
+}
+
+.delete {
+  background: none;
+  border: none;
+  color: var(--color-green);
+  width: max-content;
+  position: absolute;
+  right: 0.5rem;
+  top: 1rem;
+  opacity: 0.5;
+  cursor: pointer;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      opacity: 1;
+      color: var(--color-red-text);
     }
   }
 }
