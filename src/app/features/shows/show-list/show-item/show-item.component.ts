@@ -7,6 +7,7 @@ import { deleteShowAction, deleteShowSuccessAction } from '../../../../core/stor
 import { AudioPlayerComponent } from '../../../../shared/components/audio-player/audio-player.component';
 import { IconComponent } from '../../../../shared/components/icons/icons.component';
 import { ModalContainerComponent } from '../../../../shared/components/modal-container/modal-container.component';
+import { ModalAction } from '../../../../shared/components/modal-container/modal.model';
 import { SHOW_CATEGORY_RU } from '../../../../shared/constants/texts/common.texts';
 import { DeclensionPipe } from '../../../../shared/pipes/declension.pipe';
 import { DurationPipe } from '../../../../shared/pipes/duration.pipe';
@@ -45,12 +46,15 @@ export class ShowItemComponent {
     this.isConfirmModalOpen.set(true);
   }
 
-  handleDeleteAction(): void {
+  handleDeleteAction(action: ModalAction): void {
     console.log("Delete");
-    const id = this.show.id;
-    if (id) {
-      this.store.dispatch(deleteShowAction({ id }));
+    if (action == 'confirm') {
+      const id = this.show.id;
+      if (id) {
+        this.store.dispatch(deleteShowAction({ id }));
+      }
     }
+
   }
 
   private initModalsSubscriptions(): void {

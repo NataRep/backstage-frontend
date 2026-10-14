@@ -31,15 +31,10 @@ export const showReducer = createReducer(
   ),
 
   // --- Success Operations ---
-  on(ShowsActions.createShowSuccessAction, (state, { data }) => {
-    // Проверяем, есть ли уже такой ID в стейте
-    const exists = state.shows.some((item) => item.id === data.id);
+  on(ShowsActions.createShowSuccessAction, (state) => {
 
     return {
       ...state,
-      shows: exists
-        ? state.shows.map((item) => (item.id === data.id ? data : item))
-        : [...state.shows, data],
       loading: false,
     };
   }),

@@ -3,7 +3,6 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { catchError, concatMap, exhaustMap, filter, map, of, switchMap } from 'rxjs';
 import { EmployeeFacade } from '../../services/employee-facade.service';
-import { ToastService } from '../../services/toasts.service';
 import { setUserProfileAction } from '../auth/auth.actions';
 import { selectAuthUser } from '../auth/auth.selectors';
 import {
@@ -30,7 +29,6 @@ export class EmployeesEffects {
   private actions$ = inject(Actions);
   private employeeManagerService = inject(EmployeeFacade);
   private store = inject(Store);
-  private toastService = inject(ToastService);
   private currentUser = this.store.selectSignal(selectAuthUser);
 
   createEmployee$ = createEffect(() =>

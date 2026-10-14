@@ -38,9 +38,8 @@ export const employeeReducer = createReducer(
     error: null,
   })),
 
-  on(createEmployeeSuccessAction, (state, { employee }) => ({
+  on(createEmployeeSuccessAction, (state) => ({
     ...state,
-    employees: [...state.employees, employee],
     loading: false,
     error: null,
   })),

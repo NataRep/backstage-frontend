@@ -1,27 +1,41 @@
 export interface FilterOptions<T> {
   query?: string;
-  searchFields: (item: T) => string[]; // Поля, по которым ищем
+  searchFields: (item: T) => (string | number | null | undefined)[];
   category?: string;
-  categoryField?: keyof T; // Поле для сравнения категории
-  sortField: (item: T) => string; // Поле для алфавитной сортировки
-  extraFilter?: (item: T) => boolean; // Специфичные фильтры (например, роли)
+  categoryField?: keyof T;
+  sortField: (item: T) => string;
+  extraFilter?: (item: T) => boolean;
 }
+
 export function filterData<T>(data: T[], options: FilterOptions<T>): T[] {
+  console.log("filterData data", data);
+
   const { query, searchFields, category, categoryField, sortField, extraFilter } = options;
+
   const normalizedQuery = query?.toLowerCase().trim() || '';
+  const queryWords = normalizedQuery ? normalizedQuery.split(/\s+/) : [];
 
   const filtered = data.filter((item) => {
     if (category && category !== 'all' && categoryField) {
-      if (item[categoryField] !== category) return false;
+      const itemCategory = item[categoryField];
+      if (itemCategory != null && String(itemCategory) !== category) {
+        return false;
+      }
     }
 
-    if (normalizedQuery) {
-      const isMatch = searchFields(item).some((field) => {
-        if (field == null) return false;
+    if (queryWords.length > 0) {
+      const fields = searchFields(item);
 
+      const isMatch = queryWords.every((qWord) =>
+        fields.some((field) => {
+          if (field == null) return false;
+          return String(field)
+            .toLowerCase()
+            .split(/\s+/)
+            .some((fWord) => fWord.startsWith(qWord));
+        })
+      );
 
-        return String(field).toLowerCase().split(' ').some((word) => word.startsWith(normalizedQuery));
-      });
       if (!isMatch) return false;
     }
 
@@ -30,5 +44,8 @@ export function filterData<T>(data: T[], options: FilterOptions<T>): T[] {
     return true;
   });
 
-  return [...filtered].sort((a, b) => sortField(a).localeCompare(sortField(b)));
+  const result = [...filtered].sort((a, b) => sortField(a).localeCompare(sortField(b)));
+
+  console.log("filterData result", result);
+  return result;
 }

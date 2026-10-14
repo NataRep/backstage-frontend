@@ -40,7 +40,6 @@ export class ShowEffects {
             imageUrl: data.imageFile ? this.cloudinaryService.uploadFile(data.imageFile) : of(null),
             audioUrl: data.audioFile ? this.cloudinaryService.uploadFile(data.audioFile) : of(null),
           };
-
           return forkJoin(uploadRequests).pipe(
             map((urls) => {
               const mappedData = mapFormToShowItem(data.formValue);

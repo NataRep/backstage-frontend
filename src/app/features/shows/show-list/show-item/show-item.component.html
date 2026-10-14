@@ -39,7 +39,7 @@
 
 @if (isConfirmModalOpen()) {
 <app-modal-container [(isOpen)]="isConfirmModalOpen" type="action" actionButton="Delete"
-  (action)="handleDeleteAction()">
+  (action)="handleDeleteAction($event)">
   <div class="modal__header">Delete this show</div>
   <div class="modal__body">
     <p>Вы собираетесь удалить из базы всю информацию об услуге: </p>
