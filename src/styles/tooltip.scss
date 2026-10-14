@@ -1,5 +1,6 @@
 .tooltip {
   display: flex;
+  align-items: center;
   position: absolute;
   width: max-content;
   padding: 4px 8px;
@@ -8,13 +9,21 @@
   color: var(--color-orange-text);
   border-radius: 4px;
   transition: opacity 0.25s;
-  opacity: 0;
+  opacity: 0.9;
   pointer-events: none;
 
-  &.tooltip--right {
+  &--right {
     left: 100%;
     top: 50%;
     transform: translate(0.5rem, -50%);
     z-index: 1;
+  }
+
+  &--opacity {
+    opacity: 0;
+  }
+
+  &--warning {
+    color: var(--color-red);
   }
 }

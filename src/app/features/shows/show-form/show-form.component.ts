@@ -20,6 +20,7 @@ import {
   selectAllInventory,
   selectInventoryEntities,
 } from '../../../core/store/inventory/inventory.selector';
+import { DurationInputComponent } from '../../../shared/components/duration-input/duration-input.component';
 import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { NumberInputComponent } from '../../../shared/components/number-input/number-input.component';
 import {
@@ -44,6 +45,7 @@ import { CreateShowPayload } from './show-form.models';
     ShowFormRolesComponent,
     ShowFormInventoryManagerComponent,
     IconComponent,
+    DurationInputComponent
   ],
   providers: [ShowFormService],
   templateUrl: './show-form.component.html',
@@ -51,7 +53,7 @@ import { CreateShowPayload } from './show-form.models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShowFormComponent implements OnInit, OnChanges {
-  @Input() inventoryItem: ShowItem | null = null;
+  @Input() show: ShowItem | null = null;
   @Output() save = new EventEmitter<CreateShowPayload>();
   @Output() cancelForm = new EventEmitter<void>();
 
@@ -82,9 +84,16 @@ export class ShowFormComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const item = changes['inventoryItem']?.currentValue;
+    if (!changes['show']) {
+      return;
+    }
+
+    const item = changes['show'].currentValue;
+
     if (item) {
       this.formService.patchFormData(item, this.inventoryEntities());
+    } else {
+      this.formService.resetForm();
     }
   }
 

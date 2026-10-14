@@ -1,0 +1,16 @@
+<div class="duration-container" [formGroup]="form">
+  <input type="text" name="minutes" formControlName="minutes" maxlength="3" placeholder="мин" id="duration"
+    (keydown)="onKeyDown($event)" (blur)="onBlur()" />
+
+  <span class="separator">:</span>
+
+  <input type="text" name="seconds" formControlName="seconds" maxlength="2" placeholder="сек"
+    (keydown)="onKeyDown($event)" (blur)="onBlur()" />
+
+  @if (showWarning()) {
+  <div class="tooltip tooltip--right tooltip--warning">
+    <app-icon name="warning" class="warning-icon" />
+    <span class="warning-text">Только цифры</span>
+  </div>
+  }
+</div>

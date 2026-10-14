@@ -1,0 +1,15 @@
+.duration-container {
+  display: flex;
+  gap: 0.125rem;
+  position: relative;
+
+  input {
+    width: calc(3ch + 1rem);
+    padding-right: 0.375rem;
+    padding-left: 0.375rem;
+  }
+
+  .tooltip app-icon {
+    margin-right: 0.25rem;
+  }
+}

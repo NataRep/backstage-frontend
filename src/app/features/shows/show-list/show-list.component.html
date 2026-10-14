@@ -24,7 +24,8 @@
 <app-modal-container [(isOpen)]="isCreateNewModalOpen" type="default" (action)="onModalAction($event)">
   <div class="modal__header">Add new show</div>
   <div class="modal__body">
-    <app-show-form #showForm (cancelForm)="closeCreateModal()" (save)="createNewShow($event)"></app-show-form>
+    <app-show-form #showForm (cancelForm)="closeCreateModal()" (save)="createNewShow($event)"
+      [show]="null"></app-show-form>
   </div>
 </app-modal-container>
 }

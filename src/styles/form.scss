@@ -37,6 +37,15 @@ input {
   color: var(--color-grey-extra-light);
   background-clip: content-box;
   border: none;
+  caret-color: #fed342;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: var(--color-grey-text-dark);
+  }
 }
 
 label,
@@ -46,6 +55,7 @@ label,
 }
 
 .modal__body {
+
   label,
   .label {
     margin-right: 1rem;
@@ -54,6 +64,7 @@ label,
 }
 
 :where(body:not(:has(.badge))) {
+
   input[type='text'],
   input[type='password'],
   input[type='email'],
@@ -129,26 +140,26 @@ input:-webkit-autofill {
   opacity: 0;
 }
 
-.checkbox input:checked + .checkbox__box {
+.checkbox input:checked+.checkbox__box {
   background-color: var(--color-blue);
   border-color: var(--color-blue);
 }
 
-.checkbox input:checked + .checkbox__box::after {
+.checkbox input:checked+.checkbox__box::after {
   opacity: 1;
 }
 
-.checkbox input:focus-visible + .checkbox__box {
+.checkbox input:focus-visible+.checkbox__box {
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
 }
 
-.checkbox input:disabled + .checkbox__box {
+.checkbox input:disabled+.checkbox__box {
   background-color: #eee;
   border-color: #aaa;
   cursor: not-allowed;
 }
 
-.checkbox input:disabled ~ .checkbox__label {
+.checkbox input:disabled~.checkbox__label {
   color: #aaa;
   cursor: not-allowed;
 }
@@ -194,7 +205,6 @@ select {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid transparent;
   border-radius: 0.5rem;
-  font-size: 0.875rem;
   color: var(--color-grey-extra-light);
   cursor: pointer;
 

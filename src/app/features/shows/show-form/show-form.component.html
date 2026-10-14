@@ -31,9 +31,8 @@
     </div>
 
     <div class="form__row" [class.invalid]="form.controls.duration.invalid && form.controls.duration.touched">
-      <label for="duration" class="label">Длительность (секунды):</label>
-      <app-number-input formControlName="duration" [min]="1"></app-number-input>
-
+      <label for="duration" class="label">Длительность:</label>
+      <app-duration-input formControlName="duration" />
       @if (form.controls.duration.invalid && form.controls.duration.touched) {
       <div class="error-message"><span>Минимум 1 секунда.</span></div>
       }
@@ -60,7 +59,7 @@
         <app-icon name="edit" class="edit-icon" (click)="imageInput.click()"></app-icon>
         <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('image')"></app-icon>
         } @else {
-        <button type="button" class="button button--border-yellow button--small" (click)="imageInput.click()">
+        <button type="button" class="button button--border-accent-3 button--small" (click)="imageInput.click()">
           Выбрать фото
         </button>
         }
@@ -78,7 +77,7 @@
         <app-icon name="edit" class="edit-icon" (click)="audioInput.click()"></app-icon>
         <app-icon name="trash" class="delete-icon" (click)="removeSelectedFile('audio')"></app-icon>
         } @else {
-        <button type="button" class="button button--border-yellow button--small" (click)="audioInput.click()">
+        <button type="button" class="button button--border-accent-3 button--small" (click)="audioInput.click()">
           Выбрать трек
         </button>
         }
@@ -101,11 +100,17 @@
         placeholder="Напишите то, для чего не нашли поля в форме..."></textarea>
     </div>
   </div>
-
   <div class="row row--buttons">
     <button class="button button--yellow" type="submit" [disabled]="form.invalid">Save</button>
     <button class="button button--border-yellow" type="button" (click)="onClose()">
       Cancel
     </button>
   </div>
+
+  @if(form.invalid){
+  <div class="attention-message">
+    <app-icon name="warning" class="warning-icon" />
+    <span class="warning-text">Заполните все поля со звездочкой (они обязательные)</span>
+  </div>
+  }
 </form>

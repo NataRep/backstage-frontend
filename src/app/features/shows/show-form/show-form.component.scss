@@ -29,6 +29,14 @@
   width: 100%;
 }
 
+.attention-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-red-text);
+  font-size: 0.7rem;
+}
+
 app-show-form-roles {
   margin-bottom: 2.5rem;
   margin-top: 1.5rem;
