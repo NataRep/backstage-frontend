@@ -15,15 +15,23 @@
 }
 
 .audioPlayer {
-  display: flex;
-  align-items: center;
-  color: var(--color-green);
-  opacity: 0.8;
-  transition: opacity 0.25s ease-in-out;
+  display: grid;
+  grid-auto-columns: 1fr;
+  justify-items: stretch;
+  justify-content: start;
+  gap: 0.6rem;
 
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      opacity: 1;
+  .player-wrap {
+    display: flex;
+    align-items: center;
+    color: var(--color-green);
+    opacity: 0.8;
+    transition: opacity 0.25s ease-in-out;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 
@@ -46,6 +54,27 @@
     --icon-fill-color: var(--color-green);
     --icon-size: 1rem;
   }
+}
+
+.download {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0 0 0.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+}
+
+.audio-file-info {
+  padding-right: 0.5rem;
+}
+
+.audio-file-name {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 300px;
+  max-width: 100%;
 }
 
 .bar {

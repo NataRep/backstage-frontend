@@ -11,6 +11,7 @@ import { ModalAction } from '../../../../shared/components/modal-container/modal
 import { SHOW_CATEGORY_RU } from '../../../../shared/constants/texts/common.texts';
 import { DeclensionPipe } from '../../../../shared/pipes/declension.pipe';
 import { DurationPipe } from '../../../../shared/pipes/duration.pipe';
+import { PriceFormatPipe } from '../../../../shared/pipes/price-format.pipe';
 import { UppercaseFirstLetter } from '../../../../shared/pipes/uppercase-first-letter.pipe';
 
 @Component({
@@ -22,7 +23,8 @@ import { UppercaseFirstLetter } from '../../../../shared/pipes/uppercase-first-l
     AudioPlayerComponent,
     DurationPipe,
     ModalContainerComponent,
-    UppercaseFirstLetter
+    UppercaseFirstLetter,
+    PriceFormatPipe
   ],
   templateUrl: './show-item.component.html',
   styleUrl: './show-item.component.scss',

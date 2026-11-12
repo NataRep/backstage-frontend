@@ -27,7 +27,7 @@
         {{ show.requiredRoles.fireworker | declension: ['пиротехник', 'пиротехника', 'пиротехников'] }}
       </li>
       }
-      <li><app-icon name="piggy-bank"></app-icon>{{ show.price }} ₽</li>
+      <li><app-icon name="piggy-bank"></app-icon>{{ show.price | priceFormat}} ₽</li>
     </ul>
   </div>
   @if (show.audio && show.audio.url !== "") {
