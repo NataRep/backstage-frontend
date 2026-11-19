@@ -1,0 +1,11 @@
+.content-container {
+  max-width: calc(100% - 8rem);
+  width: 1200px;
+  container-type: inline-size;
+  container-name: listContainer;
+
+  @media (max-width: 768px) {
+    max-width: calc(100% - 2rem);
+
+  }
+}

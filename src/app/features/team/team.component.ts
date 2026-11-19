@@ -15,12 +15,12 @@ export class TeamComponent {
   tabs: TabItem[] = [
     {
       label: 'Team list',
-      link: 'list',
+      routePath: 'list',
       icon: 'team',
     },
     {
       label: 'Availability calendar',
-      link: 'availability',
+      routePath: 'availability',
       icon: 'calendar',
     },
   ];

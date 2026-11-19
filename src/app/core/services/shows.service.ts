@@ -17,7 +17,9 @@ export class ShowsService {
 
   // ---- Read ----
   getById(id: string): Observable<ShowItem | null> {
-    return from(this.firebase.getOneByField<ShowItem>(this.collectionName, 'id', id));
+    return from(this.firebase.getOne<ShowItem>(this.collectionName, id)).pipe(
+      retry(this.retryConfig)
+    );
   }
 
   getAll(): Observable<ShowItem[]> {

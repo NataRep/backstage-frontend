@@ -46,6 +46,5 @@ export function filterData<T>(data: T[], options: FilterOptions<T>): T[] {
 
   const result = [...filtered].sort((a, b) => sortField(a).localeCompare(sortField(b)));
 
-  console.log("filterData result", result);
   return result;
 }

@@ -18,9 +18,13 @@
   overflow: hidden;
   position: relative;
 
-  .main {
+  .main a {
     display: flex;
     cursor: pointer;
+
+    @media (hover: hover) and (pointer: fine) {
+      color: inherit;
+    }
   }
 
   .image {

@@ -1,5 +1,6 @@
 import { Component, DestroyRef, inject, Input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ShowItem } from '../../../../core/models/interfaces/show.model';
@@ -18,13 +19,14 @@ import { UppercaseFirstLetter } from '../../../../shared/pipes/uppercase-first-l
   selector: 'app-show-item',
   standalone: true,
   imports: [
+    RouterLink,
     IconComponent,
-    DeclensionPipe,
     AudioPlayerComponent,
-    DurationPipe,
     ModalContainerComponent,
+    DeclensionPipe,
+    DurationPipe,
+    PriceFormatPipe,
     UppercaseFirstLetter,
-    PriceFormatPipe
   ],
   templateUrl: './show-item.component.html',
   styleUrl: './show-item.component.scss',
@@ -56,7 +58,6 @@ export class ShowItemComponent {
         this.store.dispatch(deleteShowAction({ id }));
       }
     }
-
   }
 
   private initModalsSubscriptions(): void {

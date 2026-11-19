@@ -8,10 +8,17 @@ import { INVENTORY_CATEGORY_RU } from '../../constants/texts/common.texts';
 import { UppercaseFirstLetter } from '../../pipes/uppercase-first-letter.pipe';
 import { IconComponent } from '../icons/icons.component';
 
+export type TabQueryParamsMap = Record<string, string | null | undefined>;
+
 export interface TabItem {
   label: string;
-  link: string;
   icon: string;
+  /** Путь для перехода при mode = 'route' */
+  routePath?: string;
+  /** Готовый объект query-параметров при mode = 'route' (например, { category: 'fireshow' }) */
+  queryParams?: TabQueryParamsMap | null;
+  /** Значение параметра при mode = 'queryParams' (например, 'fireshow' для ?category=fireshow) */
+  paramValue?: string;
 }
 
 @Component({
@@ -25,38 +32,46 @@ export interface TabItem {
 export class TabsComponent {
   @Input() tabs: TabItem[] = [];
 
-  /** Если true — переключаем только Query Params */
-  @Input() useQueryParams = false;
+  /** 'route' — переход по routePath с queryParams; 'queryParams' — смена только query-параметра на текущем пути */
+  @Input() mode: 'route' | 'queryParams' = 'route';
 
-  /** Имя параметра в URL (например, 'type' или 'tab') */
-  @Input() queryParamName = 'tab';
+  /** Имя query-параметра при mode = 'queryParams' (например, 'category' или 'tab') */
+  @Input() queryParamKey = 'tab';
 
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly currentQueryParams = toSignal(this.route.queryParams);
 
-  // Используем Signal для отслеживания текущих параметров (Angular 18 way)
-  private queryParams = toSignal(this.route.queryParams);
-
-  isActive(tab: TabItem): boolean {
-    if (this.useQueryParams) {
-      const currentTab = this.queryParams()?.[this.queryParamName];
-      return currentTab === tab.link;
+  getTargetLink(tab: TabItem): string | unknown[] {
+    if (this.mode === 'queryParams') {
+      return [];
     }
-    return this.router.url.includes(tab.link);
+    return tab.routePath ?? [];
   }
 
-  /**
-   * Генерирует объект параметров для [queryParams]
-   */
-  getQueryParams(tabLink: string): Record<string, string> {
-    return { [this.queryParamName]: tabLink };
+  getTargetQueryParams(tab: TabItem): TabQueryParamsMap | null {
+    if (this.mode === 'queryParams') {
+      return { [this.queryParamKey]: tab.paramValue ?? null };
+    }
+    return tab.queryParams ?? null;
+  }
+
+  isTabActive(tab: TabItem): boolean {
+    if (this.mode === 'queryParams') {
+      return this.currentQueryParams()?.[this.queryParamKey] === tab.paramValue;
+    }
+    if (!tab.routePath) {
+      return false;
+    }
+    const currentPath = this.router.url.split('?')[0];
+    return currentPath === tab.routePath;
   }
 }
 
 export const getCategoryTabs = (array: readonly (ShowType | InventoryCategory)[]): TabItem[] => {
-  return [...array].map((key) => ({
-    label: INVENTORY_CATEGORY_RU[key as keyof typeof INVENTORY_CATEGORY_RU],
-    link: key,
-    icon: key,
+  return [...array].map((categoryKey) => ({
+    label: INVENTORY_CATEGORY_RU[categoryKey as keyof typeof INVENTORY_CATEGORY_RU],
+    icon: categoryKey,
+    paramValue: categoryKey,
   }));
 };
