@@ -9,3 +9,41 @@
 
   }
 }
+
+.show-detail__text--multiline {
+  white-space: pre-line;
+}
+
+.show-detail__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.show-meta__item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--grey-dark);
+}
+
+.roles-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.show-detail__section--note {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--grey-dark);
+}
+
+@media (max-width: 576px) {
+  .show-detail__stats {
+    grid-template-columns: 1fr;
+  }
+}

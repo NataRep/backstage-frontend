@@ -1,6 +1,144 @@
+@let showData = show();
+
 <div class="content-container">
   <app-tabs [tabs]="tabs()" mode="route" queryParamKey="category"></app-tabs>
+
   <div class="content-container__content">
-    <p>show-detail works!</p>
+    @if (showData) {
+    <article class="show-detail">
+
+      <!-- Заголовок -->
+      <header class="show-detail__header">
+        <div class="show-detail__heading">
+          <h1 class="show-detail__title">{{ showData.title }}</h1>
+          <span class="show-detail__badge">{{ showData.type }}</span>
+        </div>
+      </header>
+
+      <!-- Характеристики -->
+      <section class="show-detail__stats">
+        <div class="show-meta__item">
+          <span class="show-meta__label">Длительность</span>
+          <span class="show-meta__value">
+            {{ showData.duration ? (showData.duration | duration) : '--' }}
+          </span>
+        </div>
+
+        <div class="show-meta__item">
+          <span class="show-meta__label">Стоимость</span>
+          <span class="show-meta__value show-meta__value--accent">
+            {{ showData.price | priceFormat }} ₽
+          </span>
+        </div>
+      </section>
+
+      <!-- Описание -->
+      <section class="show-detail__section">
+        <h2 class="show-detail__section-title">Описание шоу</h2>
+
+        <p class="show-detail__text show-detail__text--multiline">
+          {{ showData.description.length > 0 ? showData.description : '--' }}
+        </p>
+      </section>
+
+      <!-- Музыка -->
+      @if (showData.audio.url) {
+      <section class="show-detail__section">
+        <h2 class="show-detail__section-title">Музыкальное сопровождение</h2>
+
+        <div class="show-detail__audio">
+          <app-audio-player [meta]="showData.audio"></app-audio-player>
+        </div>
+      </section>
+      }
+
+      <!-- Команда -->
+      <section class="show-detail__section">
+        <h2 class="show-detail__section-title">Команда</h2>
+
+        @if (
+        showData.requiredRoles.artist > 0 ||
+        showData.requiredRoles.fireworker > 0 ||
+        showData.requiredRoles.tech > 0
+        ) {
+        <ul class="roles-list">
+          @if (showData.requiredRoles.artist > 0) {
+          <li class="roles-list__item">
+            <span>Артисты</span>
+            <span class="roles-list__count">
+              {{ showData.requiredRoles.artist }}
+              {{ showData.requiredRoles.artist | declension: ['человек', 'человека', 'человек'] }}
+            </span>
+          </li>
+          }
+
+          @if (showData.requiredRoles.fireworker > 0) {
+          <li class="roles-list__item">
+            <span>Пиротехники</span>
+            <span class="roles-list__count">
+              {{ showData.requiredRoles.fireworker }}
+              {{ showData.requiredRoles.fireworker | declension: ['человек', 'человека', 'человек'] }}
+            </span>
+          </li>
+          }
+
+          @if (showData.requiredRoles.tech > 0) {
+          <li class="roles-list__item">
+            <span>Техники</span>
+            <span class="roles-list__count">
+              {{ showData.requiredRoles.tech }}
+              {{ showData.requiredRoles.tech | declension: ['человек', 'человека', 'человек'] }}
+            </span>
+          </li>
+          }
+        </ul>
+        } @else {
+        <p class="show-detail__empty">Состав команды не указан.</p>
+        }
+      </section>
+
+      <!-- Оборудование и реквизит -->
+      <section class="show-detail__section inventory-block">
+        <h2 class="show-detail__section-title">Оборудование и реквизит</h2>
+
+        @if (requiredInventoryGroups().length > 0) {
+        <div class="inventory-groups">
+          @for (group of requiredInventoryGroups(); track group.type) {
+          <div class="inventory-group">
+            <h3 class="inventory-group__title">{{ group.label }}</h3>
+
+            <ul class="inventory-group__list">
+              @for (entry of group.entries; track entry.item.id) {
+              <li class="inventory-group__item">
+                <span class="inventory-group__name">{{ entry.item.name }}</span>
+                <span class="inventory-group__count">{{ entry.requiredCount }} шт.</span>
+              </li>
+              }
+            </ul>
+          </div>
+          }
+        </div>
+        } @else {
+        <p class="show-detail__empty">Инвентарь не указан или ещё загружается.</p>
+        }
+      </section>
+
+      <!-- Внутренний комментарий -->
+      <section class="show-detail__section show-detail__section--note">
+        <h2 class="show-detail__section-title">Внутренний комментарий</h2>
+
+        <p class="show-detail__text show-detail__text--multiline">
+          {{ showData.comment.length > 0 ? showData.comment : '--' }}
+        </p>
+      </section>
+
+    </article>
+    } @else {
+    <div class="show-skeleton" aria-busy="true">
+      <div class="show-skeleton__bar show-skeleton__bar--title"></div>
+      <div class="show-skeleton__bar"></div>
+      <div class="show-skeleton__bar show-skeleton__bar--short"></div>
+    </div>
+    }
   </div>
 </div>

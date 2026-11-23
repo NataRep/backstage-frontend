@@ -1,7 +1,9 @@
 <div class="wrapper {{ type }}">
+  @if (canEdit()) {
   <button type="button" class="delete" (click)="onDelete()" aria-label="Delete item" title="Удалить из базы">
     <app-icon name="trash"></app-icon>
   </button>
+  }
   <div class="main">
     <a [routerLink]="['/shows', show.id]">
       <div class="image">
@@ -39,7 +41,7 @@
   }
 </div>
 
-@if (isConfirmModalOpen()) {
+@if (isConfirmModalOpen() && canEdit()) {
 <app-modal-container [(isOpen)]="isConfirmModalOpen" type="action" actionButton="Delete"
   (action)="handleDeleteAction($event)">
   <div class="modal__header">Delete this show</div>

@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { ShowItem } from '../../../../core/models/interfaces/show.model';
+import { selectCanEdit } from '../../../../core/store/auth/auth.selectors';
 import { deleteShowAction, deleteShowSuccessAction } from '../../../../core/store/shows/shows.actions';
 import { AudioPlayerComponent } from '../../../../shared/components/audio-player/audio-player.component';
 import { IconComponent } from '../../../../shared/components/icons/icons.component';
@@ -38,6 +39,7 @@ export class ShowItemComponent {
   private readonly actions = inject(Actions);
   private readonly store = inject(Store);
   private readonly destroyRef = inject(DestroyRef);
+  readonly canEdit = this.store.selectSignal(selectCanEdit);
 
   showTypes = SHOW_CATEGORY_RU;
   isConfirmModalOpen = signal(false);
