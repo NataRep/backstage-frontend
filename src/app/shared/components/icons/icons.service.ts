@@ -16,18 +16,18 @@ export class IconService {
       return cachedRequest;
     }
 
-    const path = `assets/icons/${name}.svg`;
+    const path = `/assets/icons/${name}.svg`;
 
     const request$ = this.http
       .get(path, {
         responseType: 'text',
       })
       .pipe(
-        shareReplay(1),
         catchError((error) => {
           console.error(`Failed to load icon ${name}:`, error);
           return of('');
-        })
+        }),
+        shareReplay({ bufferSize: 1, refCount: true })
       );
 
     this.cache.set(name, request$);

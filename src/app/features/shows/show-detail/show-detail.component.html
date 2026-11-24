@@ -10,14 +10,14 @@
       <header class="show-detail__header">
         <div class="show-detail__heading">
           <h1 class="show-detail__title">{{ showData.title }}</h1>
-          <span class="show-detail__badge">{{ showData.type }}</span>
+          <div class="show-detail__badge"><app-icon name="{{ showData.type }}"></app-icon> {{ showData.type }}</div>
         </div>
         @if (canEdit()){
         <div class="edit-buttons">
           <button class="button button--yellow button--edit" (click)="onClickEdit()">
             <app-icon name="edit" class="edit-icon"></app-icon> Edit
           </button>
-          <button class="button button--yellow button--delete" (click)="openConfirmDeleteModal()">
+          <button class="button button--border-yellow  button--delete" (click)="openConfirmDeleteModal()">
             <app-icon name="trash" class="delete-icon"></app-icon> Delete
           </button>
         </div>
@@ -39,6 +39,7 @@
           </span>
         </div>
 
+        @if(showData.audio){
         <div class="show-meta__item">
           <span class="show-meta__label">Музыка</span>
           <div class="show-meta__value show-meta__value--accent">
@@ -47,13 +48,15 @@
             </div>
           </div>
         </div>
+        }
+
       </section>
 
       <section class="show-detail__section">
         <h2 class="show-detail__section-title">Описание шоу</h2>
 
         <p class="show-detail__text show-detail__text--multiline">
-          {{ showData.description.length > 0 ? showData.description : '--' }}
+          {{ showData.description && showData.description.length > 0 ? showData.description : '--' }}
         </p>
       </section>
 
@@ -130,7 +133,7 @@
         <h2 class="show-detail__section-title">Внутренний комментарий</h2>
 
         <p class="show-detail__text show-detail__text--multiline">
-          {{ showData.comment.length > 0 ? showData.comment : '--' }}
+          {{ showData.comment && showData.comment.length > 0 ? showData.comment : '--' }}
         </p>
       </section>
 

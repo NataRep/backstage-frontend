@@ -28,7 +28,7 @@ export interface MediaMetadata {
   metadata: {
     size: number;
     format: string;
-    duration?: number; // Для аудио
+    duration?: number;
   };
 }
 

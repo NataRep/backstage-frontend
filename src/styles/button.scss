@@ -81,6 +81,10 @@
     background: var(--color-grey-text);
     pointer-events: none;
   }
+
+  app-icon {
+    margin-right: 0.5rem;
+  }
 }
 
 .row--buttons {
