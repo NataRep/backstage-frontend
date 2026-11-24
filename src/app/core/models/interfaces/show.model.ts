@@ -19,8 +19,6 @@ export interface ShowRoles {
   fireworker: number;
 }
 
-export type showType = 'firework' | 'fireshow' | 'ledshow' | 'welcome';
-
 export const SHOW_TYPES = ['firework', 'fireshow', 'ledshow', 'welcome'] as const;
 export type ShowType = (typeof SHOW_TYPES)[number];
 

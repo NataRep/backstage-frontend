@@ -23,7 +23,7 @@ import {
   subscribeAllShowAction,
   unsubscribeAllShowAction
 } from '../../../core/store/shows/shows.actions';
-import { selectAllShow } from '../../../core/store/shows/shows.selector';
+import { selectAllShows } from '../../../core/store/shows/shows.selector';
 import { ModalContainerComponent } from '../../../shared/components/modal-container/modal-container.component';
 import { ModalAction } from '../../../shared/components/modal-container/modal.model';
 import { SearchInputComponent } from '../../../shared/components/search-input/search-input.component';
@@ -65,7 +65,7 @@ export class ShowListComponent implements OnInit {
   readonly currentCategory = computed(() => this.queryParams()?.get('category'));
 
   public readonly canEdit = this.store.selectSignal(selectCanEdit);
-  readonly allShows = this.store.selectSignal(selectAllShow);
+  readonly allShows = this.store.selectSignal(selectAllShows);
   readonly searchQuery = signal('');
 
   readonly filteredShows = computed(() =>

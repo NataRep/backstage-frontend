@@ -7,15 +7,23 @@
     @if (showData) {
     <article class="show-detail">
 
-      <!-- Заголовок -->
       <header class="show-detail__header">
         <div class="show-detail__heading">
           <h1 class="show-detail__title">{{ showData.title }}</h1>
           <span class="show-detail__badge">{{ showData.type }}</span>
         </div>
+        @if (canEdit()){
+        <div class="edit-buttons">
+          <button class="button button--yellow button--edit" (click)="onClickEdit()">
+            <app-icon name="edit" class="edit-icon"></app-icon> Edit
+          </button>
+          <button class="button button--yellow button--delete" (click)="openConfirmDeleteModal()">
+            <app-icon name="trash" class="delete-icon"></app-icon> Delete
+          </button>
+        </div>
+        }
       </header>
 
-      <!-- Характеристики -->
       <section class="show-detail__stats">
         <div class="show-meta__item">
           <span class="show-meta__label">Длительность</span>
@@ -30,9 +38,17 @@
             {{ showData.price | priceFormat }} ₽
           </span>
         </div>
+
+        <div class="show-meta__item">
+          <span class="show-meta__label">Музыка</span>
+          <div class="show-meta__value show-meta__value--accent">
+            <div class="show-detail__audio">
+              <app-audio-player [meta]="showData.audio"></app-audio-player>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <!-- Описание -->
       <section class="show-detail__section">
         <h2 class="show-detail__section-title">Описание шоу</h2>
 
@@ -41,18 +57,6 @@
         </p>
       </section>
 
-      <!-- Музыка -->
-      @if (showData.audio.url) {
-      <section class="show-detail__section">
-        <h2 class="show-detail__section-title">Музыкальное сопровождение</h2>
-
-        <div class="show-detail__audio">
-          <app-audio-player [meta]="showData.audio"></app-audio-player>
-        </div>
-      </section>
-      }
-
-      <!-- Команда -->
       <section class="show-detail__section">
         <h2 class="show-detail__section-title">Команда</h2>
 
@@ -97,7 +101,6 @@
         }
       </section>
 
-      <!-- Оборудование и реквизит -->
       <section class="show-detail__section inventory-block">
         <h2 class="show-detail__section-title">Оборудование и реквизит</h2>
 
@@ -123,7 +126,6 @@
         }
       </section>
 
-      <!-- Внутренний комментарий -->
       <section class="show-detail__section show-detail__section--note">
         <h2 class="show-detail__section-title">Внутренний комментарий</h2>
 

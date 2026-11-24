@@ -9,6 +9,7 @@ import { InventoryService } from '../../../core/services/inventory.service';
 import { ShowsService } from '../../../core/services/shows.service';
 import { selectCanEdit } from '../../../core/store/auth/auth.selectors';
 import { AudioPlayerComponent } from '../../../shared/components/audio-player/audio-player.component';
+import { IconComponent } from '../../../shared/components/icons/icons.component';
 import { TabItem, TabsComponent } from '../../../shared/components/tabs/tabs.component';
 import { INVENTORY_TYPES_RU, NounTranslation } from '../../../shared/constants/texts/common.texts';
 import { DeclensionPipe } from '../../../shared/pipes/declension.pipe';
@@ -35,6 +36,7 @@ export interface InventoryGroup {
     DeclensionPipe,
     DurationPipe,
     AudioPlayerComponent,
+    IconComponent
   ],
   templateUrl: './show-detail.component.html',
   styleUrl: './show-detail.component.scss',
@@ -139,5 +141,13 @@ export class ShowDetailComponent {
     effect(() => {
       console.log('show:', this.show());
     });
+  }
+
+  onClickEdit() {
+    console.log("Edit")
+  }
+
+  openConfirmDeleteModal() {
+    console.log("Delete")
   }
 }

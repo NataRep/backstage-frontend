@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { showType } from '../../core/models/interfaces/show.model';
+import { SHOW_TYPES, ShowType } from '../../core/models/interfaces/show.model';
 import { selectShowLoading } from '../../core/store/shows/shows.selector';
 
 @Component({
@@ -22,9 +22,9 @@ export class ShowsComponent {
 
   public readonly isLoading = this.store.selectSignal(selectShowLoading);
 
-  category = computed(() => {
+  category = computed<ShowType>(() => {
     const value = this.queryParamsSignal()?.get('category');
-    return (value as showType) || 'fireshow';
+    return SHOW_TYPES.includes(value as ShowType) ? (value as ShowType) : 'fireshow';
   });
 
   constructor() {
