@@ -1,28 +1,37 @@
 <audio #audio [src]="meta.url" (loadedmetadata)="setAudioState()" (play)="onPlay()" (pause)="onPause()"
   (timeupdate)="onTimeupdate()" (volumechange)="onVolumeChange()"></audio>
-<div class="audioPlayer" [class.active]="audioState.isPlaying">
-  <div class="player-wrap">
-    <button (click)="togglePlay()">
+<div class="audio-player" [class.audio-player--playing]="audioState.isPlaying">
+  <div class="audio-player__inner">
+    <button (click)="togglePlay()" class="audio-player__play-btn">
       @if (audioState.isPlaying) {
       <app-icon name="pause"></app-icon>
       } @else {
       <app-icon name="play"></app-icon>
       }
     </button>
-    <div class="bar">
-      <input class="progress" type="range" min="0" max="100" [value]="progress" [style.--progress.%]="progress"
-        (input)="onSetProgress($event)" />
-    </div>
-    <div class="duration-wrapper">
-      {{ audioState.currentTime | duration }} / {{ audioState.duration | duration }}
-    </div>
 
-  </div>
-  <button (click)="downloadTrack(meta.url)" class="download" title="Скачать трек">
-    <div class="audio-file-info">
-      <span class="audio-file-name">{{ meta.name }}</span>
-      <span class="audio-file-size">({{ meta.metadata.size | fileSize }})</span>
+    <div class="audio-player__body">
+      <div class="audio-player__header">
+        <div class="audio-player__file-info">
+          <span class="audio-player__file-name">{{ meta.name | truncate: 40 }}</span>
+          <span class="audio-player__file-size">{{ meta.metadata.size | fileSize }}</span>
+        </div>
+      </div>
+
+      <div class="audio-player__playback">
+        <div class="audio-player__timeline">
+          <input class="audio-player__progress" type="range" min="0" max="100" [value]="progress"
+            [style.--progress.%]="progress" (input)="onSetProgress($event)" />
+        </div>
+        <div class="audio-player__duration">
+          {{ audioState.currentTime | duration }} / {{ audioState.duration | duration }}
+        </div>
+      </div>
     </div>
-    <app-icon name="download"></app-icon>
-  </button>
+    <div class="audio-player__download">
+      <button (click)="downloadTrack(meta.url)" class="audio-player__download-btn" title="Скачать трек">
+        <app-icon name="download"></app-icon>
+      </button>
+    </div>
+  </div>
 </div>

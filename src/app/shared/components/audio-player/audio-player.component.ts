@@ -10,6 +10,7 @@ import {
 import { MediaMetadata } from '../../../core/models/interfaces/show.model';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { FileSizePipe } from '../../pipes/file-size.pipe';
+import { StringTruncatePipe } from '../../pipes/string-truncate.pipe';
 import { IconComponent } from '../icons/icons.component';
 
 interface AudioState {
@@ -22,7 +23,10 @@ interface AudioState {
 @Component({
   selector: 'app-audio-player',
   standalone: true,
-  imports: [IconComponent, FileSizePipe, DurationPipe],
+  imports: [IconComponent,
+    FileSizePipe,
+    DurationPipe,
+    StringTruncatePipe],
   templateUrl: './audio-player.component.html',
   styleUrl: './audio-player.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

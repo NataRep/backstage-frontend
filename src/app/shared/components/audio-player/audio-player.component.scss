@@ -1,34 +1,21 @@
-.download {
-  cursor: pointer;
-  display: flex;
-  color: var(--color-grey-text-dark);
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-orange-text);
-
-      app-icon {
-        --icon-fill-color: var(--color-orange-text)
-      }
-    }
-  }
-}
-
-.audioPlayer {
+.audio-player {
   display: grid;
   grid-auto-columns: 1fr;
   justify-items: stretch;
   justify-content: start;
   gap: 0.6rem;
-  container-type: inline-size;
-  container-name: wrapper;
 
-  .player-wrap {
+  .audio-player__inner {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: flex-start;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
     color: var(--color-green);
     opacity: 0.8;
     transition: opacity 0.25s ease-in-out;
+    gap: 1rem;
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
@@ -41,55 +28,103 @@
     opacity: 1;
   }
 
-  .duration-wrapper {
+  .audio-player__duration {
     font-size: 0.75rem;
-    margin-left: 0.75rem;
   }
 
   button {
     background: none;
     border: none;
     cursor: pointer;
+    padding: 0;
   }
+
+  .audio-player__play-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-green);
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    app-icon {
+      display: block;
+      --icon-fill-color: var(--color-grey-dark);
+      --icon-size: 1rem;
+    }
+  }
+}
+
+.audio-player__body {
+  display: grid;
+  gap: 2px;
+  min-width: 200px;
+  flex: 1 1 auto;
+  width: 100%;
+}
+
+.audio-player__header {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.audio-player__playback {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.audio-player__file-info {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-grey-text-dark);
+}
+
+.audio-player__file-size {
+  flex-shrink: 0;
+}
+
+.audio-player__download {
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding-bottom: 4px;
+  cursor: pointer;
 
   app-icon {
     --icon-fill-color: var(--color-green);
-    --icon-size: 1rem;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-orange-text);
+
+      app-icon {
+        --icon-fill-color: var(--color-orange-text);
+      }
+    }
   }
 }
 
-
-.download {
-  display: flex;
-  justify-content: space-between;
-  padding: 0 0 0 0.5rem;
-  text-align: left;
-  font-size: 0.75rem;
-}
-
-.audio-file-info {
-  padding-right: 0.5rem;
-}
-
-.audio-file-name {
+.audio-player__file-name {
   display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 300px;
+  max-width: 100%;
 }
 
-@container wrapper (max-width: 400px) {
-  .audio-file-name {
-    width: 200px;
-  }
-}
-
-.bar {
+.audio-player__timeline {
   flex: 1;
 }
 
-.progress {
+.audio-player__progress {
   height: 1rem;
   appearance: none;
   background: transparent;
@@ -97,7 +132,7 @@
   min-width: 0;
 }
 
-.progress::-webkit-slider-runnable-track {
+.audio-player__progress::-webkit-slider-runnable-track {
   height: 3px;
   border-radius: 2px;
   background: rgba(var(--color-grey-text-dark-rgb), 0.8);
@@ -109,29 +144,29 @@
       var(--color-grey-text-dark) 100%);
 }
 
-.progress::-webkit-slider-thumb {
+.audio-player__progress::-webkit-slider-thumb {
   appearance: none;
-  width: 8px;
-  height: 8px;
-  margin-top: -3.5px;
+  width: 4px;
+  height: 7px;
+  margin-top: -2px;
   border: none;
-  border-radius: 50%;
+  border-radius: 2px;
   background: var(--color-green);
 }
 
-.progress::-moz-range-track {
+.audio-player__progress::-moz-range-track {
   height: 3px;
   border-radius: 2px;
   background: var(--color-grey-text-dark);
 }
 
-.progress::-moz-range-progress {
+.audio-player__progress::-moz-range-progress {
   height: 3px;
   border-radius: 2px;
   background: var(--color-green);
 }
 
-.progress::-moz-range-thumb {
+.audio-player__progress::-moz-range-thumb {
   width: 10px;
   height: 10px;
   border: none;

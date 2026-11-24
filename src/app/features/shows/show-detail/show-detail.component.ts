@@ -15,6 +15,7 @@ import { INVENTORY_TYPES_RU, NounTranslation } from '../../../shared/constants/t
 import { DeclensionPipe } from '../../../shared/pipes/declension.pipe';
 import { DurationPipe } from '../../../shared/pipes/duration.pipe';
 import { PriceFormatPipe } from '../../../shared/pipes/price-format.pipe';
+import { StringTruncatePipe } from '../../../shared/pipes/string-truncate.pipe';
 
 export interface RequiredInventoryEntry {
   item: InventoryItem;
@@ -35,6 +36,7 @@ export interface InventoryGroup {
     PriceFormatPipe,
     DeclensionPipe,
     DurationPipe,
+    StringTruncatePipe,
     AudioPlayerComponent,
     IconComponent
   ],

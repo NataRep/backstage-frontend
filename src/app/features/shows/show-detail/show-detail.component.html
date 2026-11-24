@@ -10,10 +10,13 @@
       <header class="show-detail__header">
         <div class="show-detail__heading">
           <h1 class="show-detail__title">{{ showData.title }}</h1>
-          <div class="show-detail__badge"><app-icon name="{{ showData.type }}"></app-icon> {{ showData.type }}</div>
+          <div class="show-detail__badge">
+            <app-icon name="{{ showData.type }}"></app-icon>
+            {{ showData.type }}
+          </div>
         </div>
         @if (canEdit()){
-        <div class="edit-buttons">
+        <div class="buttons">
           <button class="button button--yellow button--edit" (click)="onClickEdit()">
             <app-icon name="edit" class="edit-icon"></app-icon> Edit
           </button>
@@ -26,22 +29,21 @@
 
       <section class="show-detail__stats">
         <div class="show-meta__item">
-          <span class="show-meta__label">Длительность</span>
-          <span class="show-meta__value">
-            {{ showData.duration ? (showData.duration | duration) : '--' }}
-          </span>
-        </div>
-
-        <div class="show-meta__item">
-          <span class="show-meta__label">Стоимость</span>
+          <span class="show-meta__label"><app-icon name="piggy-bank"></app-icon> Стоимость</span>
           <span class="show-meta__value show-meta__value--accent">
             {{ showData.price | priceFormat }} ₽
           </span>
         </div>
 
+        <div class="show-meta__item">
+          <span class="show-meta__label"><app-icon name="clock"></app-icon> Длительность </span>
+          <span class="show-meta__value">
+            {{ showData.duration ? (showData.duration | duration) : '--' }}
+          </span>
+        </div>
+
         @if(showData.audio){
         <div class="show-meta__item">
-          <span class="show-meta__label">Музыка</span>
           <div class="show-meta__value show-meta__value--accent">
             <div class="show-detail__audio">
               <app-audio-player [meta]="showData.audio"></app-audio-player>
